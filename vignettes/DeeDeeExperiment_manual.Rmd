@@ -15,7 +15,7 @@ author:
   - Research Center for Immunotherapy (FZI), Mainz
   email: marinif@uni-mainz.de
 date: "`r BiocStyle::doc_date()`"
-package: "`r BiocStyle::pkg_ver('DeeDee')`"
+package: "`r BiocStyle::pkg_ver('DeeDeeExperiment')`"
 output: 
   BiocStyle::html_document:
     toc: true
@@ -68,7 +68,7 @@ TODO to be updated
 * `de_results`: A named list of DE results, in any of the formats supported by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
 * `enrich_results`: A named list of functional enrichment results.
 
-In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDee")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018]
+In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDeeExperiment")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018]
 [doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
 
 The data is made available via the `r BiocStyle::Biocpkg("macrophage")` Bioconductor package, which contains the files output from the Salmon quantification (version 0.12.0, with Gencode v29 reference), as well as the values summarized at the gene level, which we will use to exemplify.
