@@ -1,0 +1,124 @@
+---
+title: >
+  The `DeeDeeExperiment` User's Guide
+author:
+- name: Najla Abassi
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  email: abassina@uni-mainz.de
+- name: Lea Rothörl
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+- name: Federico Marini
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  - Research Center for Immunotherapy (FZI), Mainz
+  email: marinif@uni-mainz.de
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('DeeDee')`"
+output: 
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    code_download: yes
+vignette: >
+  %\VignetteIndexEntry{The DeeDeeExperiment User's Guide}
+  %\VignetteEncoding{UTF-8}  
+  %\VignettePackage{DeeDeeExperiment}
+  %\VignetteKeywords{GeneExpression, RNASeq, Sequencing, Pathways, Infrastructure}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: DeeDeeExperiment_bibliography.bib
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  error    = FALSE,
+  warning  = FALSE,
+  eval     = TRUE,
+  message  = FALSE
+)
+```
+
+
+# Introduction {#introduction}
+
+## Why do we need a new class?
+
+In Transcriptomic Analyses, managing Differential Expression Analysis (DEA) and Functional Enrichment Analysis (FEA) results across multiple contrasts can quickly become overwhelming. This issue is further amplified in single-cell RNA-seq, where Pseudobulk Analyses generate numerous tables for each cell type.
+
+The `r BiocStyle::Biocpkg("DeeDeeExperiment")` class streamlines this process by providing a structured framework that integrates DEA and FEA results within an organized, `SummarizedExperiment`-like object. By centralizing these results in a single object, `DeeDeeExperiment` facilitates streamlined data management and downstream analysis.
+
+## Anatomy of DeeDeeExperiment
+
+TODO, maybe it s interesting to have a schematic representation (like the one for SummarizedExperiment)
+
+
+In order to create a `DeeDeeExperiment` object, at least one of the following inputs are required:
+
+## Creating a `DeeDeeExperiment` object
+
+TODO to be updated
+* `se`: A `SummarizedExperiment` object, that will be used as a scaffold to store the DE related information.
+* `de_results`: A named list of DE results, in any of the formats supported by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
+* `enrich_results`: A named list of functional enrichment results.
+
+In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDee")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018]
+[doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
+
+The data is made available via the `r BiocStyle::Biocpkg("macrophage")` Bioconductor package, which contains the files output from the Salmon quantification (version 0.12.0, with Gencode v29 reference), as well as the values summarized at the gene level, which we will use to exemplify.
+
+In the `macrophage` experimental setting, the samples are available from 6 different donors, in 4 different conditions (naive, treated with Interferon gamma, with SL1344, or with a combination of Interferon gamma and SL1344).
+
+# Getting started {#gettingstarted}
+
+To install this package, start R and enter:
+
+```{r install, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("DeeDeeExperiment")
+```
+
+Once installed, the package can be loaded and attached to your current workspace as follows:
+
+```{r loadlib, eval = FALSE}
+library("DeeDeeExperiment")
+```
+
+If you have all four input elements ready, 
+
+......
+
+
+# The `DeeDeeExperiment` class
+
+yadda yadda
+
+......
+
+# A typical analysis workflow with `DeeDeeExperiment` {#typicalworkflow}
+
+# Additional Information {#additionalinfo}
+
+Bug reports can be posted on the Bioconductor support site (https://support.bioconductor.org/) or raised as issues in the `DeeDeeExperiment` GitHub repository
+......
+(https://github.com/imbeimainz/DeeDeeExperiment/issues). 
+
+The GitHub repository also contains the development version of the package, where new functionality is added over time - careful, you might be running bleeding edge versions!
+
+The authors appreciate well-considered suggestions for improvements or new features, or even better, pull requests.
+
+If you use `DeeDeeExperiment` for your analysis, please cite it as shown below:
+
+```{r cite}
+citation("DeeDeeExperiment")
+```
+
+
