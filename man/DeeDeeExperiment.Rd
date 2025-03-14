@@ -13,7 +13,7 @@ DeeDeeExperiment(se = NULL, de_results = NULL, enrich_results = NULL)
 store the DE related information.}
 
 \item{de_results}{A named list of DE results, in any of the formats supported by
-the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).}
+the package (currently: results from DESeq2, edgeR, limma).}
 
 \item{enrich_results}{A named list of functional enrichment results}
 }
@@ -21,9 +21,9 @@ the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).}
 A \code{DeeDeeExperiment} object.
 }
 \description{
-The \code{DeeDeeExperiment} class is designed to represent
+The \code{DeeDeeExperiment} class is integrate and manage transciptomic analysis results.
 It inherits from the SummarizedExperiment class, and additionally stores
-DE-related information via dedicated slots and \code{colData}.
+DE-related/functional enrichment information via dedicated slots and \code{colData}.
 }
 \details{
 The \code{se} parameter can be optionally left unspecified. If this is the case,
@@ -37,10 +37,12 @@ be stored in the returned \code{DeeDeeExperiment} object.
 The names of the list will be used to define the \code{contrasts} for the different
 DE analyses included, which will determine the way to access the information
 stored in the \code{dea} slot of the \code{DeeDeeExperiment} object.
+\subsection{TODO: add description for fea}{
 
 Since a \code{DeeDeeExperiment} is also a \code{SummarizedExperiment} object, it can be
 seamlessly provided downstream for visualization and in-depth exploration to
 packages such as \code{iSEE} or similar.
+}
 }
 \section{Slots}{
 

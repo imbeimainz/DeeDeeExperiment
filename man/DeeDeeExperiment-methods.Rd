@@ -69,7 +69,8 @@ below.
 }
 \description{
 The \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} class provides a family of methods to get
-and set DE-related information in \link{DeeDeeExperiment} objects.
+and set DE-related information and functional enrichment results in
+\link{DeeDeeExperiment} objects.
 }
 \details{
 \itemize{
