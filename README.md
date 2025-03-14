@@ -21,8 +21,8 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
 
 The `DeeDeeExperiment` extends `SummarizedExperiment` and contains additional attributes:
 
-* `dea` : A slot for storing DE-related information (currentlysupported formats:
-results from DESeq2, edgeR, limma).
+* `dea` : A slot for storing DE-related information (currently supported formats:
+results from `DESeq2`, `edgeR`, `limma`).
 
 * `fea` : A slot for storing Functional Enrichment related information
 

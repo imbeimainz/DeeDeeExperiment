@@ -1,6 +1,5 @@
 library("macrophage")
 library("DESeq2")
-#source("~/Development/DeeDee_wip/deedee_prepare.R")
 library("SummarizedExperiment")
 library("edgeR")
 library("limma")
