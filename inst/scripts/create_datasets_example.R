@@ -94,13 +94,13 @@ save(Salm_both, file = "data/DE_results_Salm_both.RData", compress = "xz")
 res_de <- res_macrophage_IFNg_vs_naive
 str(res_de)
 
-data(DE_results_IFNg_naive, package = "DeeDee")
+data(DE_results_IFNg_naive, package = "DeeDeeExperiment")
 IFNg_naive
-data(DE_results_IFNg_both, package = "DeeDee")
+data(DE_results_IFNg_both, package = "DeeDeeExperiment")
 IFNg_both
-data(DE_results_Salm_naive, package = "DeeDee")
+data(DE_results_Salm_naive, package = "DeeDeeExperiment")
 Salm_naive
-data(DE_results_Salm_both, package = "DeeDee")
+data(DE_results_Salm_both, package = "DeeDeeExperiment")
 Salm_both
 
 # for the original object/implementation:
@@ -112,7 +112,7 @@ Salm_both
 # )
 
 # save(dd_list_original, file = "data/dd_list_original.RData", compress = "xz")
-data("dd_list_original", package = "DeeDee")
+data("dd_list_original", package = "DeeDeeExperiment")
 
 # for the new version
 de_named_list <- list(
@@ -123,6 +123,6 @@ de_named_list <- list(
 )
 
 # save(de_named_list, file = "data/de_named_list.RData", compress = "xz")
-data("de_named_list", package = "DeeDee")
+data("de_named_list", package = "DeeDeeExperiment")
 
 dde <- DeeDeeExperiment(se_macrophage_noassays, de_results = de_named_list)

@@ -22,7 +22,7 @@
 #' @param x A [DeeDeeExperiment()] object
 #' @param value Replacement value for replacement methods.
 #' @param dea A named list of DE results, in any of the formats supported by
-#' the `DeeDee` package (currently: results from DESeq2, edgeR, limma).
+#' the package (currently: results from DESeq2, edgeR, limma).
 #' @param dea_name Character value, specifying the name of the DE analysis to
 #' get or remove
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
@@ -52,7 +52,7 @@
 #' object.
 #'
 #' @examples
-#' data("de_named_list", package = "DeeDee")
+#' data("de_named_list", package = "DeeDeeExperiment")
 #' library("SummarizedExperiment")
 #'
 #' rd_macrophage <- DataFrame(

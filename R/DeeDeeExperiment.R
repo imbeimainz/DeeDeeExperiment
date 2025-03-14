@@ -37,13 +37,14 @@
 #' packages such as `iSEE` or similar.
 #'
 #'
+#'
 #' @return A `DeeDeeExperiment` object.
 #' @export
 #'
 #' @author Lea Rothörl and Federico Marini
 #'
 #' @examples
-#' data("de_named_list", package = "DeeDee")
+#' data("de_named_list", package = "DeeDeeExperiment")
 #'
 #' dde_onlyde <- DeeDeeExperiment(
 #'   de_results = de_named_list
@@ -150,7 +151,7 @@ DeeDeeExperiment <- function(se = NULL,
                   fea = list())
 
     # stash the package version
-    metadata(object)[["version"]] <- packageVersion("DeeDee")
+    metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
 
     return(object)
   }
@@ -217,7 +218,7 @@ DeeDeeExperiment <- function(se = NULL,
                 fea = list()) # for now fea is empty anywy until i figure out dea completely
 
   # stash the package version
-  metadata(object)[["version"]] <- packageVersion("DeeDee")
+  metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
 
   return(object)
 
@@ -462,9 +463,9 @@ DeeDeeExperiment <- function(se = NULL,
     stop("Dataframe does not contain required columns: ", paste(x, collapse = ", "))
   })
 
-  valid_matches <- rownames(gse) %in% rownames(res_de)
+  valid_matches <- rownames(se) %in% rownames(res_de)
 
-  matched_ids <- match(rownames(gse)[valid_matches], rownames(res_de))
+  matched_ids <- match(rownames(se)[valid_matches], rownames(res_de))
 
 
   # Pre-fill rowData with NA
