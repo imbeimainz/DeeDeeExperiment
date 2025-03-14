@@ -55,7 +55,7 @@ provided when instantiating the \link{DeeDeeExperiment}.}
 }}
 
 \examples{
-data("de_named_list", package = "DeeDee")
+data("de_named_list", package = "DeeDeeExperiment")
 
 dde_onlyde <- DeeDeeExperiment(
   de_results = de_named_list

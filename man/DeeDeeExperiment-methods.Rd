@@ -50,7 +50,7 @@
 \item{value}{Replacement value for replacement methods.}
 
 \item{dea}{A named list of DE results, in any of the formats supported by
-the \code{DeeDee} package (currently: results from DESeq2, edgeR, limma).}
+the package (currently: results from DESeq2, edgeR, limma).}
 
 \item{dea_name}{Character value, specifying the name of the DE analysis to
 get or remove}
@@ -92,7 +92,7 @@ object.
 }
 }
 \examples{
-data("de_named_list", package = "DeeDee")
+data("de_named_list", package = "DeeDeeExperiment")
 library("SummarizedExperiment")
 
 rd_macrophage <- DataFrame(
