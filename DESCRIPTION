@@ -36,7 +36,9 @@ Imports:
 Suggests: 
     macrophage,
     knitr,
-    BiocStyle
+    BiocStyle,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataRepresentation, GeneExpression, Transcription,
   Transcriptomics, DifferentialExpression, Pathways, GO
+Config/testthat/edition: 3
