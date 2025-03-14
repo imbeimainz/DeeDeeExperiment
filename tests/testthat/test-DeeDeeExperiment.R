@@ -6,20 +6,20 @@ test_that("creating", {
 
   print(dde)
 
-  expect_is(dde, "DeeDeeExperiment")
+  expect_s4_class(dde, "DeeDeeExperiment")
 
   dde_only_de <- DeeDeeExperiment(
     de_results = de_named_list
   )
-  expect_is(dde_only_de, "DeeDeeExperiment")
+  expect_s4_class(dde_only_de, "DeeDeeExperiment")
 
   dde_nodd <- DeeDeeExperiment(
     se = se_macrophage_noassays,
   )
-  expect_is(dde_nodd, "DeeDeeExperiment")
+  expect_s4_class(dde_nodd, "DeeDeeExperiment")
 
 
-  expect_is(
+  expect_s4_class(
     get_dea_df(dde, "ifng_vs_naive"), "DataFrame"
   )
 
@@ -58,9 +58,9 @@ test_that("creating", {
 
   expect_false(is.list(salmo_both))
 
-  expect_is(salmo_both, "DESeqResults")
+  expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_is(dea(dde_one), "list")
+  expect_type(dea(dde_one), "list")
 
   expect_length(dea(dde_one), 1)
 
@@ -93,12 +93,12 @@ test_that("adding and removing", {
   )
   # add a new (set of) DE result(s)
   dde_new <- add_dea(dde, new_del)
-  expect_is(dde_new, "DeeDeeExperiment")
+  expect_s4_class(dde_new, "DeeDeeExperiment")
   expect_equal(length(dea(dde)), 4)
   expect_equal(length(dea(dde_new)), 6)
 
   dde_removed <- remove_dea(dde, "ifngsalmo_vs_naive")
-  expect_is(dde_removed, "DeeDeeExperiment")
+  expect_s4_class(dde_removed, "DeeDeeExperiment")
   expect_equal(length(dea(dde_removed)), 3)
 })
 
