@@ -366,15 +366,13 @@ setMethod("get_dea_df",
             # maybe not interesting to print back all missmatches in casee all rownames
             # dont match
             rownames_x <- rownames(rowData(x))
-            rownames_y <- rownames(deas[[dea_name]])
+            rownames_y <- rownames(dea(x)[[dea_name]][["original_object"]])
             mismatched_rows <- sum(!rownames_x %in% rownames_y)
-
 
             affected_deas <- character()
             if (mismatched_rows > 0) {
               affected_deas <- c(affected_deas, dea_name)
             }
-
 
             if (length(affected_deas) > 0) {
               if (verbose)
