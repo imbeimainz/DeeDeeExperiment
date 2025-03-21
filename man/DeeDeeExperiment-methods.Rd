@@ -2,21 +2,23 @@
 % Please edit documentation in R/DeeDeeExperiment-methods.R
 \name{DeeDeeExperiment-methods}
 \alias{DeeDeeExperiment-methods}
-\alias{dea}
-\alias{dea<-}
+\alias{dea_info}
+\alias{dea_info<-}
+\alias{dea_names}
 \alias{add_dea}
 \alias{remove_dea}
-\alias{get_dea_df}
+\alias{dea}
 \alias{get_dea_list}
 \alias{fea}
 \alias{fea<-}
 \alias{add_fea}
 \alias{remove_fea}
-\alias{dea,DeeDeeExperiment-method}
-\alias{dea<-,DeeDeeExperiment-method}
+\alias{dea_info,DeeDeeExperiment-method}
+\alias{dea_info<-,DeeDeeExperiment-method}
+\alias{dea_names,DeeDeeExperiment-method}
 \alias{add_dea,DeeDeeExperiment-method}
 \alias{remove_dea,DeeDeeExperiment,character-method}
-\alias{get_dea_df,DeeDeeExperiment,character-method}
+\alias{dea,DeeDeeExperiment,character-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
 \alias{fea,DeeDeeExperiment-method}
 \alias{fea<-,DeeDeeExperiment-method}
@@ -24,15 +26,17 @@
 \alias{remove_fea,DeeDeeExperiment,character-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
-\S4method{dea}{DeeDeeExperiment}(x)
+\S4method{dea_info}{DeeDeeExperiment}(x)
 
-\S4method{dea}{DeeDeeExperiment}(x) <- value
+\S4method{dea_info}{DeeDeeExperiment}(x) <- value
+
+\S4method{dea_names}{DeeDeeExperiment}(x)
 
 \S4method{add_dea}{DeeDeeExperiment}(x, dea)
 
 \S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
 
-\S4method{get_dea_df}{DeeDeeExperiment,character}(x, dea_name, verbose = TRUE)
+\S4method{dea}{DeeDeeExperiment,character}(x, dea_name, verbose = TRUE)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, verbose = TRUE)
 
@@ -74,12 +78,13 @@ and set DE-related information and functional enrichment results in
 }
 \details{
 \itemize{
-\item \code{dea} and \verb{dea<-} are the methods to get and set the \code{dea} information as a
+\item \code{dea_info} and \verb{dea_info<-} are the methods to get and set the \code{dea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{add_dea} and \code{remove_dea} are used to respectively add or remove DE-results
 items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{dea} slot.
-\item \code{get_dea_df} and \code{get_dea_list} retrieve the \code{dea} information and provide
+\item \code{dea_names} returns the names of the available DE contrasts in \code{DeeDeeExperiment} objects.
+\item \code{dea} and \code{get_dea_list} retrieve the \code{dea} information and provide
 this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
 element for each reported analysis.
 \item \code{fea} and \verb{fea<-} are the methods to get and set the \code{fea} information as a

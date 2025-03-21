@@ -21,7 +21,7 @@ the package (currently: results from DESeq2, edgeR, limma).}
 A \code{DeeDeeExperiment} object.
 }
 \description{
-The \code{DeeDeeExperiment} class is integrate and manage transciptomic analysis results.
+The \code{DeeDeeExperiment} class is integrate and manage transcriptomic analysis results.
 It inherits from the SummarizedExperiment class, and additionally stores
 DE-related/functional enrichment information via dedicated slots and \code{colData}.
 }
