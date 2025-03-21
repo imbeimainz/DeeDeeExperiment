@@ -5,6 +5,7 @@
 #' @aliases
 #' dea_info
 #' dea_info<-
+#' dea_names
 #' add_dea
 #' remove_dea
 #' dea
@@ -40,6 +41,7 @@
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
+#' * `dea_names` returns the names of the available DE contrasts in `DeeDeeExperiment` objects.
 #' * `dea` and `get_dea_list` retrieve the `dea` information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
@@ -108,6 +110,15 @@ setReplaceMethod("dea_info",
 
 
 # dea info - add, remove, get --------------------------------------------------
+
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("dea_names",
+          signature = "DeeDeeExperiment",
+          definition = function(x){
+            names(dea_info(x))
+          }
+          )
 
 #' @rdname DeeDeeExperiment-methods
 #' @export

@@ -7,6 +7,9 @@ setGeneric("dea_info", function(x, ...) standardGeneric("dea_info"))
 setGeneric("dea_info<-", function(x, value) standardGeneric("dea_info<-"))
 
 #' @export
+setGeneric("dea_names", function(x, value) standardGeneric("dea_names"))
+
+#' @export
 setGeneric("add_dea", function(x, dea, ...) standardGeneric("add_dea"))
 
 #' @export
