@@ -13,6 +13,13 @@ test_that("creating", {
   )
   expect_s4_class(dde_only_de, "DeeDeeExperiment")
 
+  expect_type(dea_names(dde_only_de), "character")
+
+  expect_equal(
+    dea_names(dde_only_de),
+    c("ifng_vs_naive", "ifngsalmo_vs_naive", "salmonella_vs_naive", "salmo_both")
+  )
+
   dde_nodd <- DeeDeeExperiment(
     se = se_macrophage_noassays,
   )
@@ -66,6 +73,15 @@ test_that("creating", {
 
   expect_true("salmo_both" == names(dea_info(dde_one)))
 
+  de_results_mismatch <- list(
+    contrast = de_named_list$ifng_vs_naive
+  )
+  rownames(de_results_mismatch$contrast) <- paste0("gene", 101:(100 + nrow(de_results_mismatch$contrast)))
+
+  expect_warning(DeeDeeExperiment(
+    se_macrophage_noassays,
+    de_results = de_results_mismatch
+  ))
 
   dea1 <- de_limma
   de_res_list <- list(de_deseq = salmo_both,
