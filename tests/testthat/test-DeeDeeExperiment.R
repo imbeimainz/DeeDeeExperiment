@@ -60,11 +60,12 @@ test_that("creating", {
 
   expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_type(dea(dde_one), "list")
+  expect_type(dea_info(dde_one), "list")
 
-  expect_length(dea(dde_one), 1)
+  expect_length(dea_info(dde_one), 1)
 
-  expect_true("salmo_both" == names(dea(dde_one)))
+  expect_true("salmo_both" == names(dea_info(dde_one)))
+
 
   dea1 <- de_limma
   de_res_list <- list(de_deseq = salmo_both,
@@ -94,12 +95,12 @@ test_that("adding and removing", {
   # add a new (set of) DE result(s)
   dde_new <- add_dea(dde, new_del)
   expect_s4_class(dde_new, "DeeDeeExperiment")
-  expect_equal(length(dea(dde)), 4)
-  expect_equal(length(dea(dde_new)), 6)
+  expect_equal(length(dea_info(dde)), 4)
+  expect_equal(length(dea_info(dde_new)), 6)
 
   dde_removed <- remove_dea(dde, "ifngsalmo_vs_naive")
   expect_s4_class(dde_removed, "DeeDeeExperiment")
-  expect_equal(length(dea(dde_removed)), 3)
+  expect_equal(length(dea_info(dde_removed)), 3)
 })
 
 

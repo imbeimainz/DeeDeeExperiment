@@ -3,8 +3,8 @@
 #' @title Methods for [DeeDeeExperiment] objects
 #'
 #' @aliases
-#' dea
-#' dea<-
+#' dea_info
+#' dea_info<-
 #' add_dea
 #' remove_dea
 #' get_dea_df
@@ -35,7 +35,7 @@
 #' below.
 #'
 #' @details
-#' * `dea` and `dea<-` are the methods to get and set the `dea` information as a
+#' * `dea_info` and `dea_info<-` are the methods to get and set the `dea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
@@ -89,7 +89,7 @@ NULL
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("dea",
+setMethod("dea_info",
           signature = "DeeDeeExperiment",
           definition = function(x) {
             x@dea
@@ -98,7 +98,7 @@ setMethod("dea",
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setReplaceMethod("dea",
+setReplaceMethod("dea_info",
                  signature = c("DeeDeeExperiment", "ANY"),
                  definition = function(x, value) {
                    x@dea <- value
@@ -121,7 +121,7 @@ setMethod("add_dea",
             # check and preocess dea
             dea <- .check_de_results(dea, entry_name)
             names(dea)
-            names(dea(x))
+            names(dea_info(x))
 
             # dde must be a DeeDeeExp
             if (!is(x, "DeeDeeExperiment")) {
@@ -133,11 +133,11 @@ setMethod("add_dea",
             }
 
             # check that names are all unique, and do not overlap with the existing ones
-            if (anyDuplicated(c(names(dea), names(dea(x))))) {
+            if (anyDuplicated(c(names(dea), names(dea_info(x))))) {
               stop("Names in dea must be unique!")
             }
 
-            dea_contrasts <- dea(x)
+            dea_contrasts <- dea_info(x)
             dde_ids <- rownames(x)
 
             # update rowData, naming them correctly
@@ -276,13 +276,13 @@ setMethod("add_dea",
                 )
               }
               else {
-                stop("The dea result '",i,
+                stop("The dea result class '",i,
                      "' is not recognized (supported classes: DESeqResults, MArrayLM, DGEExact and DGELRT)")
               }
             }
 
             # update the dea slot
-            dea(x) <- dea_contrasts
+            dea_info(x) <- dea_contrasts
 
             # check here the validity
             validObject(x)
@@ -306,7 +306,7 @@ setMethod("remove_dea",
             # x must be a DeeDeeExp
 
             # dea must be char vector
-            deas <- names(dea(x))
+            deas <- names(dea_info(x))
 
             deas_to_remove <- intersect(dea_name, deas)
 

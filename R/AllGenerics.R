@@ -1,10 +1,10 @@
 # DeeDeeExperiment methods -----------------------------------------------------
 
 #' @export
-setGeneric("dea", function(x, ...) standardGeneric("dea"))
+setGeneric("dea_info", function(x, ...) standardGeneric("dea_info"))
 
 #' @export
-setGeneric("dea<-", function(x, value) standardGeneric("dea<-"))
+setGeneric("dea_info<-", function(x, value) standardGeneric("dea_info<-"))
 
 #' @export
 setGeneric("add_dea", function(x, dea, ...) standardGeneric("add_dea"))
