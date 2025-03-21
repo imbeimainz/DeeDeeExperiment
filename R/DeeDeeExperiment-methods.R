@@ -377,7 +377,7 @@ setMethod("dea",
             # maybe not interesting to print back all missmatches in casee all rownames
             # dont match
             rownames_x <- rownames(rowData(x))
-            rownames_y <- rownames(dea(x)[[dea_name]][["original_object"]])
+            rownames_y <- rownames(dea_info(x)[[dea_name]][["original_object"]])
             mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
             affected_deas <- character()
@@ -388,7 +388,7 @@ setMethod("dea",
             if (length(affected_deas) > 0) {
               if (verbose)
                 warning(
-                  "Mismatch detected between `rownames(rowData(x))` and rownames for dea element(s): ",
+                  "Mismatch detected between `rownames(rowData(x))` and rownames for the following dea element(s): ",
                   paste(unique(affected_deas), collapse = ", ")
                 )
             }
@@ -427,10 +427,9 @@ setMethod("get_dea_list",
               # maybe not interesting to print back all missmatches in casee all rownames
               # dont match
               rownames_x <- rownames(rowData(x))
-              rownames_y <- rownames(deas[[i]])
+              rownames_y <- rownames(deas[[i]][["original_object"]])
 
               mismatched_rows <- sum(!rownames_x %in% rownames_y)
-
 
               if (mismatched_rows > 0) {
                 affected_deas <- c(affected_deas, i)
@@ -443,7 +442,7 @@ setMethod("get_dea_list",
             #     "Mismatch detected between `rownames(rowData(x))` and rownames for dea element(s): ",
             #     paste(unique(affected_deas), collapse = ", ")
             #   )
-            # } # we might not need this warning since the call of get_dea_df will trigger individual warnings
+            # } # not needed since the warnings will be triggered from dea
 
             return(dea_list)
           }

@@ -7,7 +7,7 @@
 #' DeeDeeExperiment-class
 #'
 #' @description
-#' The `DeeDeeExperiment` class is integrate and manage transciptomic analysis results.
+#' The `DeeDeeExperiment` class is integrate and manage transcriptomic analysis results.
 #' It inherits from the SummarizedExperiment class, and additionally stores
 #' DE-related/functional enrichment information via dedicated slots and `colData`.
 #'
@@ -179,6 +179,11 @@ DeeDeeExperiment <- function(se = NULL,
 
   dde_ids <- rownames(se_out)
 
+
+
+
+
+
   dea_contrasts <- list()
 
   for (i in names(de_results)) {
@@ -190,11 +195,51 @@ DeeDeeExperiment <- function(se = NULL,
       se_out <- input_deseq2$se
       dea_contrasts[[i]] <- input_deseq2$dea_contrast
 
+      # check for rowname mismatches
+      rownames_x <- rownames(rowData(se_out))
+      rownames_y <- rownames(this_de)
+      mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+      affected_deas <- character()
+      if (mismatched_rows > 0) {
+        affected_deas <- c(affected_deas, i)
+      }
+
+      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+      if (mismatch_percent > 50) {
+        warning(
+          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          i,
+          ". Consider synchronizing your rownames in both se and de_results elements."
+        )
+      }
+
 
     } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
       input_edgeR <- .importDE_edgeR(se_out, this_de, i)
       se_out <- input_edgeR$se
       dea_contrasts[[i]] <- input_edgeR$dea_contrast
+
+      # check for rowname mismatches
+      rownames_x <- rownames(rowData(se_out))
+      rownames_y <- rownames(this_de)
+      mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+      affected_deas <- character()
+      if (mismatched_rows > 0) {
+        affected_deas <- c(affected_deas, i)
+      }
+
+      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+      if (mismatch_percent > 50) {
+        warning(
+          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          i,
+          ". Consider synchronizing your rownames in both se and de_results elements."
+        )
+      }
 
 
     } else if (is(this_de, "MArrayLM")) {
@@ -202,11 +247,51 @@ DeeDeeExperiment <- function(se = NULL,
       se_out <- input_limma$se
       dea_contrasts[[i]] <- input_limma$dea_contrast
 
+      # check for rowname mismatches
+      rownames_x <- rownames(rowData(se_out))
+      rownames_y <- rownames(this_de)
+      mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+      affected_deas <- character()
+      if (mismatched_rows > 0) {
+        affected_deas <- c(affected_deas, i)
+      }
+
+      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+      if (mismatch_percent > 50) {
+        warning(
+          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          i,
+          ". Consider synchronizing your rownames in both se and de_results elements."
+        )
+      }
+
 
     } else if (is(this_de, "data.frame")) {
       input_custom <- .importDE_custom(se_out, this_de, i)
       se_out <- input_custom$se
       dea_contrasts[[i]] <- input_custom$dea_contrast
+
+      # check for rowname mismatches
+      rownames_x <- rownames(rowData(se_out))
+      rownames_y <- rownames(this_de)
+      mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+      affected_deas <- character()
+      if (mismatched_rows > 0) {
+        affected_deas <- c(affected_deas, i)
+      }
+
+      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+      if (mismatch_percent > 50) {
+        warning(
+          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          i,
+          ". Consider synchronizing your rownames in both se and de_results elements."
+        )
+      }
     }
   }
 
