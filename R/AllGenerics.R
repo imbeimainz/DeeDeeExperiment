@@ -13,7 +13,7 @@ setGeneric("add_dea", function(x, dea, ...) standardGeneric("add_dea"))
 setGeneric("remove_dea", function(x, dea_name, ...) standardGeneric("remove_dea"))
 
 #' @export
-setGeneric("get_dea_df", function(x, dea_name, ...) standardGeneric("get_dea_df"))
+setGeneric("dea", function(x, dea_name, ...) standardGeneric("dea"))
 
 #' @export
 setGeneric("get_dea_list", function(x, ...) standardGeneric("get_dea_list"))

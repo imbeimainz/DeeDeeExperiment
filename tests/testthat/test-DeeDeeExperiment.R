@@ -20,17 +20,17 @@ test_that("creating", {
 
 
   expect_s4_class(
-    get_dea_df(dde, "ifng_vs_naive"), "DataFrame"
+    dea(dde, "ifng_vs_naive"), "DataFrame"
   )
 
   expect_error(
-    get_dea_df(dde, "wrong_name")
+    dea(dde, "wrong_name")
   )
 
   dde_gone_wrong <- dde
   rowData(dde_gone_wrong)[["ifng_vs_naive_log2FoldChange"]] <- NULL
   expect_error(
-    get_dea_df(dde_gone_wrong, "ifng_vs_naive")
+    dea(dde_gone_wrong, "ifng_vs_naive")
   )
 
   expect_error(
@@ -75,7 +75,7 @@ test_that("creating", {
 
   expect_warning(get_dea_list(dde_list))
 
-  expect_warning(get_dea_df(dde_list, dea_name = "dge_lrt"))
+  expect_warning(dea(dde_list, dea_name = "dge_lrt"))
 
 }
 

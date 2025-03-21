@@ -7,7 +7,7 @@
 #' dea_info<-
 #' add_dea
 #' remove_dea
-#' get_dea_df
+#' dea
 #' get_dea_list
 #' fea
 #' fea<-
@@ -40,7 +40,7 @@
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
-#' * `get_dea_df` and `get_dea_list` retrieve the `dea` information and provide
+#' * `dea` and `get_dea_list` retrieve the `dea` information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
 #' * `fea` and `fea<-` are the methods to get and set the `fea` information as a
@@ -319,7 +319,7 @@ setMethod("remove_dea",
               cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue", "_padj")))
               rowData(x) <- rowData(x)[, !(colnames(rowData(x)) %in% cols_to_remove)]
               # update the de slot
-              dea(x)[[i]] <- NULL
+              dea_info(x)[[i]] <- NULL
             }
 
             # here check some validity?
@@ -335,12 +335,12 @@ setMethod("remove_dea",
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("get_dea_df",
+setMethod("dea",
           signature = c("DeeDeeExperiment", "character"),
           definition = function(x,
                                 dea_name,
                                 verbose = TRUE) {
-            deas <- dea(x)
+            deas <- dea_info(x)
             dea_names <- names(deas)
 
             if (!(dea_name %in% dea_names)) {
@@ -401,7 +401,7 @@ setMethod("get_dea_list",
           signature = c("DeeDeeExperiment"),
           definition = function(x, verbose = TRUE) {
             verbose <- verbose
-            deas <- dea(x)
+            deas <- dea_info(x)
             dea_names <- names(deas)
 
             dea_list <- list()
@@ -409,7 +409,7 @@ setMethod("get_dea_list",
             affected_deas <- character()
 
             for (i in dea_names) {
-              dea_list[[i]] <- as.data.frame(get_dea_df(x, i, verbose))
+              dea_list[[i]] <- as.data.frame(dea(x, i, verbose))
               colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
 
               # maybe check for rowname mismatches potential gene version issue?
