@@ -10,8 +10,8 @@
 #' remove_dea
 #' dea
 #' get_dea_list
-#' fea
-#' fea<-
+#' fea_info
+#' fea_info<-
 #' add_fea
 #' remove_fea
 #'
@@ -454,7 +454,7 @@ setMethod("get_dea_list",
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("fea",
+setMethod("fea_info",
           signature = "DeeDeeExperiment",
           definition = function(x) {
             x@fea
@@ -462,7 +462,7 @@ setMethod("fea",
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setReplaceMethod("fea",
+setReplaceMethod("fea_info",
                  signature = c("DeeDeeExperiment", "ANY"),
                  definition = function(x, value) {
                    x@fea <- value
