@@ -485,11 +485,88 @@ setMethod("fea_names",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("add_fea",
-          signature = c("DeeDeeExperiment", "ANY"),
-          definition = function(x, fea) {
+          signature = c("DeeDeeExperiment",
+                        "ANY"), # or should i force it to data.frame??
+          definition = function(x,
+                                fea_res,
+                                de_name= NA_character_,
+                                fe_name= NULL) {
+
+            # x must be a DeeDeeExperiment
+            if (!is(x, "DeeDeeExperiment")) {
+              stop("x must be DeeDeeExperiment object!")
+            }
+
+            # capture name inside the env where the func is called
+            entry_name <- deparse(substitute(fea_res, env = parent.frame()))
 
             # TODO
+            # check and preocess fea
+            fea_list <- .check_enrich_results(fea_res, entry_name)
 
+            # fea must be named list
+            if (is.null(names(fea_list))) {
+              stop("All elements in 'fea_res' list must have names!")
+            }
+            # check that names are all unique, and do not overlap with the existing ones
+            if (anyDuplicated(c(names(fea_list), names(fea_info(x))))) {
+              stop("Names in fea must be unique!")
+            }
+            # get existing results in the fea slot
+            fea_contrasts <- fea_info(x)
+
+            for (fe in names(fea_list)) {
+              res_enrich <- fea_list[[fe]]
+              if (!is.null(dea_info(x)) &&
+                  length(dea_info(x)) > 0) {
+                matched_name <- .match_fe_to_de(fe, names(dea_info(x)))
+                if (!is.na(matched_name) &&
+                    matched_name %in% names(dea_info(x))) {
+                  de_res_name <- matched_name
+                  if (fe != matched_name) {
+                    message("FEA '", fe, "' matched to DE contrast '", matched_name, "'")
+                  }
+                } else {
+                  de_res_name <- NA_character_
+                  warning(
+                    "Could not match FEA '",
+                    fe,
+                    "' to a DE contrast.\n",
+                    "Available DE results: ",
+                    paste(names(dea_info(x)), collapse = ", "),
+                    "\n",
+                    "Keep in mind that your enrich_results names should start with one of the following prefixes:",
+                    " 'GO_', 'ClusterPro_', 'KEGG_', 'Reactome_'"
+                  )
+                }
+              } else {
+                de_res_name <- NA_character_
+                warning("Could not match FEA '",
+                        fe,
+                        "' to a DE contrast because no DE results were provided.\n")
+              }
+
+              if ("GO.ID" %in% colnames(res_enrich)) {
+                fe_type <- "TopGo"
+              } else {
+                fe_type <- "NULL" # placeholder for now
+              }
+
+              fea_contrast <- list(
+                de_name = de_res_name, # links to de result
+                fe_name = fe,
+                original_object = res_enrich,
+                GeneTonicList = NULL , # we'll put back a GT ready obj
+                fe_type = fe_type
+              )
+              fea_contrasts[[fe]] <- fea_contrast
+            }
+            # update the fea slot
+            fea_info(x) <- fea_contrasts
+            # check here the validity
+            validObject(x)
+            # return the object
+            return(x)
           }
 )
 
