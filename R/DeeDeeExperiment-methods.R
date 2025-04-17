@@ -577,8 +577,33 @@ setMethod("remove_fea",
           signature = c("DeeDeeExperiment", "character"),
           definition = function(x, fea_name) {
 
-            # TODO
+            # x must be a DeeDeeExp
+            if(!is(x,"DeeDeeExperiment")) {
+              stop("x must be a DeeDeeExperiment object!")
+            }
+            # fea must be char vector
+            if(!is(fea_name,"character")) {
+              stop("'fea_name' must be a character vector!") # is it necessary??? since we define that in signature
+            }
+            feas <- fea_names(x)
 
+            feas_to_remove <- intersect(fea_name, feas)
+
+            # warning() if nothing to remove
+            if(length(feas_to_remove) == 0){
+              warning("No matching fea entries found to remove.")
+            }
+
+            for (i in feas_to_remove) {
+              # update the de slot
+              fea_info(x)[[i]] <- NULL
+            }
+
+            # here check some validity?
+            validObject(x)
+
+            # return the object
+            return(x)
           }
 )
 
