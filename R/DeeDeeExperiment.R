@@ -97,7 +97,7 @@ DeeDeeExperiment <- function(se = NULL,
   }
   else {
     # if nothing is passed, return error
-    if (length(de_results) == 0) {
+    if (length(de_results) == 0 & length(enrich_results) == 0) {
       stop("You have to provide at least an se object or a de_results object!")
     }
     # if no se passed but de_results is not empty, create a mock from it
@@ -129,11 +129,6 @@ DeeDeeExperiment <- function(se = NULL,
     # no clue why this is strictly needed, but still it seems it is, if mocking up
     se <- as(se_mock, "RangedSummarizedExperiment")
 
-
-
-
-
-
   }
 
 
@@ -156,13 +151,6 @@ DeeDeeExperiment <- function(se = NULL,
     return(object)
   }
 
-  if (!is.null(enrich_results)) {
-    # first check content
-    enrich_name <- deparse(substitute(enrich_results)) # capture variable name as a char
-    extracted_enrich_results <- enrich_results
-    extracted_enrich_results <- .check_enrich_results(extracted_enrich_results, enrich_name)
-  }
-
 
   # TODO: does not have to relate to an SE which has all the slots and all
   # ...
@@ -178,9 +166,6 @@ DeeDeeExperiment <- function(se = NULL,
   # TODO
 
   dde_ids <- rownames(se_out)
-
-
-
 
 
 
@@ -295,17 +280,79 @@ DeeDeeExperiment <- function(se = NULL,
     }
   }
 
+  ## handle fea results
+
+  #### TODO: the list should be named
+
+  fea_contrasts <- list()
+  if (!is.null(enrich_results)) {
+    # first check content
+    enrich_name <- deparse(substitute(enrich_results)) # capture variable name as a char
+    enrich_results <- .check_enrich_results(enrich_results, enrich_name)
+
+    # get de_name? try and link fea to dea by name
+    for (fe in names(enrich_results)) {
+      res_enrich <- enrich_results[[fe]]
+
+      if (!is.null(de_results) && length(de_results) > 0) {
+        matched_name <- .match_fe_to_de(fe, names(de_results))
+        if (!is.na(matched_name) && matched_name %in% names(de_results)) {
+          de_res_name <- matched_name
+          if (fe != matched_name) {
+            message("FEA '", fe, "' matched to DE contrast '", matched_name, "'")
+          }
+          } else {
+            de_res_name <- NA_character_
+            warning(
+              "Could not match FEA '", fe, "' to a DE contrast.\n", "Available DE results: ",
+              paste(names(de_results), collapse = ", "), "\n",
+              "Keep in mind that your enrich_results names should start with one of the following prefixes:",
+              " 'GO_', 'ClusterPro_', 'KEGG_', 'Reactome_'"
+            )
+          }
+    } else {
+      de_res_name <- NA_character_
+      warning("Could not match FEA '",
+              fe,
+              "' to a DE contrast because no DE results were provided.\n")
+    }
+
+      fe_name <- fe # here goes the fea name
+
+      if ("GO.ID" %in% colnames(res_enrich)) {
+        fe_type <- "TopGo"
+      } else {
+        fe_type <- "NULL" # placeholder for now
+      }
+
+      fea_contrast <- list(
+        de_name = de_res_name, # links to de result
+        fe_name = fe_name,
+        original_object = res_enrich,
+        GeneTonicList = NULL , # we'll put back a GT ready obj
+        fe_type = fe_type
+      )
+
+      fea_contrasts[[fe]] <- fea_contrast
+  }
+
+
+    }
+
+
+
   # rowData(dde)[["new_rd"]] <- de_name
 
   object <- new("DeeDeeExperiment",
                 se_out,
                 dea = dea_contrasts,
-                fea = list()) # for now fea is empty anywy until i figure out dea completely
+                fea = fea_contrasts)
 
   # stash the package version
   metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
 
   return(object)
+
 
 }
 
