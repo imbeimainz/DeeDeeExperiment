@@ -24,14 +24,21 @@ setGeneric("get_dea_list", function(x, ...) standardGeneric("get_dea_list"))
 
 
 #' @export
-setGeneric("fea", function(x, ...) standardGeneric("fea"))
+setGeneric("fea_info", function(x, ...) standardGeneric("fea_info"))
 
 #' @export
-setGeneric("fea<-", function(x, value) standardGeneric("fea<-"))
+setGeneric("fea_info<-", function(x, value) standardGeneric("fea_info<-"))
 
 #' @export
-setGeneric("add_fea", function(x, dea, ...) standardGeneric("add_fea"))
+setGeneric("fea_names", function(x, value) standardGeneric("fea_names"))
+
+#' @export
+setGeneric("add_fea", function(x, fea, ...) standardGeneric("add_fea"))
 
 #' @export
 setGeneric("remove_fea", function(x, fea_name, ...) standardGeneric("remove_fea"))
+
+#' @export
+setGeneric("fea", function(x, fea_name, ...) standardGeneric("fea"))
+
 
