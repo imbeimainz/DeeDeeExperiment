@@ -655,55 +655,103 @@ DeeDeeExperiment <- function(se = NULL,
 }
 
 
-############### checking if enrich results are valid
-
+#' Checking the validity of the imported Enrichment results
+#'
+#' @param x de_results list
+#' @param entry_name fea results name
+#'
+#' @returns a list of valid results elements
+#' @noRd
+#'
+#' @examples
+#' # will turn back a valid fea list
 .check_enrich_results <- function(x, entry_name = NULL) {
-  # checks that:
-  # it is a specific obj class or a df or a list of those
-  # if one single element, i.e not a list, convert if into a list of length 1
-  if (is(x, "enrichResult") || is(x, "topGOdata")) {
-    if (is.null(entry_name)) {
-      stop("You must provide a name for your enrichment results!")
-    }
+  # check that:
+  # you provided a name for your results
+  if (is.null(entry_name)) {
+    stop("You must provide a name for your enrichment results!")
+  }
 
+  # if results are not either a list or df throw an error
+  # TODO later specific object types (like clusterpro results..)
+  if (!is.list(x)) {
+    # df are also lists :v
+    stop("Enrichment results must be a list or a data frame!")
+  }
+
+  # check if results are either a df, or a list of dfs
+  # if results is one df convert it into a named list
+  if (is(x, "data.frame")) {
     x <- list(x)
     names(x) <- entry_name
-  } else if (is(x, "data.frame")) {
-    # check the columns
-    enrich_cols <- c(
-      "GO.ID",
-      "Term",
-      "Annotated",
-      "Significant",
-      "Expected",
-      "Rank in p.value_classic",
-      "p.value_elim",
-      "p.value_classic",
-      "genes"
-    ) # do we have other possible names??? or simply select only
-    # specific columns like GO.ID, term sometimes called description...
+  }
 
-    missing_cols <- enrich_cols[!enrich_cols %in% colnames(x)]
+  # if a list
+  ok_types <- unlist(lapply(x, function(arg) {
+    is(arg, "data.frame")
+  }))
+
+  if (!all(ok_types)) {
+    stop("All elements in the list must be of type data.frame!")
+  }
+
+  # check the columns for each df
+  # for now i ll pretend we only work with res topGO
+  required_enrich_cols <- c(
+    "GO.ID",
+    "Term",
+    "Annotated",
+    "Significant",
+    "Expected",
+    "Rank in p.value_classic",
+    "p.value_elim",
+    "p.value_classic",
+    "genes"
+  ) # do we have other possible names??? or simply select only
+  # specific columns like GO.ID, term sometimes called description...
+
+  for (i in seq_along(x)) {
+    df <- x[[i]]
+    missing_cols <- required_enrich_cols[!required_enrich_cols %in% colnames(df)]
 
     if (length(missing_cols) > 0) {
       stop("The following columns are missing: ",
            paste(missing_cols, collapse = ", "))
     }
-  } else {
-    # if a list
-    ok_types <- unlist(lapply(x, function(arg) {
-      is(arg, "enrichResult") ||
-        is(arg, "topGOdata") || is(arg, "data.frame")
-    }))
 
-    if (!all(ok_types)) {
-      stop("All elements in the list must be of type enrichResult, topGOdata, or data.frame!")
-    }
   }
+
   return(x)
 }
 
 
+
+
+#' Find matching fea and dea results within a DeeDeeExperiment object
+#'
+#' @param fea_name name of fea to insert
+#' @param dea_names names of available deas in DeeDeeExperiment
+#' @param pattern acceptable prefixes for fea names, it is supposed to force the
+#' user to call their result a specific way so that they can match their dea and
+#' fea results
+#'
+#' @returns either the cleaned named, which is the corresponding dea name, or NA
+#' if no match found
+#' @noRd
+#'
+#' @examples
+#' dea_names <- c("ctrl_vs_treat", "LPS", "IFNg")
+#' .match_fe_to_de("GO_ctrl_vs_treat", dea_names)
+.match_fe_to_de <- function(fea_name, dea_names,
+                             pattern = "^(GO_|ClusterPro_|KEGG_|Reactome_)") {
+  # what else can we put in the pattern??
+  cleaned_name <- sub(pattern, "", fea_name, ignore.case = TRUE)
+  if (cleaned_name %in% dea_names) {
+    return(cleaned_name)
+  } else {
+    return(NA_character_) # Achtung this needs to be character
+  }
+}
 
 deedee_import <- function(x) {
   # legacy code:
