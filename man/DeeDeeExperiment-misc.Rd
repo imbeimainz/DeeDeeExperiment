@@ -3,12 +3,17 @@
 \name{DeeDeeExperiment-misc}
 \alias{DeeDeeExperiment-misc}
 \alias{show,DeeDeeExperiment-method}
+\alias{summary,DeeDeeExperiment-method}
 \title{Miscellaneous DeeDeeExperiment methods}
 \usage{
 \S4method{show}{DeeDeeExperiment}(object)
+
+\S4method{summary}{DeeDeeExperiment}(object, ...)
 }
 \arguments{
 \item{object}{a \code{\link{DeeDeeExperiment}} object}
+
+\item{...}{additional arguments passed to the summary method.}
 }
 \value{
 Returns NULL

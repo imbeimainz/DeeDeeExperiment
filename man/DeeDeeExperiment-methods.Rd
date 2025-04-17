@@ -9,10 +9,12 @@
 \alias{remove_dea}
 \alias{dea}
 \alias{get_dea_list}
-\alias{fea}
-\alias{fea<-}
+\alias{fea_info}
+\alias{fea_info<-}
+\alias{fea_names}
 \alias{add_fea}
 \alias{remove_fea}
+\alias{fea}
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
@@ -20,10 +22,12 @@
 \alias{remove_dea,DeeDeeExperiment,character-method}
 \alias{dea,DeeDeeExperiment,character-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
-\alias{fea,DeeDeeExperiment-method}
-\alias{fea<-,DeeDeeExperiment-method}
+\alias{fea_info,DeeDeeExperiment-method}
+\alias{fea_info<-,DeeDeeExperiment-method}
+\alias{fea_names,DeeDeeExperiment-method}
 \alias{add_fea,DeeDeeExperiment-method}
 \alias{remove_fea,DeeDeeExperiment,character-method}
+\alias{fea,DeeDeeExperiment,character-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -40,13 +44,17 @@
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, verbose = TRUE)
 
-\S4method{fea}{DeeDeeExperiment}(x)
+\S4method{fea_info}{DeeDeeExperiment}(x)
 
-\S4method{fea}{DeeDeeExperiment}(x) <- value
+\S4method{fea_info}{DeeDeeExperiment}(x) <- value
 
-\S4method{add_fea}{DeeDeeExperiment}(x, fea)
+\S4method{fea_names}{DeeDeeExperiment}(x)
+
+\S4method{add_fea}{DeeDeeExperiment}(x, fea_res, de_name = NA_character_, fe_name = NULL)
 
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
+
+\S4method{fea}{DeeDeeExperiment,character}(x, fea_name, verbose = TRUE)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
@@ -62,10 +70,19 @@ get or remove}
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
 
-\item{fea}{A named list of Functional Enrichment results}
+\item{fea_res}{A data frame or a named list of data frames containing fea results.
+Each element should represent a table of enrichment terms (e.g., GO terms).}
+
+\item{de_name}{A character string to explicitly specify the name of the de result this fea should be linked to.
+If not provided, the function will attempt to match fea names to de results automatically.}
+
+\item{fe_name}{A character string giving a name to the FE results.
+It can only support \code{FDR} to adjust the threshold used for summarizing DE results.}
 
 \item{fea_name}{Character value, specifying the name of the functional enrichment
 result to add or remove}
+
+\item{fea}{A named list of Functional Enrichment results}
 }
 \value{
 Return value varies depending on the individual methods, as described
@@ -89,6 +106,7 @@ this as a \code{DataFrame} object (for a specific analysis) or as a list, with o
 element for each reported analysis.
 \item \code{fea} and \verb{fea<-} are the methods to get and set the \code{fea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
+\item \code{fea_names} returns the names of the available enrichment results in \code{DeeDeeExperiment} objects.
 \item \code{add_fea} and \code{remove_fea} are used to respectively add or remove functional
 enrichment results items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{fea} slot.
