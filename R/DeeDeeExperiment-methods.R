@@ -638,8 +638,10 @@ setMethod("show",
 
             callNextMethod()
             cat(
-              "Including ", length(object@dea), " DE analyses:\n",
-              paste(names(object@dea), collapse = ", "),
-              sep=""
+              "dea(",length(object@dea), "): ",
+              paste(names(object@dea), collapse = ", "), " \n",
+              "fea(",length(object@fea), "): ",
+              paste(names(object@fea), collapse = ", "),
+              sep = ""
             )
           })
