@@ -12,6 +12,7 @@
 #' get_dea_list
 #' fea_info
 #' fea_info<-
+#' fea_names
 #' add_fea
 #' remove_fea
 #'
@@ -472,6 +473,14 @@ setReplaceMethod("fea_info",
 
 
 # fea info - add, remove, get --------------------------------------------------
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("fea_names",
+          signature = "DeeDeeExperiment",
+          definition = function(x){
+            names(fea_info(x))
+          }
+)
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
