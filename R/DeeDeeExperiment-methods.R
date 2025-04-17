@@ -32,6 +32,12 @@
 #' @param fea A named list of Functional Enrichment results
 #' @param fea_name Character value, specifying the name of the functional enrichment
 #' result to add or remove
+#' @param fea_res A data frame or a named list of data frames containing fea results.
+#' Each element should represent a table of enrichment terms (e.g., GO terms).
+#' @param de_name A character string to explicitly specify the name of the de result this fea should be linked to.
+#' If not provided, the function will attempt to match fea names to de results automatically.
+#' @param fe_name A character string giving a name to the FE results.
+#' It can only support `FDR` to adjust the threshold used for summarizing DE results.
 #'
 #' @return Return value varies depending on the individual methods, as described
 #' below.
@@ -48,6 +54,7 @@
 #' element for each reported analysis.
 #' * `fea` and `fea<-` are the methods to get and set the `fea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
+#' * `fea_names` returns the names of the available enrichment results in `DeeDeeExperiment` objects.
 #' * `add_fea` and `remove_fea` are used to respectively add or remove functional
 #' enrichment results items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `fea` slot.
@@ -645,3 +652,77 @@ setMethod("show",
               sep = ""
             )
           })
+
+
+#' @rdname DeeDeeExperiment-misc
+#' @param ... additional arguments passed to the summary method.
+#' @export
+setMethod("summary",
+          signature = signature(object = "DeeDeeExperiment"),
+          definition = function(object,
+                                ...) {
+
+            args <- list(...)
+            FDR <- if (!is.null(args$FDR)) args$FDR else 0.05
+
+            # dea summary
+            dea <- dea_info(object)
+
+            if (length(dea) > 0) {
+              cat("DE Results Summary:\n")
+              de_table <- data.frame(
+                Contrast = names(dea),
+
+                Up = sapply(names(dea), function(contrast) {
+                  lfc_col <- paste0(contrast, "_log2FoldChange")
+                  padj_col <- paste0(contrast, "_padj")
+                  if (all(c(lfc_col, padj_col) %in% colnames(rowData(object)))) {
+                    lfc <- rowData(object)[[lfc_col]]
+                    padj <- rowData(object)[[padj_col]]
+                    sum(lfc > 0 & padj < FDR, na.rm = TRUE)
+                  } else {
+                    NA_integer_
+                  }
+                }),
+
+                Down = sapply(names(dea), function(contrast) {
+                  lfc_col <- paste0(contrast, "_log2FoldChange")
+                  padj_col <- paste0(contrast, "_padj")
+                  if (all(c(lfc_col, padj_col) %in% colnames(rowData(object)))) {
+                    lfc <- rowData(object)[[lfc_col]]
+                    padj <- rowData(object)[[padj_col]]
+                    sum(lfc < 0 & padj < FDR, na.rm = TRUE)
+                  } else {
+                    NA_integer_
+                  }
+                }),
+
+                FDR_Cutoff = rep(FDR, length(dea))
+              )
+              print(de_table, row.names = FALSE)
+              cat("\n")
+            } else {
+              cat("No DEA results stored.\n\n")
+            }
+
+            # fea summary
+
+            fea <- fea_info(object)
+            if (length(fea) > 0) {
+              cat("FE Results Summary:\n")
+              fea_table <- data.frame(
+                FEA_Name = names(fea),
+                Linked_DE = sapply(fea, function(object) ifelse(is.na(object$de_name),
+                                                           ".", object$de_name)),
+                Type = sapply(fea, function(object) object$fe_type),
+                Terms = sapply(fea, function(object) nrow(object$original_object))
+              )
+              print(fea_table, row.names = FALSE)
+
+            } else {
+              cat("No FEA results stored.\n")
+            }
+
+          })
+
+
