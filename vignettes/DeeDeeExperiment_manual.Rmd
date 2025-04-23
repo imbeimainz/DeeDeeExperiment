@@ -33,7 +33,6 @@ editor_options:
 bibliography: DeeDeeExperiment_bibliography.bib
 ---
 
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -45,35 +44,68 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 # Introduction {#introduction}
 
 ## Why do we need a new class?
 
-In Transcriptomic Analyses, managing Differential Expression Analysis (DEA) and Functional Enrichment Analysis (FEA) results across multiple contrasts can quickly become overwhelming. This issue is further amplified in single-cell RNA-seq, where Pseudobulk Analyses generate numerous tables for each cell type.
+Differential expression analysis (DEA) and functional enrichment analysis (FEA) are core steps in transcriptomic workflows, helping researchers detect and interpret biological differences between conditions. However, as the number of conditions (defined by complex experimental designs) and analysis tools increases, managing the outputs of these analyses across multiple contrasts becomes increasingly overwhelming. This challenge is further amplified in single-cell RNA-seq, where pseudo-bulk analyses generate numerous results tables across cell types and contrasts, making it challenging to organize, explore, and reproduce findings, even for experienced users.
 
-The `r BiocStyle::Biocpkg("DeeDeeExperiment")` class streamlines this process by providing a structured framework that integrates DEA and FEA results within an organized, `SummarizedExperiment`-like object. By centralizing these results in a single object, `DeeDeeExperiment` facilitates streamlined data management and downstream analysis.
+To address these issues, we introduce the `r BiocStyle::Biocpkg("DeeDeeExperiment")` class, an S4 object that extends the widely adopted `SummarizedExperiment` class in Bioconductor.
+
+`DeeDeeExperiment` provides a structured and consistent framework for integrating DEA and FEA results alongside core expression data and metadata. By centralizing these results in a single container, `DeeDeeExperiment` enables users to retrieve, explore, and manage their analysis results more efficiently across multiple contrasts.
+
+This vignette introduces the class structure, demonstrates how to create and work with `DeeDeeExperiment` objects, and walks through a typical RNA-seq workflow using the class.
 
 ## Anatomy of DeeDeeExperiment
 
-TODO, maybe it s interesting to have a schematic representation (like the one for SummarizedExperiment)
+[TODO, insert a schematic representation (like the one for SummarizedExperiment)]
 
+The `DeeDeeExperiment` class inherits from the core Bioconductor `SummarizedExperiment` object. This means it inherits all the slots, methods, and compatibility with tools built for `SummarizedExperiment`, while introducing additional components to streamline downstream analysis.
 
-In order to create a `DeeDeeExperiment` object, at least one of the following inputs are required:
+Specifically, `DeeDeeExperiment` has two new slots:
+
+- `dea` : a list that stores results from differential expression analysis (DEA), along with relevant metadata. This includes:
+
+  - The used FDR and LFC thresholds.
+  
+  - Meta info related to both the LFC and p value.
+  
+  - The package used to generate the DE results (e.g. `DESeq2`, `edgeR`, `limma`).
+  
+  - A copy of the original result object.
+  
+The main columns to use in DEA (`log2FoldChange`, `pvalue`, and `padj`) are also stored in the `rowData` of the `DeeDeeExperiment` object.
+
+- `fea` : a list that stores results from functional enrichment analysis (FEA), along with relevant metadata. This includes:
+  
+  - The name of the associated DEA contrast.
+  
+  - The FEA name.
+  
+  - A `GeneTonicList` (ready to be used in `r BiocStyle::Biocpkg("GeneTonic")`).
+  
+  - The enrichment tool used to generate the results (e.g. `topGO`, `ClusterProfiler...`).
+  
+  - A copy of the original result object.
 
 ## Creating a `DeeDeeExperiment` object
 
-TODO to be updated
-* `se`: A `SummarizedExperiment` object, that will be used as a scaffold to store the DE related information.
-* `de_results`: A named list of DE results, in any of the formats supported by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
-* `enrich_results`: A named list of functional enrichment results.
+In order to create a `DeeDeeExperiment` object, at least one of the following inputs are required:
 
-In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDeeExperiment")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018]
-[doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
+- `se`: A `SummarizedExperiment` object, that will be used as a scaffold to store the DE related information.
 
-The data is made available via the `r BiocStyle::Biocpkg("macrophage")` Bioconductor package, which contains the files output from the Salmon quantification (version 0.12.0, with Gencode v29 reference), as well as the values summarized at the gene level, which we will use to exemplify.
+- `de_results`: A named list of DE results, in any of the formats supported by the package (currently results from `DESeq2`, `edgeR`, or `limma`).
 
-In the `macrophage` experimental setting, the samples are available from 6 different donors, in 4 different conditions (naive, treated with Interferon gamma, with SL1344, or with a combination of Interferon gamma and SL1344).
+- `enrich_results`: A named list of FE results, as `data.frame` generated by one of the following packages (currently `topGO`, `ClusterProfiler` ... TODO to be updated)
+
+```{r create_dde, eval=FALSE}
+# do not run
+dde <- DeeDeeExperiment(se =se, # se is a SE object
+                        # de_results is a named list of de results
+                        de_results = de_results,
+                        # enrich_res is a named list of enrichment results
+                        enrich_results = enrich_res)
+```
 
 # Getting started {#gettingstarted}
 
@@ -92,24 +124,85 @@ Once installed, the package can be loaded and attached to your current workspace
 library("DeeDeeExperiment")
 ```
 
-If you have all four input elements ready, 
+# Methods and accessors for `DeeDeeExperiment`
 
-......
+TODO here explain a bit what are the methods we have for dde and how to use them?
 
+## Managing results
 
-# The `DeeDeeExperiment` class
+### Retrieve available results names
 
-yadda yadda
+```{r, eval=FALSE}
+dea_names(dde)
+fea_names(dde)
+```
 
-......
+### Retrieve available results
+
+```{r, eval=FALSE}
+dea(dde,de_name)
+fea(dde,fe_name)
+```
+
+### Add results to `DeeDeeExperiment` object
+
+```{r, eval=FALSE}
+add_dea(dde,new_dea)
+add_fea(dde,new_fea)
+```
+
+### Remove results to `DeeDeeExperiment` object
+
+```{r, eval=FALSE}
+remove_dea(dde, c("de_result"))
+remove_fea(dde, c("fe_result"))
+```
+
+## Results metainfo
+
+### Retrieve dea and fea slot content
+
+You maybe no supposed to use this one unless you want to check some metainfo
+
+```{r, eval=FALSE}
+dea_info(dde)
+fea_info(dde)
+```
+
+## Miscellaneous methods
+
+### Show results
+
+```{r, eval=FALSE}
+dde
+```
+
+### Results summary
+
+```{r, eval=FALSE}
+summary(dde)
+```
 
 # A typical analysis workflow with `DeeDeeExperiment` {#typicalworkflow}
 
+TODO: this is the core of documentation, here we'll show how you are supposed to use dde
+
+In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDeeExperiment")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018]
+[doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
+
+The data is made available via the `r BiocStyle::Biocpkg("macrophage")` Bioconductor package, which contains the files output from the Salmon quantification (version 0.12.0, with Gencode v29 reference), as well as the values summarized at the gene level, which we will use to exemplify.
+
+In the `macrophage` experimental setting, the samples are available from 6 different donors, in 4 different conditions (naive, treated with Interferon gamma, with SL1344, or with a combination of Interferon gamma and SL1344).
+
+
+TODO: load data, perform example Enrich analysis
+refer to deseq vignettes or whatever so the user  always knows that it is not our job here to explain to them how to do de/fe analysis but we expect that they already have the results and we'll focus on 
+creating the dde, access,add,remove results...
+
+
 # Additional Information {#additionalinfo}
 
-Bug reports can be posted on the Bioconductor support site (https://support.bioconductor.org/) or raised as issues in the `DeeDeeExperiment` GitHub repository
-......
-(https://github.com/imbeimainz/DeeDeeExperiment/issues). 
+Bug reports can be posted on the Bioconductor support site (https://support.bioconductor.org/) or raised as issues in the `DeeDeeExperiment` GitHub repository (https://github.com/imbeimainz/DeeDeeExperiment/issues). 
 
 The GitHub repository also contains the development version of the package, where new functionality is added over time - careful, you might be running bleeding edge versions!
 
@@ -121,4 +214,8 @@ If you use `DeeDeeExperiment` for your analysis, please cite it as shown below:
 citation("DeeDeeExperiment")
 ```
 
+# Session info {.unnumbered}
 
+```{r}
+sessionInfo()
+```
