@@ -164,3 +164,33 @@ save(dge_exact_Salm_naive, file = "data/DGEExact_Salm_naive.RData", compress = "
 save(dge_exact_IFNg_both, file = "data/DGEExact_IFNg_both.RData", compress = "xz")
 save(dge_exact_Salm_both, file = "data/DGEExact_Salm_both.RData", compress = "xz")
 
+# FE with topGO ----------------------------------------------------------------
+library("org.Hs.eg.db")
+library("topGO")
+FDR = 0.05
+
+de_named_list <- list(
+  ifng_vs_naive = IFNg_naive,
+  ifngsalmo_vs_naive = IFNg_both,
+  salmonella_vs_naive = Salm_naive,
+  salmo_both = Salm_both
+)
+
+topGO_results <- list()
+
+for (name in names(de_named_list)) {
+  de <- de_named_list[[name]]
+
+  topGO_results[[name]] <-
+    mosdef::run_topGO(de_container = dds_macrophage,
+                      res_de = de,
+                      FDR_threshold = FDR,
+                      ontology = "BP",
+                      add_gene_to_terms = TRUE,
+                      mapping = "org.Hs.eg.db")
+}
+
+#save
+save(topGO_results, file = "data/topGO_results_list.RData", compress = "xz")
+
+
