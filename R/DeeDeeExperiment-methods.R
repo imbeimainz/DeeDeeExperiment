@@ -603,11 +603,13 @@ setMethod("remove_fea",
             if(!is(x,"DeeDeeExperiment")) {
               stop("x must be a DeeDeeExperiment object!")
             }
-            # fea must be char vector
-            if(!is(fea_name,"character")) {
-              stop("'fea_name' must be a character vector!") # is it necessary??? since we define that in signature
-            }
+
             feas <- fea_names(x)
+
+              if (!all(fea_name %in% feas)) {
+                stop("Some elements in 'fea_name' were not found among FEA results.\n",
+                     "Available results: ", paste(feas,collapse = ","))
+              }
 
             feas_to_remove <- intersect(fea_name, feas)
 
@@ -617,7 +619,7 @@ setMethod("remove_fea",
             }
 
             for (i in feas_to_remove) {
-              # update the de slot
+              # update the fea slot
               fea_info(x)[[i]] <- NULL
             }
 
