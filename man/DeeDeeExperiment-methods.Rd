@@ -54,7 +54,7 @@
 
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
 
-\S4method{fea}{DeeDeeExperiment,character}(x, fea_name, verbose = TRUE)
+\S4method{fea}{DeeDeeExperiment,character}(x, fea_name)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}

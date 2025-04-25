@@ -15,6 +15,7 @@
 #' fea_names
 #' add_fea
 #' remove_fea
+#' fea
 #'
 #' @description
 #' The [DeeDeeExperiment()] class provides a family of methods to get
@@ -615,9 +616,49 @@ setMethod("remove_fea",
 )
 
 
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("fea",
+          signature = c("DeeDeeExperiment",
+                        "character"),
+          definition = function(x,
+                                fea_name) {
 
+            # get returns shaked table by default for a specific contrast
+            # for now the only case where we won't have shaked results if the user
+            # introduces fea that is not generate with {topGO,clusterPro, or reactomePA}
+            #we can handle the other types later
 
+            # or should we give the user the freedom to choose which table to fetch??? using another arg
 
+            # check
+            # x must be a DeeDeeExperiment
+            if (!is(x, "DeeDeeExperiment")) {
+              stop("x must be DeeDeeExperiment object!")
+            }
+
+            if (!is.character(fea_name) || length(fea_name) != 1) {
+              stop("'fea_name' must be a single character string!")
+            }
+
+            fea_names <- fea_names(x)
+
+            if (!(fea_name %in% fea_names)) {
+              stop("Could not find '",fea_name,"' among FEA results.\n",
+                   "Available results: ", paste(fea_names,collapse = ","))
+            }
+
+              fea_res <- fea_info(x)[[fea_name]]$shaked_results
+
+              if (is.null(fea_res)) {
+                warning("No shaked results available for '", fea_name,
+                        "'. Returning original enrichment results instead.")
+                fea_res <- fea_info(x)[[fea_name]]$original_object
+              }
+
+              return(fea_res)
+          }
+)
 
 
 # misc - show & more ------------------------------------------------------
