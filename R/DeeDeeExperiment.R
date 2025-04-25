@@ -282,8 +282,6 @@ DeeDeeExperiment <- function(se = NULL,
 
   ## handle fea results
 
-  #### TODO: the list should be named
-
   fea_contrasts <- list()
   if (!is.null(enrich_results)) {
     # first check content
@@ -295,51 +293,84 @@ DeeDeeExperiment <- function(se = NULL,
       res_enrich <- enrich_results[[fe]]
 
       if (!is.null(de_results) && length(de_results) > 0) {
+        # hoping here that the user names their results in a meaningful way
         matched_name <- .match_fe_to_de(fe, names(de_results))
-        if (!is.na(matched_name) && matched_name %in% names(de_results)) {
+        if (!is.na(matched_name) &&
+            matched_name %in% names(de_results)) {
           de_res_name <- matched_name
           if (fe != matched_name) {
-            message("FEA '", fe, "' matched to DE contrast '", matched_name, "'")
+            message("FEA '",
+                    fe,
+                    "' matched to DE contrast '",
+                    matched_name,
+                    "'")
           }
-          } else {
-            de_res_name <- NA_character_
-            warning(
-              "Could not match FEA '", fe, "' to a DE contrast.\n", "Available DE results: ",
-              paste(names(de_results), collapse = ", "), "\n",
-              "Keep in mind that your enrich_results names should start with one of the following prefixes:",
-              " 'GO_', 'ClusterPro_', 'KEGG_', 'Reactome_'"
-            )
-          }
-    } else {
-      de_res_name <- NA_character_
-      warning("Could not match FEA '",
-              fe,
-              "' to a DE contrast because no DE results were provided.\n")
-    }
+        } else {
+          de_res_name <- NA_character_
+          warning(
+            "Could not match FEA '",
+            fe,
+            "' to a DE contrast.\n",
+            "Available DE results: ",
+            paste(names(de_results), collapse = ", "),
+            "\n",
+            "Consider naming your enrich_results starting with one of the following prefixes:",
+            " 'topGO_', 'ClusterPro_', 'ReactomePA_'"
+          )
+        }
+      } else {
+        de_res_name <- NA_character_
+        warning("Could not match FEA '",
+                fe,
+                "' to a DE contrast because no DE results were provided.\n")
+      }
 
       fe_name <- fe # here goes the fea name
 
-      if ("GO.ID" %in% colnames(res_enrich)) {
-        fe_type <- "TopGo"
-      } else {
-        fe_type <- "NULL" # placeholder for now
+      # detect fea type (aka the packge used to generate the results)
+      fe_tool <- .detect_fea_tool(res_enrich)
+
+
+      res_enrich_shaked <- NULL # default
+
+        if (fe_tool == "topGO") {
+          # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
+          res_enrich_shaked <- GeneTonic::shake_topGOtableResult(res_enrich)
+
+        } else if (fe_tool == "clusterProfiler/ReactomePA") {
+
+          if(is(res_enrich,"enrichResult")) {
+            res_enrich_shaked <- GeneTonic::shake_enrichResult(res_enrich)
+          }
+        }
+
+      else {
+        message("No shaking method available for this functional enrichment results.")
       }
+      #### maybe this is not the most optimal implementation?
+      # fea_contrast <- list(
+      #   de_name = de_res_name, # links to de result
+      #   fe_name = fe_name,
+      #   original_object = res_enrich,
+      #   GeneTonicList = gtl ,
+      #   # we'll put back a GT ready obj
+      #   fe_tool = fe_tool
+      # )
+
 
       fea_contrast <- list(
-        de_name = de_res_name, # links to de result
+        de_name = de_res_name,# links to de result
         fe_name = fe_name,
+        shaked_results = res_enrich_shaked , # return shaked results for later use in genetonic
         original_object = res_enrich,
-        GeneTonicList = NULL , # we'll put back a GT ready obj
-        fe_type = fe_type
+        fe_tool = fe_tool
       )
 
+
       fea_contrasts[[fe]] <- fea_contrast
-  }
-
-
     }
 
-
+  }
 
   # rowData(dde)[["new_rd"]] <- de_name
 
@@ -657,7 +688,7 @@ DeeDeeExperiment <- function(se = NULL,
 
 #' Checking the validity of the imported Enrichment results
 #'
-#' @param x de_results list
+#' @param x fe_results list
 #' @param entry_name fea results name
 #'
 #' @returns a list of valid results elements
@@ -668,57 +699,88 @@ DeeDeeExperiment <- function(se = NULL,
 .check_enrich_results <- function(x, entry_name = NULL) {
   # check that:
   # you provided a name for your results
+
   if (is.null(entry_name)) {
     stop("You must provide a name for your enrichment results!")
   }
 
-  # if results are not either a list or df throw an error
-  # TODO later specific object types (like clusterpro results..)
-  if (!is.list(x)) {
+  # if results are not either a list or df or enrichResult obj throw an error
+  if ( !(is(x, "data.frame") || is(x,"enrichResult") || is.list(x))) {
     # df are also lists :v
-    stop("Enrichment results must be a list or a data frame!")
+    stop("Enrichment results must be a data frame,",
+         " an enrichResult object, or a list of these element!")
   }
 
   # check if results are either a df, or a list of dfs
-  # if results is one df convert it into a named list
-  if (is(x, "data.frame")) {
+
+  # if results is one df or enrichResult obj put it into a named list
+  if (is(x, "data.frame") || is(x,"enrichResult")) {
     x <- list(x)
     names(x) <- entry_name
   }
 
-  # if a list
-  ok_types <- unlist(lapply(x, function(arg) {
-    is(arg, "data.frame")
-  }))
 
-  if (!all(ok_types)) {
-    stop("All elements in the list must be of type data.frame!")
-  }
+    x <- lapply(x, function(arg) {
+      if (is(arg, "enrichResult") || is(arg, "data.frame")) {
+        arg
+      } else {
+        stop("Elements in the list must be a data.frame or enrichResult!")
+      }
+    })
+
+  # if a list
+    # check name
+    if (is.null(names(x)) || any(names(x) == "")) {
+      stop("All elements in the provided enrich_results list must be named!")
+    }
+
 
   # check the columns for each df
-  # for now i ll pretend we only work with res topGO
   required_enrich_cols <- c(
-    "GO.ID",
-    "Term",
-    "Annotated",
-    "Significant",
-    "Expected",
-    "Rank in p.value_classic",
-    "p.value_elim",
-    "p.value_classic",
-    "genes"
-  ) # do we have other possible names??? or simply select only
-  # specific columns like GO.ID, term sometimes called description...
+      "GO.ID",
+      "Term",
+      "Annotated",
+      "Significant",
+      "Expected",
+      "Rank in p.value_classic",
+      "p.value_elim",
+      "p.value_classic",
+      "genes",
+      "ID",
+      "Description",
+      "GeneRatio",
+      "BgRatio",
+      "RichFactor",
+      "FoldEnrichment",
+      "zScore",
+      "pvalue",
+      "p.adjust",
+      "qvalue",
+      "geneID",
+      "Count") # do we have other possible names??? or simply select only
+  # specific columns like GO.ID, term, description...
+  # should we state all of them or only some????
 
   for (i in seq_along(x)) {
     df <- x[[i]]
-    missing_cols <- required_enrich_cols[!required_enrich_cols %in% colnames(df)]
 
-    if (length(missing_cols) > 0) {
-      stop("The following columns are missing: ",
-           paste(missing_cols, collapse = ", "))
+    if (is(x, "enrichResult")) {
+      cols <-  colnames(as.data.frame(x))
     }
+     else {
+       cols <- colnames(x)
+     }
 
+    any_match <- any(required_enrich_cols %in% colnames(df))
+
+
+    # is it safe like this ??? should we add more check to make sure we get a
+    # safe input structure???
+
+    if (!any_match) {
+      stop("None of the known enrichment result columns match the input. ",
+           "Check that you're providing a valid topGO or clusterProfiler/ReactomePA result.")
+    }
   }
 
   return(x)
@@ -743,7 +805,7 @@ DeeDeeExperiment <- function(se = NULL,
 #' dea_names <- c("ctrl_vs_treat", "LPS", "IFNg")
 #' .match_fe_to_de("GO_ctrl_vs_treat", dea_names)
 .match_fe_to_de <- function(fea_name, dea_names,
-                             pattern = "^(GO_|ClusterPro_|KEGG_|Reactome_)") {
+                             pattern = "^(topGO_|ClusterPro_|ReactomePA_)") {
   # what else can we put in the pattern??
   cleaned_name <- sub(pattern, "", fea_name, ignore.case = TRUE)
   if (cleaned_name %in% dea_names) {
@@ -753,31 +815,21 @@ DeeDeeExperiment <- function(se = NULL,
   }
 }
 
-deedee_import <- function(x) {
-  # legacy code:
-
-  # # ----------------------------- argument check ------------------------------
-  # choices <- c("DESeq2", "edgeR", "limma")
-  # checkmate::assertChoice(input_type, choices)
-  #
-  # if (input_type == "DESeq2") {
-  #   checkmate::assertClass(data, "DESeqResults")
-  #   logFC <- data$log2FoldChange
-  #   pval <- data$padj
-  #   input <- data.frame(logFC, pval)
-  #   rownames(input) <- data@rownames
-  # } else if (input_type == "edgeR") {
-  #   checkmate::assertClass(data, "DGEExact")
-  #   logFC <- data[["table"]][["logFC"]]
-  #   pval <- data[["table"]][["PValue"]]
-  #   input <- data.frame(logFC, pval)
-  #   rownames(input) <- data[["genes"]][["genes"]]
-  # } else if (input_type == "limma") {
-  #   checkmate::assertDataFrame(data, types = "numeric")
-  #   logFC <- data$logFC
-  #   pval <- data$adj.P.Val
-  #   input <- data.frame(logFC, pval)
-  #   rownames(input) <- rownames(data)
-  # }
-  # return(input)
+#' detect the fe input type (e.g. topGO, clusterPro...)
+#'
+#' @param fe_res FE result table
+#' @noRd
+.detect_fea_tool <- function(fe_res) {
+  if ("GO.ID" %in% colnames(fe_res)) {
+    return("topGO")
+  }
+  else if ("ID" %in% colnames(fe_res) && "geneID" %in% colnames(fe_res)) {
+    return("clusterProfiler/ReactomePA")
+  } else {
+    return("Not Specified")  # or maybe we can allow the user to enter it if they
+    # want better documentation of their analysis ??
+  }
 }
+
+
+
