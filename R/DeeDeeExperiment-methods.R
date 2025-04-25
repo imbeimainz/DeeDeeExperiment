@@ -508,7 +508,6 @@ setMethod("add_fea",
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(fea_res, env = parent.frame()))
 
-            # TODO
             # check and preocess fea
             fea_list <- .check_enrich_results(fea_res, entry_name)
 
@@ -543,8 +542,8 @@ setMethod("add_fea",
                     "Available DE results: ",
                     paste(names(dea_info(x)), collapse = ", "),
                     "\n",
-                    "Keep in mind that your enrich_results names should start with one of the following prefixes:",
-                    " 'GO_', 'ClusterPro_', 'KEGG_', 'Reactome_'"
+                    "Consider naming your enrich_results starting with one of the following prefixes:",
+                    " 'topGO_', 'ClusterPro_', 'ReactomePA_'"
                   )
                 }
               } else {
@@ -554,19 +553,34 @@ setMethod("add_fea",
                         "' to a DE contrast because no DE results were provided.\n")
               }
 
-              if ("GO.ID" %in% colnames(res_enrich)) {
-                fe_type <- "TopGo"
-              } else {
-                fe_type <- "NULL" # placeholder for now
+              fe_tool <- .detect_fea_tool(res_enrich)
+
+              res_enrich_shaked <- NULL # default
+
+              if (fe_tool == "topGO") {
+                # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
+                res_enrich_shaked <- GeneTonic::shake_topGOtableResult(res_enrich)
+
+              } else if (fe_tool == "clusterProfiler/ReactomePA") {
+
+                if(is(res_enrich,"enrichResult")) {
+                  res_enrich_shaked <- GeneTonic::shake_enrichResult(res_enrich)
+                }
+              }
+
+              else {
+                message("No shaking method available for this functional enrichment results.")
               }
 
               fea_contrast <- list(
-                de_name = de_res_name, # links to de result
-                fe_name = fe,
+                de_name = de_res_name,# links to de result
+                fe_name = fe_name,
+                shaked_results = res_enrich_shaked , # return shaked results for later use in genetonic
                 original_object = res_enrich,
-                GeneTonicList = NULL , # we'll put back a GT ready obj
-                fe_type = fe_type
+                fe_tool = fe_tool
               )
+
+
               fea_contrasts[[fe]] <- fea_contrast
             }
             # update the fea slot
