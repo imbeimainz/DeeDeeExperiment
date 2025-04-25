@@ -1,3 +1,12 @@
+# DeeDeeExperiment 0.3.0
+
+## New features
+
+* Methods to retrieve and manage the `fea` slot content are established
+
+* A summary method is included to provide a quick overview of stored DEA and
+FEA results
+
 # DeeDeeExperiment 0.2.0
 
 ## New features
@@ -14,4 +23,4 @@
 ## New features
 
 * The `DeeDeeExperiment` class is now being developed in its own standalone
-package, following its separation from the original `DeeDee_legacy` repository
+package, following its separation from the original `DeeDee_legacy` repository: https://github.com/imbeimainz/DeeDee_legacy

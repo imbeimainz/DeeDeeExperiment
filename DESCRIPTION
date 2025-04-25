@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
-Title: DeeDeeExperiment: An S4 Class for Managing Transcriptomic Analysis results
-Version: 0.2.0
+Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
+Version: 0.3.0
 Authors@R: 
     c(
         person(
