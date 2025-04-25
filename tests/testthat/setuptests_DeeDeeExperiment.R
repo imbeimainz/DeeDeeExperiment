@@ -16,3 +16,5 @@ names(de_named_list)
 
 data("de_limma", package = "DeeDeeExperiment")
 
+data("topGO_results", package = "DeeDeeExperiment")
+

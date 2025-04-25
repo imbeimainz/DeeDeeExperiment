@@ -85,7 +85,7 @@ test_that("creating", {
 
   dea1 <- de_limma
   de_res_list <- list(de_deseq = salmo_both,
-                      dge_lrt =dea1)
+                      dge_lrt = dea1)
 
   dde_list <- DeeDeeExperiment(de_results = de_res_list)
 
@@ -117,6 +117,28 @@ test_that("adding and removing", {
   dde_removed <- remove_dea(dde, "ifngsalmo_vs_naive")
   expect_s4_class(dde_removed, "DeeDeeExperiment")
   expect_equal(length(dea_info(dde_removed)), 3)
+
+  topGO_Salm_naive <- topGO_results$salmonella_vs_naive
+  topGO_IFNg_naive <- topGO_results$ifng_vs_naive
+
+
+  dde2 <- add_fea(dde, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+                            topGO_IFNg_naive = topGO_IFNg_naive))
+
+  expect_s4_class(dde2, "DeeDeeExperiment")
+  expect_equal(length(fea_info(dde2)), 2)
+
+  dde2 <- remove_fea(dde2, "topGO_IFNg_naive")
+  expect_s4_class(dde2, "DeeDeeExperiment")
+  expect_equal(length(fea_info(dde2)), 1)
+
+
+  expect_error(remove_fea(dde2,"IFNgVSnaive"))
+
+  expect_s3_class(fea(dde2, "topGO_Salm_naive"), "data.frame")
+
+
+
 })
 
 
