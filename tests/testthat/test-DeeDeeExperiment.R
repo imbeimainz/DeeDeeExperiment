@@ -1,4 +1,6 @@
 test_that("creating", {
+  expect_error(DeeDeeExperiment())
+
   dde <- DeeDeeExperiment(
     se_macrophage_noassays,
     de_results = de_named_list
@@ -40,6 +42,7 @@ test_that("creating", {
     dea(dde_gone_wrong, "ifng_vs_naive")
   )
 
+
   expect_error(
     DeeDeeExperiment(
       rowData(se_macrophage_noassays),
@@ -52,10 +55,6 @@ test_that("creating", {
       assay(se_macrophage),
       de_results = de_named_list
     )
-  )
-
-  expect_error(
-    DeeDeeExperiment()
   )
 
   salmo_both <- de_named_list$salmo_both
@@ -78,10 +77,18 @@ test_that("creating", {
   )
   rownames(de_results_mismatch$contrast) <- paste0("gene", 101:(100 + nrow(de_results_mismatch$contrast)))
 
-  expect_warning(DeeDeeExperiment(
+  expect_warning(
+    DeeDeeExperiment(
     se_macrophage_noassays,
     de_results = de_results_mismatch
   ))
+
+  broken_de_res <- salmo_both
+  rownames(broken_de_res) <- NULL
+
+  expect_error(DeeDeeExperiment(de_results = list(salmo_both = salmo_both,
+                                                  broken_salmo_both = broken_de_res)))
+
 
   dea1 <- de_limma
   de_res_list <- list(de_deseq = salmo_both,
