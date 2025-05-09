@@ -255,3 +255,17 @@ NULL
 #' @name dge_exact_Salm_both
 #' @docType data
 NULL
+
+
+#' `topGO_results`
+#'
+#' A list of FE results generated with mosdef::topGOtable()
+#'
+#' @details A list of FE results for the macrophage data
+#'
+#' @return A list
+#'
+#'
+#' @name topGO_results
+#' @docType data
+NULL
