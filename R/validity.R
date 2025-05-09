@@ -1,8 +1,9 @@
 validDeeDeeExperiment <- function(object) {
   msg <- NULL
 
+  ## check dea validity
   if (!is(dea_info(object), "list")) {
-    msg <- c(msg, "'dea' must be a list")
+    msg <- c(msg, "`dea` must be a list")
   }
 
   # if (length(dea_info(object)) == 0) {
@@ -11,10 +12,11 @@ validDeeDeeExperiment <- function(object) {
 
   if (length(dea_info(object)) > 0) {
     if (any(is.null(names(dea_info(object))))) {
-      msg <- c(msg, "'dea' must be a named list")
+      msg <- c(msg, "`dea` must be a named list")
     }
 
     dea_names <- names(dea_info(object))
+
 
     required_rowdata <- unlist(
       lapply(
@@ -26,15 +28,48 @@ validDeeDeeExperiment <- function(object) {
           )
       )
     )
+    # this will catch almost every wrong thing
     if (!all(required_rowdata %in% colnames(rowData(object)))) {
-      msg <- c(msg, "some required columns were not found in the rowData")
+      msg <- c(msg, "Some required columns were not found in the rowData")
     }
   }
+
+  ## check fea validity
+  if (!is(fea_info(object), "list")) {
+    msg <- c(msg, "`fea` must be a list")
+  }
+
+  if (length(fea_info(object)) > 0) {
+    if (any(is.null(names(fea_info(object))))) {
+      msg <- c(msg, "`fea` must be a named list")
+    }
+
+  }
+
+  if (length(fea_info(object)) > 0) {
+
+    for (entry in fea_info(object)) {
+
+      if (!is(entry$original_object,"data.frame") &&
+          !is(entry$original_object,"enrichResult")&&
+          !is(entry$original_object,"gseaResult")) {
+            msg <- c(msg, "FEA results should be either a data.frame,
+                enrichResult, or a gseaResult object")
+            next
+          }
+
+      if (!(entry$fe_tool %in% c("topGO", "clusterPro", "GeneTonic", "DAVID",
+                                 "fgsea", "gsea", "enrichr", "gProfiler",
+                                 "Not Specified"))) {
+        msg <- c(msg, "Some FEA entries have invalid or unrecognized `fe_tool` values")
+      }
+    }
+  }
+
 
   if (is.null(msg)) {
     TRUE
   } else msg
-
 
 }
 
