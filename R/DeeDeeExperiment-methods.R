@@ -506,7 +506,8 @@ setMethod("add_fea",
                                 fea_res,
                                 de_name= NA_character_,
                                 fe_name= NULL,
-                                fea_type = c("auto", "topGO", "clusterPro", "GeneTonic"),
+                                fea_type = c("auto", "topGO", "clusterPro", "GeneTonic",
+                                             "DAVID", "gsea", "fgsea", "enrichr", "gProfiler"),
                                 force = FALSE) {
 
             # x must be a DeeDeeExperiment
