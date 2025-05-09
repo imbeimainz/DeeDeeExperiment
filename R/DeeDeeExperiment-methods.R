@@ -39,6 +39,10 @@
 #' If not provided, the function will attempt to match fea names to de results automatically.
 #' @param fe_name A character string giving a name to the FE results.
 #' It can only support `FDR` to adjust the threshold used for summarizing DE results.
+#' @param fea_type A character string indicating the FEA tool used. It take take the following
+#' values: "auto", "topGO", "clusterPro", "custom", and it defaults to "auto"
+#' @param force A logical, indicating whether to overwrite results when introducing the same
+#' results name. It defaults to FALSE.
 #'
 #' @return Return value varies depending on the individual methods, as described
 #' below.
@@ -128,6 +132,9 @@ setMethod("dea_names",
             names(dea_info(x))
           }
           )
+
+### TODO: add a setter for dea_names, in case one wants to rename the de res in
+### dde?
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -498,12 +505,20 @@ setMethod("add_fea",
           definition = function(x,
                                 fea_res,
                                 de_name= NA_character_,
-                                fe_name= NULL) {
+                                fe_name= NULL,
+                                fea_type = c("auto", "topGO", "clusterPro", "GeneTonic"),
+                                force = FALSE) {
 
             # x must be a DeeDeeExperiment
             if (!is(x, "DeeDeeExperiment")) {
               stop("x must be DeeDeeExperiment object!")
             }
+
+            ## add checks for fea_res!!
+
+            # match and check fea_type, if the user doesn't use the argument
+            # the default is auto
+            fea_type <- match.arg(fea_type)
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(fea_res, env = parent.frame()))
@@ -515,10 +530,21 @@ setMethod("add_fea",
             if (is.null(names(fea_list))) {
               stop("All elements in 'fea_res' list must have names!")
             }
+
             # check that names are all unique, and do not overlap with the existing ones
-            if (anyDuplicated(c(names(fea_list), names(fea_info(x))))) {
-              stop("Names in fea must be unique!")
+            # unless force is TRUE
+
+            new_names <- names(fea_list)
+            existing_names <- names(fea_info(x))
+
+            overlapping_names <- intersect(new_names, existing_names)
+
+            if (length(overlapping_names) > 0 && !force) {
+              stop("Names in 'fea_res' overlap with existing FEA results: ",
+                   paste(overlapping_names, collapse = ", "),
+                   ". Set force = TRUE to overwrite.")
             }
+
             # get existing results in the fea slot
             fea_contrasts <- fea_info(x)
 
@@ -530,20 +556,26 @@ setMethod("add_fea",
                 if (!is.na(matched_name) &&
                     matched_name %in% names(dea_info(x))) {
                   de_res_name <- matched_name
-                  if (fe != matched_name) {
+                  if (fe != matched_name) { ### if the name is exactly the same do we need a msg or it s obvious???
                     message("FEA '", fe, "' matched to DE contrast '", matched_name, "'")
+                  } else{
+                    message("FEA '",
+                            fe,
+                            "' matched **directly** to DE contrast '", # in case of the same name
+                            matched_name, "'")
                   }
                 } else {
                   de_res_name <- NA_character_
                   warning(
                     "Could not match FEA '",
                     fe,
-                    "' to a DE contrast.\n",
+                    "' to any DE contrast.\n",
                     "Available DE results: ",
                     paste(names(dea_info(x)), collapse = ", "),
                     "\n",
                     "Consider naming your enrich_results starting with one of the following prefixes:",
-                    " 'topGO_', 'ClusterPro_', 'ReactomePA_'"
+                    " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+                    "followed by the contrast name"
                   )
                 }
               } else {
@@ -553,29 +585,63 @@ setMethod("add_fea",
                         "' to a DE contrast because no DE results were provided.\n")
               }
 
-              fe_tool <- .detect_fea_tool(res_enrich)
+              if (fea_type == "auto") {
+                # auto detect
+                fe_tool <- .detect_fea_tool(res_enrich)
+              } else {
+                fe_tool <- fea_type
+              }
 
-              res_enrich_shaked <- NULL # default
+              res_enrich_shaken <- NULL # default
 
               if (fe_tool == "topGO") {
-                # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
-                res_enrich_shaked <- GeneTonic::shake_topGOtableResult(res_enrich)
-
-              } else if (fe_tool == "clusterProfiler/ReactomePA") {
-
-                if(is(res_enrich,"enrichResult")) {
-                  res_enrich_shaked <- GeneTonic::shake_enrichResult(res_enrich)
-                }
+                # shake using shake_topGOtableResult
+                res_enrich_shaken <- GeneTonic::shake_topGOtableResult(res_enrich)
               }
 
-              else {
-                message("No shaking method available for this functional enrichment results.")
+              else if (fe_tool == "clusterPro") {
+                #shake using shake_enrichResult
+                res_enrich_shaken <- GeneTonic::shake_enrichResult(res_enrich)
               }
+
+              else if (fe_tool == "GeneTonic") {
+                # shake based on specific columns or return original object
+                res_enrich_shaken <- res_enrich # input already shaken
+              }
+
+              else if (fe_tool == "DAVID") {
+                # we are not taking the output of the file!!  so we cannot
+                # use genetonic shakers!!
+                # create shakers for that
+                res_enrich_shaken <- .DeeDeefy_david(res_enrich)
+              }
+
+              else if (fe_tool == "fgsea") {
+                res_enrich_shaken <- GeneTonic::shake_fgseaResult(res_enrich)
+              }
+
+              else if (fe_tool == "gsea") {
+                  res_enrich_shaken <- GeneTonic::shake_gsenrichResult(res_enrich)
+              }
+
+              else if (fe_tool == "enrichr") {
+                res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
+              }
+
+              else if (fe_tool == "gProfiler") {
+                res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
+              }
+
+              if (is.null(res_enrich_shaken)) {
+                message("No shaking method available for this functional enrichment results.",
+                        " Returning only the original object.")
+              }
+
 
               fea_contrast <- list(
                 de_name = de_res_name,# links to de result
                 fe_name = fe_name,
-                shaked_results = res_enrich_shaked , # return shaked results for later use in genetonic
+                shaken_results = res_enrich_shaken , # return shaken results for later use in GeneTonic
                 original_object = res_enrich,
                 fe_tool = fe_tool
               )
@@ -640,9 +706,9 @@ setMethod("fea",
           definition = function(x,
                                 fea_name) {
 
-            # get returns shaked table by default for a specific contrast
-            # for now the only case where we won't have shaked results if the user
-            # introduces fea that is not generate with {topGO,clusterPro, or reactomePA}
+            # get returns shaken table by default for a specific contrast
+            # for now the only case where we won't have shaken results if the user
+            # introduces fea that is not generate with {topGO,clusterPro,...}
             #we can handle the other types later
 
             # or should we give the user the freedom to choose which table to fetch??? using another arg
@@ -664,10 +730,10 @@ setMethod("fea",
                    "Available results: ", paste(fea_names,collapse = ","))
             }
 
-              fea_res <- fea_info(x)[[fea_name]]$shaked_results
+              fea_res <- fea_info(x)[[fea_name]]$shaken_results
 
               if (is.null(fea_res)) {
-                warning("No shaked results available for '", fea_name,
+                warning("No shaken results available for '", fea_name,
                         "'. Returning original enrichment results instead.")
                 fea_res <- fea_info(x)[[fea_name]]$original_object
               }
@@ -754,7 +820,7 @@ setMethod("summary",
                   }
                 }),
 
-                FDR_Cutoff = rep(FDR, length(dea))
+                FDR = rep(FDR, length(dea))
               )
               print(de_table, row.names = FALSE)
               cat("\n")
@@ -764,15 +830,28 @@ setMethod("summary",
 
             # fea summary
 
+            ##########
+            #### needs more work, prove to errors
+            ########
+
             fea <- fea_info(object)
             if (length(fea) > 0) {
               cat("FE Results Summary:\n")
               fea_table <- data.frame(
                 FEA_Name = names(fea),
-                Linked_DE = sapply(fea, function(object) ifelse(is.na(object$de_name),
-                                                           ".", object$de_name)),
-                Type = sapply(fea, function(object) object$fe_type),
-                Terms = sapply(fea, function(object) nrow(object$original_object))
+                Linked_DE = sapply(fea, function(object) {
+                  if (!is.null(object$de_name) && !is.na(object$de_name)) object$de_name else "."
+                }),
+                FE_Type = sapply(fea, function(object) {
+                  if (!is.null(object$fe_tool)) object$fe_tool else "Not Specified"
+                }),
+                Term_Number = sapply(fea, function(object) {
+                  if (!is.null(object$original_object) && is.data.frame(object$original_object)) {
+                    nrow(object$original_object)
+                  } else {
+                    NA_integer_
+                  }
+                })
               )
               print(fea_table, row.names = FALSE)
 
