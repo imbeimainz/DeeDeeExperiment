@@ -15,7 +15,9 @@
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported by
 #' the package (currently: results from DESeq2, edgeR, limma).
-#' @param enrich_results A named list of functional enrichment results
+#' @param enrich_results A named list of functional enrichment results, in any of the
+#' formats supported by the package (currently: results from topGO, clusterprofiler,
+#' gsea, fgsea algorithms, or a data.frame generated with one of `GeneTonic` shakers)
 #'
 #' @details
 #' The `se` parameter can be optionally left unspecified. If this is the case,
@@ -30,7 +32,12 @@
 #' DE analyses included, which will determine the way to access the information
 #' stored in the `dea` slot of the `DeeDeeExperiment` object.
 #'
-#' ### TODO: add description for fea
+#' The content of the `enrich_results` provided by the user will be validated to
+#' ensure that it is properly formatted and correctly named. The FE tool can be automatically
+#' detected, and based on that, the appropriate shaking method is used to return a standardized
+#' format of the FEA results.
+#' The names of the list will be used to attempt to associate each enrichment result
+#' with a corresponding DE contrast stored in the `DeeDeeExperiment` object.
 #'
 #' Since a `DeeDeeExperiment` is also a `SummarizedExperiment` object, it can be
 #' seamlessly provided downstream for visualization and in-depth exploration to
@@ -41,7 +48,7 @@
 #' @return A `DeeDeeExperiment` object.
 #' @export
 #'
-#' @author Lea Rothörl and Federico Marini
+#' @author Najla Abassi, Lea Rothörl, and Federico Marini
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDeeExperiment")
@@ -87,7 +94,7 @@ DeeDeeExperiment <- function(se = NULL,
   if (!is.null(se)) {
     if (!is(se, "RangedSummarizedExperiment")) {
       # check if it is SE and convert it into a RangedSE
-      if (is(se, "SummarizedExperiment")) {
+      if (is(se, "SummarizedExperiment")) { ### think again, should we use rather the SCE class?
         se <- as(se, "RangedSummarizedExperiment")
       } else {
         stop("'se' must be a RangedSummarizedExperiment object")
@@ -253,31 +260,32 @@ DeeDeeExperiment <- function(se = NULL,
       }
 
 
-    } else if (is(this_de, "data.frame")) {
-      input_custom <- .importDE_custom(se_out, this_de, i)
-      se_out <- input_custom$se
-      dea_contrasts[[i]] <- input_custom$dea_contrast
-
-      # check for rowname mismatches
-      rownames_x <- rownames(rowData(se_out))
-      rownames_y <- rownames(this_de)
-      mismatched_rows <- sum(!rownames_x %in% rownames_y)
-
-      affected_deas <- character()
-      if (mismatched_rows > 0) {
-        affected_deas <- c(affected_deas, i)
-      }
-
-      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
-
-      if (mismatch_percent > 50) {
-        warning(
-          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
-          i,
-          ". Consider synchronizing your rownames in both se and de_results elements."
-        )
-      }
     }
+    # else if (is(this_de, "data.frame")) {
+    #   input_custom <- .importDE_custom(se_out, this_de, i)
+    #   se_out <- input_custom$se
+    #   dea_contrasts[[i]] <- input_custom$dea_contrast
+    #
+    #   # check for rowname mismatches
+    #   rownames_x <- rownames(rowData(se_out))
+    #   rownames_y <- rownames(this_de)
+    #   mismatched_rows <- sum(!rownames_x %in% rownames_y)
+    #
+    #   affected_deas <- character()
+    #   if (mismatched_rows > 0) {
+    #     affected_deas <- c(affected_deas, i)
+    #   }
+    #
+    #   mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+    #
+    #   if (mismatch_percent > 50) {
+    #     warning(
+    #       "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+    #       i,
+    #       ". Consider synchronizing your rownames in both se and de_results elements."
+    #     )
+    #   }
+    # }
   }
 
   ## handle fea results
@@ -301,21 +309,27 @@ DeeDeeExperiment <- function(se = NULL,
           if (fe != matched_name) {
             message("FEA '",
                     fe,
-                    "' matched to DE contrast '",
+                    "' matched to DE contrast '", # in case of formatted name
                     matched_name,
                     "'")
+          } else{
+            message("FEA '",
+                    fe,
+                    "' matched **directly** to DE contrast '", # in case of the same name
+                    matched_name, "'")
           }
         } else {
           de_res_name <- NA_character_
           warning(
             "Could not match FEA '",
             fe,
-            "' to a DE contrast.\n",
+            "' to any DE contrast.\n",
             "Available DE results: ",
             paste(names(de_results), collapse = ", "),
             "\n",
             "Consider naming your enrich_results starting with one of the following prefixes:",
-            " 'topGO_', 'ClusterPro_', 'ReactomePA_'"
+            " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+            "followed by the contrast name"
           )
         }
       } else {
@@ -331,37 +345,63 @@ DeeDeeExperiment <- function(se = NULL,
       fe_tool <- .detect_fea_tool(res_enrich)
 
 
-      res_enrich_shaked <- NULL # default
+      # based on the fe_tool , we'll handle the shaking separately, so we always return res_enrich_shaken
+      # unless that's an unknown tool used?
+      # we can take any already shaken version
 
-        if (fe_tool == "topGO") {
-          # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
-          res_enrich_shaked <- GeneTonic::shake_topGOtableResult(res_enrich)
+      res_enrich_shaken <- NULL # default
 
-        } else if (fe_tool == "clusterProfiler/ReactomePA") {
+      if (fe_tool == "topGO") {
+        # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
+        res_enrich_shaken <- GeneTonic::shake_topGOtableResult(res_enrich)
 
-          if(is(res_enrich,"enrichResult")) {
-            res_enrich_shaked <- GeneTonic::shake_enrichResult(res_enrich)
-          }
+      } else if (fe_tool == "clusterPro") {
+        if (is(res_enrich, "enrichResult")) {
+          res_enrich_shaken <- GeneTonic::shake_enrichResult(res_enrich)
         }
 
-      else {
-        message("No shaking method available for this functional enrichment results.")
+      } else if (fe_tool == "GeneTonic") {
+        res_enrich_shaken <- res_enrich
+
       }
-      #### maybe this is not the most optimal implementation?
-      # fea_contrast <- list(
-      #   de_name = de_res_name, # links to de result
-      #   fe_name = fe_name,
-      #   original_object = res_enrich,
-      #   GeneTonicList = gtl ,
-      #   # we'll put back a GT ready obj
-      #   fe_tool = fe_tool
-      # )
+      else if (fe_tool == "DAVID") {
+        # we are not taking the output of the file!!  so we cannot
+        # use genetonic shakers!!
+        # create shakers for that
+        res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_david(res_enrich)
+      }
+
+      else if (fe_tool == "fgsea") {
+        res_enrich_shaken <- GeneTonic::shake_fgseaResult(res_enrich)
+      }
+
+      else if (fe_tool == "gsea") {
+        if (is(res_enrich, "gseaResult")) {
+          res_enrich_shaken <- GeneTonic::shake_gsenrichResult(res_enrich)
+        }
+      }
+
+      else if (fe_tool == "enrichr") {
+          res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_enrichr(res_enrich)
+      }
+
+      else if (fe_tool == "gProfiler") {
+        res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_gprofiler(res_enrich)
+      }
+
+
+      if (is.null(res_enrich_shaken)) {
+        message(
+          "No shaking method available for this functional enrichment results.",
+          " Returning only the original object."
+        )
+      }
 
 
       fea_contrast <- list(
         de_name = de_res_name,# links to de result
         fe_name = fe_name,
-        shaked_results = res_enrich_shaked , # return shaked results for later use in genetonic
+        shaken_results = res_enrich_shaken , # return shaken results for later use in genetonic
         original_object = res_enrich,
         fe_tool = fe_tool
       )
@@ -371,8 +411,6 @@ DeeDeeExperiment <- function(se = NULL,
     }
 
   }
-
-  # rowData(dde)[["new_rd"]] <- de_name
 
   object <- new("DeeDeeExperiment",
                 se_out,
@@ -386,450 +424,3 @@ DeeDeeExperiment <- function(se = NULL,
 
 
 }
-
-
-
-
-
-# extends the rowData slot of the provided SE and returns also metadata
-
-#' Import from `DESeq2` DE results
-#'
-#' @param se A `SummarizedExperiment` object
-#' @param res_de A set of DE results, provided as `DESeqResults` as in the `DESeq2`
-#' framework
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the `rowData` slot.
-#'
-#' @return A list, containing the updated `SummarizedExperiment` object, and the
-#' standardized information on the DE analysis, as these are to be used in the
-#' `DeeDee` framework.
-#'
-#' @noRd
-#'
-#' @examples
-#' # TODO example
-.importDE_DESeq2 <- function(se, res_de, de_name) {
-  # checks TODO:
-  # correct object format
-  stopifnot(is(res_de, "DESeqResults"))
-  # contain the right columns
-  stopifnot(all(c("log2FoldChange", "pvalue", "padj") %in% colnames(res_de)))
-
-  # contain the feature ids
-
-  # p value different from NA respect the 0-1 interval
-  stopifnot(all(na.omit(res_de$pvalue <= 1)) &
-              all(na.omit(res_de$pvalue > 0)))
-
-  #matched_ids <- match(rownames(res_de), rownames(se))
-
-  matched_ids <- match(rownames(se), rownames(res_de)) # we align de res with se
-  # only valid indices
-  valid_matches <- !is.na(matched_ids)
-
-
-  # Pre-fill rowData with NA
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de$log2FoldChange[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_de$pvalue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_de$padj[matched_ids[valid_matches]]
-
-
-  dea_contrast <- list(
-    alpha = metadata(res_de)$alpha,
-    lfcThreshold = metadata(res_de)$lfcThreshold,
-    metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
-    metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
-    original_object = res_de,
-    # object_name = deparse(substitute(res_de)),
-    package = "DESeq2"
-  )
-
-  return(list(se = se, dea_contrast = dea_contrast))
-}
-
-
-#' Import from edgeR DE results
-#'
-#' @param se A SummarizedExperiment object
-#' @param res_de A set of DE results, provided by the `edgeR` framework (either a
-#' `DGEExact` or a `DGELRT` object).
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the rowData slot.
-#'
-#' @return A list, containing the updated SummarizedExperiment object, and the
-#' standardized information on the DE analysis, as these are to be used in the
-#' DeeDee framework.
-#'
-#' @noRd
-#'
-#' @examples
-#' # TODO example
-.importDE_edgeR <- function(se, res_de, de_name) {
-  # checks object
-  stopifnot(is(res_de, "DGEExact") || is(res_de, "DGELRT"))
-
-  # extract columns
-  res_tbl <- topTags(res_de, n = nrow(res_de), sort.by = "none")
-
-  # p value different from NA respect the 0-1 interval
-  stopifnot(all(na.omit(res_tbl$PValue <= 1)) &
-              all(na.omit(res_tbl$PValue > 0)))
-
-  # identify the logFC cols
-  logFC_cols <- grep("^logFC", colnames(res_tbl), value = TRUE)
-
-
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
-  # only valid indices
-  valid_matches <- !is.na(matched_ids)
-
-  # pre-fill rowData with NA the assign the corresponding values only for matched
-  # indices for logFC, accounting for the fact that the logFC column name in edgeR
-  # depends on whether we have 1 or multiple contrasts
-  for (i in logFC_cols) {
-    rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-    # assign correspionding values
-    rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_tbl$table[[i]][matched_ids[valid_matches]]
-  }
-
-  # pre-fill rowData with NA the assign the corresponding values for matched indices for pval and padj
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_tbl$table$PValue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_tbl$table$FDR[matched_ids[valid_matches]]
-
-  dea_contrast <- list(
-    alpha = NA,
-    lfcThreshold = NA,
-    metainfo_logFC = res_tbl$comparison,
-    metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
-    original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
-    package = "edgeR"
-  )
-
-  return(list(se = se, dea_contrast = dea_contrast))
-}
-
-
-
-#' Import from `limma` DE results
-#'
-#' @param se A `SummarizedExperiment` object
-#' @param res_de A set of DE results, provided in the `limma` framework (a `MArrayLM`
-#' object).
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the `rowData` slot.
-#'
-#' @return A list, containing the updated `SummarizedExperiment` object, and the
-#' standardized information on the DE analysis, as these are to be used in the
-#' `DeeDee` framework.
-#'
-#' @noRd
-#'
-#' @examples
-#' # TODO example
-#' # ... limma_de <- lmFit
-#' # will provide the outout of lmFit - see its examples
-.importDE_limma <- function(se, res_de, de_name) {
-  # checks object
-  stopifnot(is(res_de, "MArrayLM"))
-
-  # make sure there are at least 2 coefficients
-  if (ncol(res_de$coefficients) < 2) {
-    # we still need to manage the handling of 1 contrast
-    warning(
-      "The provided MArrayLM object has only ",
-      ncol(res_de$coefficients),
-      " coefficient(s). At least 2 are required."
-    )
-  }
-
-  # extract columns
-  res_tbl <- topTable(
-    res_de,
-    coef = 2,
-    # this is forced internally, maybe offer more flexibility??
-    number = nrow(res_de),
-    sort.by = "none"
-  )
-
-  # p value different from NA respect the 0-1 interval
-  stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
-              all(na.omit(res_tbl$P.Value > 0)))
-
-  #matched_ids <- match(rownames(res_tbl), rownames(se))
-
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
-  # only valid indices
-  valid_matches <- !is.na(matched_ids)
-
-
-  # Pre-fill rowData with NA
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_tbl$logFC[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_tbl$P.Value[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_tbl$adj.P.Val[matched_ids[valid_matches]]
-
-  dea_contrast <- list(
-    alpha = NA,
-    lfcThreshold = NA,
-    metainfo_logFC = NA,
-    metainfo_pvalue = NA,
-    original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
-    package = "limma"
-  )
-
-  return(list(se = se, dea_contrast = dea_contrast))
-
-
-  # returns info (in the standardized manner)
-
-}
-
-# custom format can be a dataframe, can it be a list???
-
-.importDE_custom <- function(se, res_de, de_name) {
-  # checks object
-  stopifnot(is(res_de, "data.frame"))
-
-  # expected columns, mainly from DESeq, edgeR and limma?
-  expected_columns <- list(
-    logFC = c("log2FoldChange", "logFC"),
-    pvalue = c("pvalue", "PValue", "P.Value"),
-    padj = c("padj", "FDR", "adj.P.Val")
-  )
-
-  # find the matching column names in res_de
-  matched_cols <- sapply(expected_columns, function(x) {
-    match <- intersect(x, colnames(res_de))
-    if (length(match) > 0) return(match[1])
-    stop("Dataframe does not contain required columns: ", paste(x, collapse = ", "))
-  })
-
-  valid_matches <- rownames(se) %in% rownames(res_de)
-
-  matched_ids <- match(rownames(se)[valid_matches], rownames(res_de))
-
-
-  # Pre-fill rowData with NA
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-
-  # assign only matched indices. keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de[[matched_cols["log2FoldChange"]]][matched_ids]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_de[[matched_cols["pvalue"]]][matched_ids]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_de[[matched_cols["padj"]]][matched_ids]
-
-
-  dea_contrast <- list(
-    alpha = NA,
-    lfcThreshold = NA,
-    metainfo_logFC = NA,
-    metainfo_pvalue = NA,
-    original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
-    package = "custom input"
-  )
-
-  return(list(se = se, dea_contrast = dea_contrast))
-
-}
-
-
-
-.check_de_results <- function(x, entry_name = NULL) {
-  ## checks the DE  input and processes it if it's 1 element
-  ## if one single element is given, i.e not a list, it converts it into a list
-  ## of length 1 and ensure it has a name
-  if (is(x, "DGEExact") ||
-      is(x, "DGELRT") || is(x, "MArrayLM") ||
-      is(x, "DESeqResults")) {
-    # convert into a named list
-    x <- list(x)
-    names(x) <- entry_name
-  }
-
-  ## if a list
-  ok_types <- unlist(lapply(x, function(arg) {
-    is(arg, "DESeqResults") || is(arg, "DGEExact") ||
-      is(arg, "DGELRT") || is(arg, "MArrayLM") || is(arg, "data.frame")
-  }))
-
-  if (!all(ok_types)) {
-    stop("All elements in the list must be of type DESeqResults, DGEExact, DGELRT, or MArrayLM. Alternatively, it can be a data.frame with at least a logFC, p-value and p-adjusted value columns.")
-  }
-  if (is.null(names(x)) || any(names(x) == "")) {
-    stop("All elements in the provided de_results list must be named!")
-  }
-  return(x)
-}
-
-
-#' Checking the validity of the imported Enrichment results
-#'
-#' @param x fe_results list
-#' @param entry_name fea results name
-#'
-#' @returns a list of valid results elements
-#' @noRd
-#'
-#' @examples
-#' # will turn back a valid fea list
-.check_enrich_results <- function(x, entry_name = NULL) {
-  # check that:
-  # you provided a name for your results
-
-  if (is.null(entry_name)) {
-    stop("You must provide a name for your enrichment results!")
-  }
-
-  # if results are not either a list or df or enrichResult obj throw an error
-  if ( !(is(x, "data.frame") || is(x,"enrichResult") || is.list(x))) {
-    # df are also lists :v
-    stop("Enrichment results must be a data frame,",
-         " an enrichResult object, or a list of these element!")
-  }
-
-  # check if results are either a df, or a list of dfs
-
-  # if results is one df or enrichResult obj put it into a named list
-  if (is(x, "data.frame") || is(x,"enrichResult")) {
-    x <- list(x)
-    names(x) <- entry_name
-  }
-
-
-    x <- lapply(x, function(arg) {
-      if (is(arg, "enrichResult") || is(arg, "data.frame")) {
-        arg
-      } else {
-        stop("Elements in the list must be a data.frame or enrichResult!")
-      }
-    })
-
-  # if a list
-    # check name
-    if (is.null(names(x)) || any(names(x) == "")) {
-      stop("All elements in the provided enrich_results list must be named!")
-    }
-
-
-  # check the columns for each df
-  required_enrich_cols <- c(
-      "GO.ID",
-      "Term",
-      "Annotated",
-      "Significant",
-      "Expected",
-      "Rank in p.value_classic",
-      "p.value_elim",
-      "p.value_classic",
-      "genes",
-      "ID",
-      "Description",
-      "GeneRatio",
-      "BgRatio",
-      "RichFactor",
-      "FoldEnrichment",
-      "zScore",
-      "pvalue",
-      "p.adjust",
-      "qvalue",
-      "geneID",
-      "Count") # do we have other possible names??? or simply select only
-  # specific columns like GO.ID, term, description...
-  # should we state all of them or only some????
-
-  for (i in seq_along(x)) {
-    df <- x[[i]]
-
-    if (is(x, "enrichResult")) {
-      cols <-  colnames(as.data.frame(x))
-    }
-     else {
-       cols <- colnames(x)
-     }
-
-    any_match <- any(required_enrich_cols %in% colnames(df))
-
-
-    # is it safe like this ??? should we add more check to make sure we get a
-    # safe input structure???
-
-    if (!any_match) {
-      stop("None of the known enrichment result columns match the input. ",
-           "Check that you're providing a valid topGO or clusterProfiler/ReactomePA result.")
-    }
-  }
-
-  return(x)
-}
-
-
-
-
-#' Find matching fea and dea results within a DeeDeeExperiment object
-#'
-#' @param fea_name name of fea to insert
-#' @param dea_names names of available deas in DeeDeeExperiment
-#' @param pattern acceptable prefixes for fea names, it is supposed to force the
-#' user to call their result a specific way so that they can match their dea and
-#' fea results
-#'
-#' @returns either the cleaned named, which is the corresponding dea name, or NA
-#' if no match found
-#' @noRd
-#'
-#' @examples
-#' dea_names <- c("ctrl_vs_treat", "LPS", "IFNg")
-#' .match_fe_to_de("GO_ctrl_vs_treat", dea_names)
-.match_fe_to_de <- function(fea_name, dea_names,
-                             pattern = "^(topGO_|ClusterPro_|ReactomePA_)") {
-  # what else can we put in the pattern??
-  cleaned_name <- sub(pattern, "", fea_name, ignore.case = TRUE)
-  if (cleaned_name %in% dea_names) {
-    return(cleaned_name)
-  } else {
-    return(NA_character_) # Achtung this needs to be character
-  }
-}
-
-#' detect the fe input type (e.g. topGO, clusterPro...)
-#'
-#' @param fe_res FE result table
-#' @noRd
-.detect_fea_tool <- function(fe_res) {
-  if ("GO.ID" %in% colnames(fe_res)) {
-    return("topGO")
-  }
-  else if ("ID" %in% colnames(fe_res) && "geneID" %in% colnames(fe_res)) {
-    return("clusterProfiler/ReactomePA")
-  } else {
-    return("Not Specified")  # or maybe we can allow the user to enter it if they
-    # want better documentation of their analysis ??
-  }
-}
-
-
-
