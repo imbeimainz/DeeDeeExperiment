@@ -50,7 +50,14 @@
 
 \S4method{fea_names}{DeeDeeExperiment}(x)
 
-\S4method{add_fea}{DeeDeeExperiment}(x, fea_res, de_name = NA_character_, fe_name = NULL)
+\S4method{add_fea}{DeeDeeExperiment}(
+  x,
+  fea_res,
+  de_name = NA_character_,
+  fe_name = NULL,
+  fea_type = c("auto", "topGO", "clusterPro", "GeneTonic"),
+  force = FALSE
+)
 
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
 
@@ -78,6 +85,12 @@ If not provided, the function will attempt to match fea names to de results auto
 
 \item{fe_name}{A character string giving a name to the FE results.
 It can only support \code{FDR} to adjust the threshold used for summarizing DE results.}
+
+\item{fea_type}{A character string indicating the FEA tool used. It take take the following
+values: "auto", "topGO", "clusterPro", "custom", and it defaults to "auto"}
+
+\item{force}{A logical, indicating whether to overwrite results when introducing the same
+results name. It defaults to FALSE.}
 
 \item{fea_name}{Character value, specifying the name of the functional enrichment
 result to add or remove}

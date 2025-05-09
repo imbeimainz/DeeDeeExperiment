@@ -15,7 +15,9 @@ store the DE related information.}
 \item{de_results}{A named list of DE results, in any of the formats supported by
 the package (currently: results from DESeq2, edgeR, limma).}
 
-\item{enrich_results}{A named list of functional enrichment results}
+\item{enrich_results}{A named list of functional enrichment results, in any of the
+formats supported by the package (currently: results from topGO, clusterprofiler,
+gsea, fgsea algorithms, or a data.frame generated with one of \code{GeneTonic} shakers)}
 }
 \value{
 A \code{DeeDeeExperiment} object.
@@ -37,12 +39,17 @@ be stored in the returned \code{DeeDeeExperiment} object.
 The names of the list will be used to define the \code{contrasts} for the different
 DE analyses included, which will determine the way to access the information
 stored in the \code{dea} slot of the \code{DeeDeeExperiment} object.
-\subsection{TODO: add description for fea}{
+
+The content of the \code{enrich_results} provided by the user will be validated to
+ensure that it is properly formatted and correctly named. The FE tool can be automatically
+detected, and based on that, the appropriate shaking method is used to return a standardized
+format of the FEA results.
+The names of the list will be used to attempt to associate each enrichment result
+with a corresponding DE contrast stored in the \code{DeeDeeExperiment} object.
 
 Since a \code{DeeDeeExperiment} is also a \code{SummarizedExperiment} object, it can be
 seamlessly provided downstream for visualization and in-depth exploration to
 packages such as \code{iSEE} or similar.
-}
 }
 \section{Slots}{
 
@@ -78,5 +85,5 @@ dde <- DeeDeeExperiment(
 )
 }
 \author{
-Lea Rothörl and Federico Marini
+Najla Abassi, Lea Rothörl, and Federico Marini
 }
