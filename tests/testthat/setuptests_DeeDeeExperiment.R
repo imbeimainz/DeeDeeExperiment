@@ -16,5 +16,7 @@ names(de_named_list)
 
 data("de_limma", package = "DeeDeeExperiment")
 
+data("DGEExact_IFNg_both", package = "DeeDeeExperiment")
+
 data("topGO_results_list", package = "DeeDeeExperiment")
 
