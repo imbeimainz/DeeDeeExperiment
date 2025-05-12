@@ -597,12 +597,12 @@ setMethod("add_fea",
 
               if (fe_tool == "topGO") {
                 # shake using shake_topGOtableResult
-                res_enrich_shaken <- GeneTonic::shake_topGOtableResult(res_enrich)
+                res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
               }
 
               else if (fe_tool == "clusterPro") {
                 #shake using shake_enrichResult
-                res_enrich_shaken <- GeneTonic::shake_enrichResult(res_enrich)
+                res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
               }
 
               else if (fe_tool == "GeneTonic") {
@@ -618,11 +618,11 @@ setMethod("add_fea",
               }
 
               else if (fe_tool == "fgsea") {
-                res_enrich_shaken <- GeneTonic::shake_fgseaResult(res_enrich)
+                res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
               }
 
               else if (fe_tool == "gsea") {
-                  res_enrich_shaken <- GeneTonic::shake_gsenrichResult(res_enrich)
+                  res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
               }
 
               else if (fe_tool == "enrichr") {
@@ -753,7 +753,7 @@ setMethod("fea",
 #' @description
 #' Miscellaneous methods for the \code{\link{DeeDeeExperiment}} class and its
 #' descendants that do not fit into any other documentation category such as,
-#' for example, show methods.
+#' for example, show and summary methods.
 #'
 #' @param object a \code{\link{DeeDeeExperiment}} object
 #'
@@ -779,7 +779,7 @@ setMethod("show",
 
 
 #' @rdname DeeDeeExperiment-misc
-#' @param ... additional arguments passed to the summary method.
+#' @param ... additional arguments passed to the summary method, namely the FDR
 #' @export
 setMethod("summary",
           signature = signature(object = "DeeDeeExperiment"),

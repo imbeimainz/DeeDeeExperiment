@@ -51,11 +51,10 @@ validDeeDeeExperiment <- function(object) {
     for (entry in fea_info(object)) {
 
       if (!is(entry$original_object,"data.frame") &&
-          !is(entry$original_object,"enrichResult")&&
+          !is(entry$original_object,"enrichResult") &&
           !is(entry$original_object,"gseaResult")) {
             msg <- c(msg, "FEA results should be either a data.frame,
                 enrichResult, or a gseaResult object")
-            next
           }
 
       if (!(entry$fe_tool %in% c("topGO", "clusterPro", "GeneTonic", "DAVID",

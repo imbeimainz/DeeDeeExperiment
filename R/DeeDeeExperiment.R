@@ -353,11 +353,11 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (fe_tool == "topGO") {
         # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
-        res_enrich_shaken <- GeneTonic::shake_topGOtableResult(res_enrich)
+        res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
 
       } else if (fe_tool == "clusterPro") {
         if (is(res_enrich, "enrichResult")) {
-          res_enrich_shaken <- GeneTonic::shake_enrichResult(res_enrich)
+          res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
         }
 
       } else if (fe_tool == "GeneTonic") {
@@ -368,25 +368,25 @@ DeeDeeExperiment <- function(se = NULL,
         # we are not taking the output of the file!!  so we cannot
         # use genetonic shakers!!
         # create shakers for that
-        res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_david(res_enrich)
+        res_enrich_shaken <- .DeeDeefy_david(res_enrich)
       }
 
       else if (fe_tool == "fgsea") {
-        res_enrich_shaken <- GeneTonic::shake_fgseaResult(res_enrich)
+        res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
       }
 
       else if (fe_tool == "gsea") {
         if (is(res_enrich, "gseaResult")) {
-          res_enrich_shaken <- GeneTonic::shake_gsenrichResult(res_enrich)
+          res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
         }
       }
 
       else if (fe_tool == "enrichr") {
-          res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_enrichr(res_enrich)
+          res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
       }
 
       else if (fe_tool == "gProfiler") {
-        res_enrich_shaken <- DeeDeeExperiment:::DeeDeefy_gprofiler(res_enrich)
+        res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
       }
 
 

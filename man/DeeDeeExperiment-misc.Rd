@@ -13,7 +13,7 @@
 \arguments{
 \item{object}{a \code{\link{DeeDeeExperiment}} object}
 
-\item{...}{additional arguments passed to the summary method.}
+\item{...}{additional arguments passed to the summary method, namely the FDR}
 }
 \value{
 Returns NULL
@@ -21,5 +21,5 @@ Returns NULL
 \description{
 Miscellaneous methods for the \code{\link{DeeDeeExperiment}} class and its
 descendants that do not fit into any other documentation category such as,
-for example, show methods.
+for example, show and summary methods.
 }
