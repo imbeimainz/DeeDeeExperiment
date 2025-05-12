@@ -14,6 +14,13 @@ rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
 
 keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
 dds_macrophage <- dds_macrophage[keep, ]
+
+# set seed for reproducibility
+set.seed(42)
+# sample randomly for 1k genes
+selected_genes <- sample(rownames(dds_macrophage), 1000)
+dds_macrophage <- dds_macrophage[selected_genes, ]
+
 dds_macrophage <- DESeq(dds_macrophage)
 
 IFNg_naive <- results(dds_macrophage,
@@ -21,7 +28,7 @@ IFNg_naive <- results(dds_macrophage,
                       lfcThreshold = 1, alpha = 0.05
 )
 
-save(IFNg_naive, file = "data/DE_results_IFNg_naive.RData", compress = "xz")
+save(IFNg_naive, file = "data/dea_IFNg_naive.RData", compress = "xz")
 
 
 IFNg_both <- results(dds_macrophage,
@@ -29,7 +36,7 @@ IFNg_both <- results(dds_macrophage,
                      lfcThreshold = 1, alpha = 0.05
 )
 
-save(IFNg_both, file = "data/DE_results_IFNg_both.RData", compress = "xz")
+save(IFNg_both, file = "data/dea_IFNg_both.RData", compress = "xz")
 
 
 Salm_naive <- results(dds_macrophage,
@@ -37,7 +44,7 @@ Salm_naive <- results(dds_macrophage,
                       lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_naive, file = "data/DE_results_Salm_naive.RData", compress = "xz")
+save(Salm_naive, file = "data/dea_Salm_naive.RData", compress = "xz")
 
 
 Salm_both <- results(dds_macrophage,
@@ -45,7 +52,16 @@ Salm_both <- results(dds_macrophage,
                      lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_both, file = "data/DE_results_Salm_both.RData", compress = "xz")
+save(Salm_both, file = "data/dea_Salm_both.RData", compress = "xz")
+
+de_named_list <- list(
+  ifng_vs_naive = IFNg_naive,
+  ifngsalmo_vs_naive = IFNg_both,
+  salmonella_vs_naive = Salm_naive,
+  salmo_both = Salm_both
+)
+
+save(de_named_list, file = "data/de_named_list.RData", compress = "xz")
 
 # DE with limma ----------------------------------------------------------------
 
@@ -67,8 +83,14 @@ dge <- DGEList(counts)
 dge <- calcNormFactors(dge)
 
 # filter by expression
-keep <- filterByExpr(dge, design)
+keep <- rowSums(cpm(dge) >= 10) >= 6
 dge <- dge[keep, , keep.lib.sizes=TRUE]
+
+# sample
+set.seed(42)
+selected_genes <- sample(rownames(dge), 1000)
+
+dge <- dge[selected_genes, , keep.lib.sizes=TRUE]
 
 # transform counts into logCPM
 v <- voom(dge, design)
@@ -112,8 +134,15 @@ dge <- DGEList(counts=counts, group=condition)
 dge <- calcNormFactors(dge)
 
 # filter by expression
-keep <- filterByExpr(dge, group=condition)
+keep <- rowSums(cpm(dge) >= 10) >= 6
 dge <- dge[keep, , keep.lib.sizes=TRUE]
+
+set.seed(42)
+selected_genes <- sample(rownames(dge), 1000)
+
+dge <- dge[selected_genes, , keep.lib.sizes=TRUE]
+
+
 
 # create design
 design <- model.matrix(~ line + condition)
@@ -123,46 +152,73 @@ dge <- estimateDisp(dge, design)
 
 # perform likelihood ratio test
 fit <- glmFit(dge, design)
-dge_lrt <- glmLRT(fit, coef=7:9) # DGELRT object
+
+# setup comparisons
+contrast_matrix <- makeContrasts(
+  IFNgNaive    = conditionIFNg,
+  IFNg_both    = conditionIFNg_SL1344 - conditionIFNg,
+  SalmNaive    = conditionSL1344,
+  Salm_both    = conditionIFNg_SL1344 - conditionSL1344,
+  levels = design
+)
+
+# DGELRT objects
+dge_lrt_IFNg_naive <- glmLRT(fit, contrast = contrast_matrix[, "IFNgNaive"])
+dge_lrt_IFNg_both  <- glmLRT(fit, contrast = contrast_matrix[, "IFNg_both"])
+dge_lrt_Salm_naive <- glmLRT(fit, contrast = contrast_matrix[, "SalmNaive"])
+dge_lrt_Salm_both  <- glmLRT(fit, contrast = contrast_matrix[, "Salm_both"])
 
 # perform exact test
 # exact test doesn't handle multi factor models, so we have to subset
 # IFNg vs naive
+
+
 keep_samples <- sample_info$condition %in% c("naive", "IFNg")
 dge_sub <- dge[, keep_samples]
 # droplevel
-dge_sub$samples$group <- factor(sample_info$condition[keep_samples])
+group <- droplevels(factor(sample_info[colnames(dge_sub), "condition"]))
+dge_sub$samples$group <- group
 # renormalizw
 dge_sub <- calcNormFactors(dge_sub)
+dge_sub <- estimateDisp(dge_sub,design = model.matrix(~group))
 dge_exact_IFNg_naive <- exactTest(dge_sub, pair=c("naive", "IFNg")) # DGEExact object
 
 # SL1344 vs naive
 keep_samples <- sample_info$condition %in% c("naive", "SL1344")
 dge_sub <- dge[, keep_samples]
-dge_sub$samples$group <- factor(sample_info$condition[keep_samples])
+group <- droplevels(factor(sample_info[colnames(dge_sub), "condition"]))
+dge_sub$samples$group <- group
 dge_sub <- calcNormFactors(dge_sub)
+dge_sub <- estimateDisp(dge_sub,design = model.matrix(~group))
 dge_exact_Salm_naive <- exactTest(dge_sub, pair=c("naive", "SL1344"))
 
 # IFNg_SL1344 vs IFNg
 keep_samples <- sample_info$condition %in% c("IFNg", "IFNg_SL1344")
 dge_sub <- dge[, keep_samples]
-dge_sub$samples$group <- factor(sample_info$condition[keep_samples])
+group <- droplevels(factor(sample_info[colnames(dge_sub), "condition"]))
+dge_sub$samples$group <- group
 dge_sub <- calcNormFactors(dge_sub)
 dge_exact_IFNg_both <- exactTest(dge_sub, pair=c("IFNg", "IFNg_SL1344"))
 
 # IFNg_SL1344 vs SL1344
 keep_samples <- sample_info$condition %in% c("SL1344", "IFNg_SL1344")
 dge_sub <- dge[, keep_samples]
-dge_sub$samples$group <- factor(sample_info$condition[keep_samples])
+group <- droplevels(factor(sample_info[colnames(dge_sub), "condition"]))
+dge_sub$samples$group <- group
 dge_sub <- calcNormFactors(dge_sub)
+dge_sub <- estimateDisp(dge_sub,design = model.matrix(~group))
 dge_exact_Salm_both <- exactTest(dge_sub, pair=c("SL1344", "IFNg_SL1344"))
 
 # save
-save(dge_lrt, file = "data/DGELRT_macrophage.RData", compress = "xz")
-save(dge_exact_IFNg_naive, file = "data/DGEExact_IFNg_naive.RData", compress = "xz")
-save(dge_exact_Salm_naive, file = "data/DGEExact_Salm_naive.RData", compress = "xz")
-save(dge_exact_IFNg_both, file = "data/DGEExact_IFNg_both.RData", compress = "xz")
-save(dge_exact_Salm_both, file = "data/DGEExact_Salm_both.RData", compress = "xz")
+save(dge_lrt_IFNg_naive, file = "data/dgeLRT_IFNg_naive.RData", compress = "xz")
+save(dge_lrt_Salm_naive, file = "data/dgeLRT_Salm_naive.RData", compress = "xz")
+save(dge_lrt_IFNg_both, file = "data/dgeLRT_IFNg_both.RData", compress = "xz")
+save(dge_lrt_Salm_both, file = "data/dgeLRT_Salm_both.RData", compress = "xz")
+
+save(dge_exact_IFNg_naive, file = "data/dgeExact_IFNg_naive.RData", compress = "xz")
+save(dge_exact_Salm_naive, file = "data/dgeExact_Salm_naive.RData", compress = "xz")
+save(dge_exact_IFNg_both, file = "data/dgeExact_IFNg_both.RData", compress = "xz")
+save(dge_exact_Salm_both, file = "data/dgeExact_Salm_both.RData", compress = "xz")
 
 # FE with topGO ----------------------------------------------------------------
 library("org.Hs.eg.db")

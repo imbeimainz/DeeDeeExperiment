@@ -39,21 +39,35 @@ rowData(se_macrophage)
 # DE run
 keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
 dds_macrophage <- dds_macrophage[keep, ]
-dds_unnormalized <- dds_macrophage
+# dds_unnormalized <- dds_macrophage
+
+# set seed for reproducibility
+set.seed(42)
+# sample randomly for 1k genes
+selected_genes <- sample(rownames(dds_macrophage), 1000)
+
+dds_macrophage <- dds_macrophage[selected_genes, ]
 
 
 
 dds_macrophage <- DESeq(dds_macrophage)
-vst_macrophage <- vst(dds_macrophage)
+
+#nsub <- sum(rowMeans(counts(dds_macrophage, normalized=TRUE)) > 5 )
+#vst_macrophage <- vst(dds_macrophage, nsub = nsub)
+
 res_macrophage_IFNg_vs_naive <- results(dds_macrophage,
                                         contrast = c("condition", "IFNg", "naive"),
                                         lfcThreshold = 1, alpha = 0.05
 )
 summary(res_macrophage_IFNg_vs_naive)
+
 res_macrophage_IFNg_vs_naive$SYMBOL <- rowData(dds_macrophage)$SYMBOL
 
-se_macrophage <- se_macrophage[keep, ]
-se_macrophage_noassays <- se_macrophage_noassays[keep, ]
+# se_macrophage <- se_macrophage[keep, ]
+# se_macrophage_noassays <- se_macrophage_noassays[keep, ]
+
+se_macrophage <- se_macrophage[selected_genes, ]
+se_macrophage_noassays <- se_macrophage_noassays[selected_genes, ]
 
 colData(se_macrophage)
 rowData(se_macrophage)
@@ -64,15 +78,16 @@ IFNg_naive <- results(dds_macrophage,
                       lfcThreshold = 1, alpha = 0.05
 )
 
-save(IFNg_naive, file = "data/DE_results_IFNg_naive.RData", compress = "xz")
-
+#save(IFNg_naive, file = "data/DE_results_IFNg_naive.RData", compress = "xz")
+#save(IFNg_naive, file = "data/sub_de_IFNg_naive.RData", compress = "xz")
 
 IFNg_both <- results(dds_macrophage,
                      contrast = c("condition", "IFNg_SL1344", "IFNg"),
                      lfcThreshold = 1, alpha = 0.05
 )
 
-save(IFNg_both, file = "data/DE_results_IFNg_both.RData", compress = "xz")
+# save(IFNg_both, file = "data/DE_results_IFNg_both.RData", compress = "xz")
+#save(IFNg_both, file = "data/sub_de_IFNg_both.RData", compress = "xz")
 
 
 Salm_naive <- results(dds_macrophage,
@@ -80,7 +95,8 @@ Salm_naive <- results(dds_macrophage,
                       lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_naive, file = "data/DE_results_Salm_naive.RData", compress = "xz")
+# save(Salm_naive, file = "data/DE_results_Salm_naive.RData", compress = "xz")
+#save(Salm_naive, file = "data/sub_de_Salm_naive.RData", compress = "xz")
 
 
 Salm_both <- results(dds_macrophage,
@@ -88,7 +104,8 @@ Salm_both <- results(dds_macrophage,
                      lfcThreshold = 1, alpha = 0.05
 )
 
-save(Salm_both, file = "data/DE_results_Salm_both.RData", compress = "xz")
+# save(Salm_both, file = "data/DE_results_Salm_both.RData", compress = "xz")
+#save(Salm_both, file = "data/sub_de_Salm_both.RData", compress = "xz")
 
 
 res_de <- res_macrophage_IFNg_vs_naive
@@ -103,16 +120,8 @@ Salm_naive
 data(DE_results_Salm_both, package = "DeeDeeExperiment")
 Salm_both
 
-# for the original object/implementation:
-# dd_list_original <- list(
-#   IFNg_naive = DeeDeeLegacy::deedee_prepare(IFNg_naive, "DESeq2"),
-#   IFNg_both = DeeDeeLegacy::deedee_prepare(IFNg_both, "DESeq2"),
-#   Salm_naive = DeeDeeLegacy::deedee_prepare(Salm_naive, "DESeq2"),
-#   Salm_both = DeeDeeLegacy::deedee_prepare(Salm_both, "DESeq2")
-# )
-
 # save(dd_list_original, file = "data/dd_list_original.RData", compress = "xz")
-data("dd_list_original", package = "DeeDeeExperiment")
+# data("dd_list_original", package = "DeeDeeExperiment")
 
 # for the new version
 de_named_list <- list(
