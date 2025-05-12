@@ -31,8 +31,7 @@ Imports:
     utils,
     DESeq2,
     edgeR,
-    limma,
-    GeneTonic
+    limma
 Suggests: 
     macrophage,
     knitr,

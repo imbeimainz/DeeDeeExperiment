@@ -649,3 +649,223 @@
   return(mydf)
 }
 
+
+#' .DeeDeefy_enrichResult() , a function based on the original shaker
+#' for enrichResult objects in GeneTonic
+#'
+#' @param obj An `enrichResult` object, obtained via `clusterProfiler` (or also
+#' via `reactomePA`)
+#'
+#' @returns a data.frame in GeneTonic shaker standard format
+#'
+#' @noRd
+.DeeDeefy_enrichResult <- function(obj) {
+  if (!is(obj, "enrichResult")) {
+    stop("Provided object must be of class `enrichResult`")
+  }
+
+  if (is.null(obj@result$geneID)) {
+    stop(
+      "You are providing an object where the gene symbols are not specified, ",
+      "this is required for running GeneTonic properly."
+    )
+  }
+
+  message("Found ", nrow(obj@result), " gene sets in `enrichResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
+  message("Converting for usage in GeneTonic...")
+
+  fullresults <- obj@result
+
+  mydf <- data.frame(
+    gs_id = fullresults$ID,
+    gs_description = fullresults$Description,
+    gs_pvalue = fullresults$pvalue,
+    gs_genes = gsub("/", ",", fullresults$geneID),
+    gs_de_count = fullresults$Count,
+    gs_bg_count = unlist(lapply(strsplit(fullresults$BgRatio, "/"), function(arg) arg[[1]])),
+    gs_ontology = obj@ontology,
+    GeneRatio = fullresults$GeneRatio,
+    BgRatio = fullresults$BgRatio,
+    p.adjust = fullresults$p.adjust,
+    qvalue = fullresults$qvalue,
+    stringsAsFactors = FALSE
+  )
+
+  rownames(mydf) <- mydf$gs_id
+
+  return(mydf)
+}
+
+
+
+#' .DeeDeefy_topGOtableResult() , a function based on the original shaker
+#' for topGOtableResult objects in GeneTonic
+#'
+#' @param obj An `topGOtableResult` object
+#' @param p_value_column Character, specifying which column the p value for
+#' enrichment has to be used. Example values are "p.value_elim" or "p.value_classic"
+#'
+#' @returns a data.frame in GeneTonic shaker standard format
+#'
+#' @noRd
+.DeeDeefy_topGOtableResult <- function(obj,
+                                   p_value_column = "p.value_elim") {
+  if (!all(c("GO.ID", "Term", "Annotated", "Significant", "Expected", "p.value_classic") %in%
+           colnames(obj))) {
+    stop("The provided object must be of in the format specified by the `pcaExplorer::topGOtable` function or the `mosdef::run_topGO` function")
+  }
+
+  if (!p_value_column %in% colnames(obj)) {
+    stop(
+      "You specified a column for the p-value which is not contained in the provided object. \n",
+      "Please check the colnames of your object in advance."
+    )
+  }
+
+  if (!"genes" %in% colnames(obj)) {
+    stop(
+      "The column `genes` is not present in the provided object and is required for properly running GeneTonic.",
+      "\nMaybe you did set `addGeneToTerms` to FALSE in the call to `pcaExplorer::topGOtable` or to `mosdef::run_topGO`?"
+    )
+  }
+
+  # Thought: store somewhere the ontology if possible - in an extra column?
+  message("Found ", nrow(obj), " gene sets in `topGOtableResult` object.")
+  message("Converting for usage in GeneTonic...")
+
+  fullresults <- obj
+
+  mydf <- data.frame(
+    gs_id = fullresults$GO.ID,
+    gs_description = fullresults$Term,
+    gs_pvalue = fullresults[[p_value_column]],
+    gs_genes = fullresults$genes,
+    gs_de_count = fullresults$Significant,
+    gs_bg_count = fullresults$Annotated,
+    # gs_ontology = obj@ontology,
+    Expected = fullresults$Expected,
+    stringsAsFactors = FALSE
+  )
+
+  rownames(mydf) <- mydf$gs_id
+
+  return(mydf)
+}
+
+
+#' .DeeDeefy_gsenrichResult() , a function based on the original shaker
+#' for gseaResult objects in GeneTonic
+#'
+#' @param obj An `gseaResult` object, obtained via `clusterProfiler`
+#'
+#' @returns a data.frame in GeneTonic shaker standard format
+#'
+#' @noRd
+.DeeDeefy_gsenrichResult <- function(obj) {
+  if (!is(obj, "gseaResult")) {
+    stop("Provided object must be of class `gseaResult`")
+  }
+
+  if (is.null(obj@result$core_enrichment)) {
+    stop(
+      "You are providing an object where the `core_enrichment` is not specified, ",
+      "this is required for running GeneTonic properly."
+    )
+  }
+
+  message(
+    "Using the content of the 'core_enrichment' column to generate the 'gs_genes' for GeneTonic...",
+    " If you have that information available directly, please adjust the content accordingly.",
+    "\n\nUsing the set of the 'core_enrichment' size to compute the 'gs_de_count'"
+  )
+
+  message("Found ", nrow(obj@result), " gene sets in `gseaResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
+  message("Converting for usage in GeneTonic...")
+
+  fullresults <- obj@result
+
+  mydf <- data.frame(
+    gs_id = fullresults$ID,
+    gs_description = fullresults$Description,
+    gs_pvalue = fullresults$pvalue,
+    gs_genes = gsub("/", ",", fullresults$core_enrichment),
+    gs_de_count = lengths(strsplit(fullresults$core_enrichment,split = "/")),
+    gs_bg_count = fullresults$setSize,
+    gs_ontology = obj@setType,
+    gs_NES = fullresults$NES,
+    gs_p.adjust = fullresults$p.adjust,
+    gs_qvalue = fullresults$qvalue,
+    stringsAsFactors = FALSE
+  )
+
+  rownames(mydf) <- mydf$gs_id
+
+  return(mydf)
+}
+
+
+#' .DeeDeefy_fgseaResult() , a function based on the original shaker
+#' for fgsea output in GeneTonic
+#'
+#' @param fgsea_output a data.frame with the output of `fgsea()` in `fgsea`
+#'
+#' @returns a data.frame in GeneTonic shaker standard format
+#'
+#' @noRd
+.DeeDeefy_fgseaResult <- function(fgsea_output) {
+  if (!is(fgsea_output, "data.frame")) {
+    stop("fgsea output should be a data.frame!")
+  }
+  exp_colnames <- c(
+    "pathway", "pval", "padj", "ES", "NES",
+    "size", "leadingEdge"
+  )
+  if (!all(exp_colnames %in% colnames(fgsea_output))) {
+    stop(
+      "I could not find some of the usual column names from the fgsea output.",
+      " Maybe you performed additional processing/filtering steps?"
+    )
+  }
+
+  if (!is(fgsea_output$leadingEdge, "list")) {
+    stop("Expecting 'leadingEdge' column to be a list")
+  }
+
+  message("Found ", nrow(fgsea_output), " gene sets in the file output from fgsea of which ", sum(fgsea_output$padj <= 0.05), " are significant (p-value <= 0.05).")
+  message("Converting for usage in GeneTonic...")
+
+  message(
+    "Using the content of the 'leadingEdge' column to generate the 'gs_genes' for GeneTonic...",
+    " If you have that information available directly, please adjust the content accordingly.",
+    "\n\nUsing the set of the leadingEdge size to compute the 'gs_de_count'"
+  )
+
+  message(
+    "\n\nfgsea is commonly returning no identifier for the gene sets used.",
+    " Please consider editing the 'gs_id' field manually according to the gene set you",
+    " provided"
+  )
+
+  mydf <- data.frame(
+    gs_id = fgsea_output$pathway,
+    gs_description = fgsea_output$pathway,
+    gs_pvalue = fgsea_output$pval,
+    gs_genes = vapply(
+      fgsea_output$leadingEdge,
+      function(arg) paste(arg, collapse = ","), character(1)
+    ),
+    gs_de_count = lengths(fgsea_output$leadingEdge),
+    gs_bg_count = fgsea_output$size,
+    gs_NES = fgsea_output$NES,
+    gs_adj_pvalue = fgsea_output$padj,
+    stringsAsFactors = FALSE
+  )
+
+  rownames(mydf) <- mydf$gs_id
+
+  # consider re-sorting by p-value?
+
+
+  return(mydf)
+}
+
