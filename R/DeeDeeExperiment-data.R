@@ -150,9 +150,8 @@ NULL
 #'
 #' @details This `DGELRT` object contains the results of a Differential
 #' Expression Analysis performed on data from the `macrophage` package, more
-#' precisely contrasting the counts from macrophage associated with different
-#' stimulation conditions, including IFNg treatment, Salmonella infection, and
-#' their combined effects.
+#' precisely contrasting the counts from macrophage associated with IFNg to
+#' those associated with IFNg and naive.
 #'
 #' The code to create said object can be found in the folder `/inst/scripts` in
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
@@ -163,7 +162,74 @@ NULL
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 #'
-#' @name dge_lrt
+#' @name dgeLRT_IFNg_naive
+#' @docType data
+NULL
+
+
+#' A sample `DGELRT` object
+#'
+#' A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @details This `DGELRT` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from macrophage associated with IFNg to
+#' those associated with IFNg and Salmonella.
+#'
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDeeExperiment package, the file is called `generate_data.R`.
+#'
+#' @return A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
+#' expression indicate a role for enhancer priming in immune response",
+#' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
+#'
+#' @name dgeLRT_IFNg_both
+#' @docType data
+NULL
+
+#' A sample `DGELRT` object
+#'
+#' A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @details This `DGELRT` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from macrophage associated with Salmonella
+#' to those associated with IFNg and Salmonella.
+#'
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDeeExperiment package, the file is called `generate_data.R`.
+#'
+#' @return A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
+#' expression indicate a role for enhancer priming in immune response",
+#' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
+#'
+#' @name dgeLRT_Salm_both
+#' @docType data
+NULL
+
+#' A sample `DGELRT` object
+#'
+#' A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @details This `DGELRT` object contains the results of a Differential
+#' Expression Analysis performed on data from the `macrophage` package, more
+#' precisely contrasting the counts from naive macrophage to those associated
+#' with Salmonella.
+#'
+#' The code to create said object can be found in the folder `/inst/scripts` in
+#' the DeeDeeExperiment package, the file is called `generate_data.R`.
+#'
+#' @return A sample `DGELRT` object, generated with `edgeR`
+#'
+#' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
+#' expression indicate a role for enhancer priming in immune response",
+#' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
+#'
+#' @name dgeLRT_Salm_naive
 #' @docType data
 NULL
 
