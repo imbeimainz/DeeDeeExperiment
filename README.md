@@ -19,18 +19,37 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
 
 ## Strucutre and Usage
 
-The `DeeDeeExperiment` extends `SummarizedExperiment` and contains additional attributes:
+The `DeeDeeExperiment` class extends the core Bioconductor `SummarizedExperiment` object,
+retaining its structure, methods, and compatibility with existing tools.
+In addition, it introduces new components designed to simplify and enhance downstream analysis.
 
-* `dea` : A slot for storing DE-related information (currently supported formats:
-results from `DESeq2`, `edgeR`, `limma`).
+Specifically, `DeeDeeExperiment` has two new slots:
 
-* `fea` : A slot for storing Functional Enrichment related information
+- `dea` : A slot that stores results from differential expression analysis (DEA),
+along with relevant metadata (currently supports results from `DESeq2`, `edgeR`, `limma`)
+
+* `fea` : A slot that stores results from functional enrichment analysis (FEA),
+along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`, `enrichR`,
+`gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic``` shakers)
 
 TODO: later attach a schematic representation of the class
 
 ## Example
 
-TODO
+``` r
+library("DeeDeeExperiment")
+library("macrophage")
+
+# load data
+data(gse, "macrophage")
+data("de_named_list", package = "DeeDeeExperiment")
+data("topGO_results_list", package = "DeeDeeExperiment")
+
+dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
+
+# create DeeDeeExperiment object
+dde <- DeeDeeExperiment(se = dds_macrophage, de_results = de_named_list, enrich_results = topGO_results)
+```
 
 ## Development
 
