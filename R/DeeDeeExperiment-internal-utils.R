@@ -301,7 +301,7 @@
     stop("You must provide a name for your enrichment results!")
   }
 
-  # if results are not either a list or df or enrichResult obj throw an error
+  # if results are not either a list or df or enrichResult or gseaResult obj throw an error
   if ( !(is(x, "data.frame") || is(x,"enrichResult") || is.list(x) || is(x,"gseaResult"))) {
 
     stop("Enrichment results must be a data frame,",
@@ -309,15 +309,16 @@
   }
 
   # if results is not a list  (one df or enrichResult obj) put it into a named list
-  if (is(x, "data.frame") || is(x,"enrichResult")) {
+  if (is(x, "data.frame") || is(x,"enrichResult") || is(x,"gseaResult")) {
     x <- list(x)
     names(x) <- entry_name
   }
 
 
   # check if the elements of the list are either data.frame or enrichResult obj
+  # gost() returns a large list, so we can accept list
   x <- lapply(x, function(arg) {
-    if (is(arg, "enrichResult") || is(arg, "data.frame" )|| is(arg, "gseaResult")) {
+    if (is(arg, "enrichResult") || is(arg, "data.frame" ) || is(arg, "gseaResult")) {
       arg
     } else {
       stop("Elements in the list must be a data.frame or enrichResult or gseaResult object!")
@@ -338,24 +339,24 @@
     DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
               "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
-    gsea = c("ID", "Description", "pvalue", "p.adjust"),
+    gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
     enrichr = c("Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
                 "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"),
-    gProfiler = c(
-      "source", "term_name", "term_id", "adjusted_p_value",
-      "negative_log10_of_adjusted_p_value", "term_size",
-      "query_size", "intersection_size", "effective_domain_size",
-      "intersections", "query", "significant", "p_value", "precision", "recall",
-      "source_order", "parents", "evidence_codes", "intersection"
-    )
+    gProfiler = c("source", "term_name", "term_id", "term_size", "query_size",
+                  "intersection_size", "effective_domain_size") # taking only the intersection of both r
+    # and txt file outputs
   )
 
 
-  for (i in seq_along(x)) {
+  for (i in names(x)) {
     df <- x[[i]]
 
     if (is(df, "enrichResult") || is(df, "gseaResult")) {
       cols <-  colnames(df@result) }
+
+    # else if (is(df, "list")) {
+    #   cols <- colnames(df$result)
+    # }
 
     else {
       cols <- colnames(df)
@@ -366,10 +367,11 @@
     }, logical(1))
 
     if (!any(matches)) {
-      stop(paste0("Element ", i, " does not contain the required columns for any known enrichment type!",
-                  "Please check that you're providing a valid topGOtable or clusterProfiler result, ",
-                  "or gseaResult object or a fgsea result or a data.frame from the output of `gost()` or output from DAVID",
-                  "or results generated with one of `GeneTonic` shakers if you used other platforms for FEA."))
+      stop(paste0("Element `",i,"` does not contain the required columns for any known enrichment type! \n",
+              "Please check that you re providing a valid enrichment result. \n",
+              "Current supported outputs are from topGO, enrichResult objects, gseaResult objects, or output from enrichR, fgsea, gprofiler, DAVID or results generated with one of `GeneTonic` shakers."
+        )
+      )
     } ### long error msg?
 
   }
@@ -426,16 +428,12 @@
     DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
               "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
-    gsea = c("ID", "Description", "pvalue", "p.adjust"),
+    gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
     enrichr = c("Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
                 "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"),
-    gProfiler = c(
-      "source", "term_name", "term_id", "adjusted_p_value",
-      "negative_log10_of_adjusted_p_value", "term_size",
-      "query_size", "intersection_size", "effective_domain_size",
-      "intersections", "query", "significant", "p_value", "precision", "recall",
-      "source_order", "parents", "evidence_codes", "intersection"
-    )
+    gProfiler = c("source", "term_name", "term_id", "term_size", "query_size",
+                  "intersection_size", "effective_domain_size") # taking only the intersection of both r
+    # and txt file outputs
   )
 
   # extract result table if it is an enrichRes obj
