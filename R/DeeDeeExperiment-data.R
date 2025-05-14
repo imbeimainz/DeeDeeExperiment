@@ -162,7 +162,7 @@ NULL
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 #'
-#' @name dgeLRT_IFNg_naive
+#' @name dge_lrt_IFNg_naive
 #' @docType data
 NULL
 
@@ -185,7 +185,7 @@ NULL
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 #'
-#' @name dgeLRT_IFNg_both
+#' @name dge_lrt_IFNg_both
 #' @docType data
 NULL
 
@@ -207,7 +207,7 @@ NULL
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 #'
-#' @name dgeLRT_Salm_both
+#' @name dge_lrt_Salm_both
 #' @docType data
 NULL
 
@@ -229,7 +229,7 @@ NULL
 #' expression indicate a role for enhancer priming in immune response",
 #' Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 #'
-#' @name dgeLRT_Salm_naive
+#' @name dge_lrt_Salm_naive
 #' @docType data
 NULL
 
@@ -325,7 +325,7 @@ NULL
 
 #' `topGO_results`
 #'
-#' A list of FE results generated with mosdef::topGOtable()
+#' A list of FE results generated with `mosdef::topGOtable()`
 #'
 #' @details A list of FE results for the macrophage data
 #'
@@ -333,5 +333,70 @@ NULL
 #'
 #'
 #' @name topGO_results
+#' @docType data
+NULL
+
+#' `enrichr_res`
+#'
+#' A list of FE results generated with enrichr::enrichr()
+#'
+#' @details A list of FE result for the macrophage data (salmonella vs naive)
+#'
+#' @return A list
+#'
+#'
+#' @name enrichr_res
+#' @docType data
+NULL
+
+#' `clusterPro_res`
+#'
+#' A list of FE results generated with `clusterProfiler::enrichGO()`
+#'
+#' @details A list of FE result for the macrophage data (salmonella vs naive and IFNg vs naive)
+#'
+#' @return A list
+#'
+#'
+#' @name clusterPro_res
+#' @docType data
+NULL
+
+#' `gost_res`
+#'
+#' A list of FE results generated with `gprofiler2::gost()`
+#'
+#' @details A list of FE result for the macrophage data (salmonella vs naive)
+#'
+#' @return A list
+#'
+#'
+#' @name gost_res
+#' @docType data
+NULL
+
+#' `fgseaRes`
+#'
+#' A list of FE results generated with `fgsea::fgsea()`
+#'
+#' @details A list of FE result for the macrophage data (IFNg vs naive)
+#'
+#' @return A list
+#'
+#'
+#' @name fgseaRes
+#' @docType data
+NULL
+
+#' `gsea_res`
+#'
+#' A list of FE results generated with `clusterProfiler::gseGO()`
+#'
+#' @details A list of FE result for the macrophage data (IFNg vs naive)
+#'
+#' @return A list
+#'
+#'
+#' @name gsea_res
 #' @docType data
 NULL

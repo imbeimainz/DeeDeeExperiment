@@ -8,7 +8,7 @@
 A list
 }
 \description{
-A list of FE results generated with mosdef::topGOtable()
+A list of FE results generated with \code{mosdef::topGOtable()}
 }
 \details{
 A list of FE results for the macrophage data

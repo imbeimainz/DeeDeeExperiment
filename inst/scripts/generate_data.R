@@ -220,6 +220,7 @@ save(dge_exact_Salm_naive, file = "data/dgeExact_Salm_naive.RData", compress = "
 save(dge_exact_IFNg_both, file = "data/dgeExact_IFNg_both.RData", compress = "xz")
 save(dge_exact_Salm_both, file = "data/dgeExact_Salm_both.RData", compress = "xz")
 
+
 # FE with topGO ----------------------------------------------------------------
 library("org.Hs.eg.db")
 library("topGO")
@@ -249,4 +250,119 @@ for (name in names(de_named_list)) {
 #save
 save(topGO_results, file = "data/topGO_results_list.RData", compress = "xz")
 
+# FE with clusterPro ----------------------------------------------------------------
+library("clusterProfiler")
 
+de_results_2 <- list(ifng_vs_naive = IFNg_naive,
+                   salmonella_vs_naive = Salm_naive)
+
+clusterPro_res <- list()
+
+for (name in names(de_results_2)) {
+  de <- de_results_2[[name]]
+
+  de_genes <- mosdef::deresult_to_df(de,FDR = FDR)
+
+  clusterPro_res[[name]] <-
+    enrichGO(
+      gene = rownames(de_genes),
+      universe      = rownames(dds_macrophage),
+      keyType       = "ENSEMBL",
+      OrgDb         = org.Hs.eg.db,
+      ont           = "BP",
+      pAdjustMethod = "BH",
+      pvalueCutoff  = 0.05,
+      qvalueCutoff  = 0.2)
+}
+
+#save
+save(clusterPro_res, file = "data/clusterPro_res.RData", compress = "xz")
+
+# FE with enrichR ----------------------------------------------------------------
+library("enrichR")
+anno_df <- data.frame(
+  gene_id = rownames(dds_macrophage),
+  gene_name = mapIds(org.Hs.eg.db, keys = rownames(dds_macrophage), column = "SYMBOL", keytype = "ENSEMBL"),
+  stringsAsFactors = FALSE,
+  row.names = rownames(dds_macrophage)
+)
+
+dbs <- c("GO_Biological_Process_2018",
+         "KEGG_2019_Human",
+         "Reactome_2016")
+
+degenes <- rownames(mosdef::deresult_to_df(Salm_naive, FDR = FDR))
+deg_symbols <- anno_df[degenes, "gene_name"]
+# remove nas
+deg_symbols <- deg_symbols[!is.na(deg_symbols)]
+
+
+enrichr_res <- enrichr(deg_symbols, dbs)
+
+save(enrichr_res, file = "data/enrichr_res.RData", compress = "xz")
+
+# FE with gprofiler2 ----------------------------------------------------------------
+library("gprofiler2")
+degenes <- rownames(mosdef::deresult_to_df(Salm_naive, FDR = FDR))
+deg_symbols <- anno_df[degenes, "gene_name"]
+# remove nas
+deg_symbols <- deg_symbols[!is.na(deg_symbols)]
+gost_res <- gost(
+  query = deg_symbols,
+  organism = "hsapiens",
+  ordered_query = FALSE,
+  multi_query = FALSE,
+  significant = FALSE,
+  exclude_iea = TRUE,
+  measure_underrepresentation = FALSE,
+  evcodes = TRUE,
+  user_threshold = 0.05,
+  correction_method = "g_SCS",
+  domain_scope = "annotated",
+  numeric_ns = "",
+  sources = "GO:BP",
+  as_short_link = FALSE)
+
+save(gost_res, file = "data/gost_res.RData", compress = "xz")
+
+# fgseaRes object ---------------------------------------------------------
+library("dplyr")
+library("tibble")
+library("fgsea")
+IFNg_naive$SYMBOL <- anno_df[rownames(IFNg_naive), "gene_name"]
+res2 <- IFNg_naive %>%
+  as.data.frame() %>%
+  dplyr::select(SYMBOL, stat)
+de_ranks <- deframe(res2)
+de_ranks <- de_ranks[!is.na(names(de_ranks))]
+head(de_ranks, 20)
+pathways_gmtfile <- gmtPathways("../msigdb_v7.0_files_to_download_locally/msigdb_v7.0_GMTs/c5.bp.v7.0.symbols.gmt")
+fgseaRes <- fgsea(pathways = pathways_gmtfile,
+                  stats = de_ranks,
+                  nperm=100000)
+fgseaRes <- fgseaRes %>%
+  arrange(desc(NES))
+
+save(fgseaRes, file = "data/fgseaRes.RData", compress = "xz")
+
+
+
+# gseaResult object ---------------------------------------------------------
+sorted_genes <- sort(
+    setNames(IFNg_naive$log2FoldChange,
+             IFNg_naive$SYMBOL),
+    decreasing = TRUE
+  )
+sorted_genes <- sorted_genes[!is.na(names(sorted_genes))]
+gsea_res <- gseGO(
+    geneList = sorted_genes,
+    ont = "BP",
+    OrgDb = org.Hs.eg.db,
+    keyType = "SYMBOL",
+    minGSSize = 10,
+    maxGSSize = 500,
+    pvalueCutoff = 0.05,
+    verbose = TRUE
+  )
+
+save(gsea_res, file = "data/gsea_res.RData", compress = "xz")
