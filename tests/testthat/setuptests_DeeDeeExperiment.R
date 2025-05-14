@@ -20,3 +20,9 @@ data("DGEExact_IFNg_both", package = "DeeDeeExperiment")
 
 data("topGO_results_list", package = "DeeDeeExperiment")
 
+data("enrichr_res", package = "DeeDeeExperiment")
+
+data("clusterPro_res", package = "DeeDeeExperiment")
+
+data("gost_res", package = "DeeDeeExperiment")
+
