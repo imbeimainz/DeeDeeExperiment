@@ -102,11 +102,11 @@ test_that("creating", {
 
   expect_warning({dea(dde_list, dea_name = "dge_lrt")})
 
-  expect_warning({DeeDeeExperiment(se =se_macrophage_noassays,
+  expect_warning({DeeDeeExperiment(se = se_macrophage_noassays,
                                    de_results = dea1)})
 
   dea2 <- dge_exact_IFNg_both
-  expect_warning({DeeDeeExperiment(se =se_macrophage_noassays,
+  expect_warning({DeeDeeExperiment(se = se_macrophage_noassays,
                                    de_results = dea2)})
 
   fea1 <- topGO_results
@@ -127,6 +127,37 @@ test_that("creating", {
       topGO_ifng_vs_naive = topGO_results$ifng_vs_naive,
       salmonella_vs_naive = topGO_results$salmonella_vs_naive))}
     )
+
+
+  broken_limma <- de_limma
+  broken_limma$coefficients <- broken_limma$coefficients[, "Salm_both", drop = FALSE]
+  broken_limma$t           <- broken_limma$t[, "Salm_both", drop = FALSE]
+  broken_limma$p.value     <- broken_limma$p.value[, "Salm_both", drop = FALSE]
+  broken_limma$lods        <- broken_limma$lods[, "Salm_both", drop = FALSE]
+
+  expect_error(DeeDeeExperiment(se = se_macrophage_noassays,
+                               de_results = broken_limma))
+
+  expect_error(DeeDeeExperiment(enrich_results = "1st enrich res"))
+
+  expect_error(DeeDeeExperiment(de_results = list(de_limma)))
+
+  dde5 <- DeeDeeExperiment(se = se_macrophage_noassays,
+                           enrich_results = list(enrichr_salmo_vs_naive = enrichr_res$Reactome_2016))
+
+  expect_s3_class(fea(dde5,"enrichr_salmo_vs_naive"), "data.frame")
+
+  expect_length(fea_info(dde5), 1)
+
+
+  expect_error(DeeDeeExperiment(se = se_macrophage_noassays,
+                     de_results = de_named_list,
+                     enrich_results = list(clusterPro_res$ifng_vs_naive)))
+
+  expect_error(DeeDeeExperiment(se = se_macrophage_noassays,
+                                de_results = de_named_list,
+                                enrich_results = gost_res))
+
 
 }
 
@@ -149,9 +180,9 @@ test_that("adding and removing", {
   expect_equal(length(dea_info(dde)), 4)
   expect_equal(length(dea_info(dde_new)), 6)
 
-  expect_error({dde_add <- add_dea(x = "sthg else", dea = new_del)})
+  expect_error({add_dea(x = dde, dea = list(de_named_list$ifng_vs_naive))})
 
-  expect_error({dde_add <- add_dea(x = de, dea = list(de_named_list$ifng_vs_naive))})
+  expect_error({dde_add <- add_dea(x = "sthg else", dea = new_del)})
 
   expect_error({dde_add <- add_dea(x = dde, dea = list(
     ifng2 = de_named_list$ifng_vs_naive,
@@ -162,9 +193,27 @@ test_that("adding and removing", {
   expect_s4_class(dde_removed, "DeeDeeExperiment")
   expect_equal(length(dea_info(dde_removed)), 3)
 
+  expect_warning({
+    dde_removed <- remove_dea(dde, "lol")})
+
+  dde_edgeR <- add_dea(dde, dea = list(DGEExact_IFNg_both = dge_exact_IFNg_both))
+  expect_s4_class(dde_edgeR, "DeeDeeExperiment")
+  expect_equal(length(dea_info(dde_edgeR)), 5)
+
+  dde_limma <- add_dea(dde, dea = list(de_limma = de_limma))
+  expect_s4_class(dde_limma, "DeeDeeExperiment")
+  expect_equal(length(dea_info(dde_limma)), 5)
+
+  genes <- rownames(de_limma)[1:20]
+
+  de_custom <- data.frame(p_val = rep(0.5,20),
+                          adj_pvalue = rep(0.5,20),
+                          gene = genes)
+  expect_error(add_dea(dde, dea = list(de_custom = de_custom)))
+
+
   topGO_Salm_naive <- topGO_results$salmonella_vs_naive
   topGO_IFNg_naive <- topGO_results$ifng_vs_naive
-
 
   dde2 <- add_fea(dde, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
                             topGO_IFNg_naive = topGO_IFNg_naive),
@@ -185,6 +234,38 @@ test_that("adding and removing", {
   dde3 <- DeeDeeExperiment(se = se_macrophage_noassays)
   expect_warning(add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
                                       topGO_IFNg_naive = topGO_IFNg_naive)))
+
+  expect_error(add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+                                              topGO_IFNg_naive)))
+
+  dde3 <- add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+                                       topGO_IFNg_naive = topGO_IFNg_naive))
+  expect_error({
+    add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive),
+            force = FALSE)
+  })
+
+  expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
+                                  de_results = de_named_list,
+                                  enrich_results = topGO_results))
+
+  expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
+                                  de_results = de_named_list,
+                                  enrich_results = list(topGO_Salm_naive = topGO_Salm_naive,
+                                                        topGO_IFNg_naive = topGO_IFNg_naive)))
+
+  fea_name <- character(0)
+  expect_warning({
+    remove_fea(dde3, fea_name)})
+
+  dde3 <- add_fea(dde3, fea_res = list(gPro_salmonella_vs_naive = gost_res$result))
+
+  expect_equal(fea_info(dde3)$gPro_salmonella_vs_naive$fe_tool, "gProfiler")
+
+  expect_message(dde3 <- add_fea(dde3,
+                                 fea_res =
+                                   list(salmonella_vs_naive = enrichr_res$KEGG_2019_Human)))
+
 
 
 
@@ -251,4 +332,26 @@ test_that("validity and so", {
   )
 
 
+
+
+
+
+
 })
+
+
+test_that("misc", {
+
+  dde_no_fea <- DeeDeeExperiment(se = se_macrophage_noassays,
+                                 de_results = de_named_list)
+  expect_no_error(summary(dde_no_fea))
+
+  dde_no_dea <- DeeDeeExperiment(se = se_macrophage_noassays,
+                                 enrich_results =  topGO_results)
+  expect_no_error(summary(dde_no_dea))
+
+  dde_empty <- DeeDeeExperiment(se = se_macrophage_noassays)
+  expect_no_error(summary(dde_empty))
+
+})
+
