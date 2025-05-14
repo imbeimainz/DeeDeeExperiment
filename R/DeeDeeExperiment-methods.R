@@ -142,14 +142,6 @@ setMethod("add_dea",
           signature = c("DeeDeeExperiment", "ANY"),
           definition = function(x, dea) {
 
-            # capture name inside the env where the func is called
-            entry_name <- deparse(substitute(dea, env = parent.frame()))
-
-            # check and preocess dea
-            dea <- .check_de_results(dea, entry_name)
-            names(dea)
-            names(dea_info(x))
-
             # dde must be a DeeDeeExp
             if (!is(x, "DeeDeeExperiment")) {
               stop("x must be DeeDeeExperiment object!")
@@ -163,6 +155,14 @@ setMethod("add_dea",
             if (anyDuplicated(c(names(dea), names(dea_info(x))))) {
               stop("Names in dea must be unique!")
             }
+
+            # capture name inside the env where the func is called
+            entry_name <- deparse(substitute(dea, env = parent.frame()))
+
+            # check and preocess dea
+            dea <- .check_de_results(dea, entry_name)
+            # names(dea)
+            # names(dea_info(x))
 
             dea_contrasts <- dea_info(x)
             dde_ids <- rownames(x)
