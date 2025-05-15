@@ -2,8 +2,8 @@
 
 `DeeDeeExperiment` is an S4 class extending the `SummarizedExperiment` framework to
 facilitate the integration and management of transcriptomic analysis results.
-It introduces two dedicated slots to store Differential Expression (DE) analysis
-results and Functional Enrichment analysis outcomes, providing a structured approach
+It introduces two dedicated slots to store Differential Expression analysis (DEA)
+results and Functional Enrichment analysis (FEA) results, providing a structured approach
 for downstream analysis.
 
 ## Installation
@@ -29,8 +29,8 @@ Specifically, `DeeDeeExperiment` has two new slots:
 along with relevant metadata (currently supports results from `DESeq2`, `edgeR`, `limma`)
 
 * `fea` : A slot that stores results from functional enrichment analysis (FEA),
-along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`, `enrichR`,
-`gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic``` shakers)
+along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
+`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic``` shakers)
 
 TODO: later attach a schematic representation of the class
 
@@ -45,10 +45,12 @@ data(gse, "macrophage")
 data("de_named_list", package = "DeeDeeExperiment")
 data("topGO_results_list", package = "DeeDeeExperiment")
 
-dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
+dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition)
 
 # create DeeDeeExperiment object
-dde <- DeeDeeExperiment(se = dds_macrophage, de_results = de_named_list, enrich_results = topGO_results)
+dde <- DeeDeeExperiment(se = dds_macrophage,
+                        de_results = de_named_list,
+                        enrich_results = topGO_results)
 ```
 
 ## Development
