@@ -118,6 +118,26 @@
 #' # removing DEAs
 #' dde_removed <- remove_dea(dde, "ifng_vs_naive")
 #' dde_removed
+#'
+#' # add a new (set of) FE result(s)
+#' dde_new <- add_fea(dde, fea = topGO_results)
+#'
+#' # removing FEAs
+#' dde_rem <- remove_fea(dde_new, "ifng_vs_naive")
+#'
+#' # display available DEAs
+#' dea_names(dde)
+#'
+#' # display available FEAs
+#' fea_names(dde)
+#'
+#' # print a summary of the available DEAs and FEAs
+#' summary(dde, FDR= 0.01)
+#'
+#' # rename DEA
+#' dde_new <- dea_rename(dde_new, old_name = "salmonella_vs_naive",
+#'                       new_name = "Salmo_vs_Naive_renamed")
+#'
 NULL
 
 
