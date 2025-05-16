@@ -5,6 +5,7 @@
 \alias{dea_info}
 \alias{dea_info<-}
 \alias{dea_names}
+\alias{dea_rename}
 \alias{add_dea}
 \alias{remove_dea}
 \alias{dea}
@@ -12,22 +13,25 @@
 \alias{fea_info}
 \alias{fea_info<-}
 \alias{fea_names}
+\alias{fea_rename}
 \alias{add_fea}
 \alias{remove_fea}
 \alias{fea}
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
+\alias{dea_rename,DeeDeeExperiment,character,character-method}
 \alias{add_dea,DeeDeeExperiment-method}
 \alias{remove_dea,DeeDeeExperiment,character-method}
-\alias{dea,DeeDeeExperiment,character-method}
+\alias{dea,DeeDeeExperiment-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
 \alias{fea_info,DeeDeeExperiment-method}
 \alias{fea_info<-,DeeDeeExperiment-method}
 \alias{fea_names,DeeDeeExperiment-method}
+\alias{fea_rename,DeeDeeExperiment,character,character-method}
 \alias{add_fea,DeeDeeExperiment-method}
 \alias{remove_fea,DeeDeeExperiment,character-method}
-\alias{fea,DeeDeeExperiment,character-method}
+\alias{fea,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -36,11 +40,13 @@
 
 \S4method{dea_names}{DeeDeeExperiment}(x)
 
-\S4method{add_dea}{DeeDeeExperiment}(x, dea)
+\S4method{dea_rename}{DeeDeeExperiment,character,character}(x, old_name, new_name)
+
+\S4method{add_dea}{DeeDeeExperiment}(x, dea, force = FALSE)
 
 \S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
 
-\S4method{dea}{DeeDeeExperiment,character}(x, dea_name, verbose = TRUE)
+\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, verbose = TRUE)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, verbose = TRUE)
 
@@ -50,9 +56,11 @@
 
 \S4method{fea_names}{DeeDeeExperiment}(x)
 
+\S4method{fea_rename}{DeeDeeExperiment,character,character}(x, old_name, new_name)
+
 \S4method{add_fea}{DeeDeeExperiment}(
   x,
-  fea_res,
+  fea,
   de_name = NA_character_,
   fe_name = NULL,
   fea_type = c("auto", "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea", "fgsea",
@@ -62,15 +70,24 @@
 
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
 
-\S4method{fea}{DeeDeeExperiment,character}(x, fea_name)
+\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
 
 \item{value}{Replacement value for replacement methods.}
 
+\item{old_name}{A character vector of existing DEA names to be renamed in a \code{DeeDeeExperiment} object}
+
+\item{new_name}{A character vector with new names to assign to existing DEA names in a
+\code{DeeDeeExperiment} object. It must be the same length of \code{old_name}, and contains unique values that
+don't overlap with existing DEA names.}
+
 \item{dea}{A named list of DE results, in any of the formats supported by
 the package (currently: results from DESeq2, edgeR, limma).}
+
+\item{force}{A logical, indicating whether to overwrite results when introducing the same
+results name. It defaults to FALSE.}
 
 \item{dea_name}{Character value, specifying the name of the DE analysis to
 get or remove}
@@ -78,25 +95,23 @@ get or remove}
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
 
-\item{fea_res}{A data frame or a named list of data frames containing fea results.
-Each element should represent a table of enrichment terms (e.g., GO terms).}
+\item{fea}{A named list of Functional Enrichment results. Each element can be
+either a data.frame (currently supports results from \code{topGO}, \code{enrichR}, \code{gProfiler},
+\code{fgsea}, \code{gsea}, \code{DAVID}, and output of \code{GeneTonic} shakers), or an \code{enrichResult}/\code{gseaResult}
+objects (currently supports \code{clusterProfiler})}
 
 \item{de_name}{A character string to explicitly specify the name of the de result this fea should be linked to.
 If not provided, the function will attempt to match fea names to de results automatically.}
 
-\item{fe_name}{A character string giving a name to the FE results.
-It can only support \code{FDR} to adjust the threshold used for summarizing DE results.}
+\item{fe_name}{A character string giving a name to the FE results.}
 
-\item{fea_type}{A character string indicating the FEA tool used. It take take the following
-values: "auto", "topGO", "clusterPro", "custom", and it defaults to "auto"}
-
-\item{force}{A logical, indicating whether to overwrite results when introducing the same
-results name. It defaults to FALSE.}
+\item{fea_type}{A character string indicating the FEA tool used. It can take
+any of the following values : "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea",
+"fgsea", "enrichr", "gProfiler". When not specified, it defaults to "auto" and
+the tool is inferred automatically based on the input.}
 
 \item{fea_name}{Character value, specifying the name of the functional enrichment
 result to add or remove}
-
-\item{fea}{A named list of Functional Enrichment results}
 }
 \value{
 Return value varies depending on the individual methods, as described
@@ -108,28 +123,40 @@ and set DE-related information and functional enrichment results in
 \link{DeeDeeExperiment} objects.
 }
 \details{
+DEAs
 \itemize{
 \item \code{dea_info} and \verb{dea_info<-} are the methods to get and set the \code{dea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
+\item \code{dea_names} returns the names of the available DE contrasts in \code{DeeDeeExperiment} objects.
+\item \code{dea_rename} is the method to rename one or multiple DEAs stored in a DeeDeeExperiment object.
 \item \code{add_dea} and \code{remove_dea} are used to respectively add or remove DE-results
 items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{dea} slot.
-\item \code{dea_names} returns the names of the available DE contrasts in \code{DeeDeeExperiment} objects.
 \item \code{dea} and \code{get_dea_list} retrieve the \code{dea} information and provide
 this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
 element for each reported analysis.
-\item \code{fea} and \verb{fea<-} are the methods to get and set the \code{fea} information as a
+}
+
+FEAs
+\itemize{
+\item \code{fea_info} and \verb{fea_info<-} are the methods to get and set the \code{fea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{fea_names} returns the names of the available enrichment results in \code{DeeDeeExperiment} objects.
+\item \code{fea_rename} is the method to rename one or multiple FEAs stored in a DeeDeeExperiment object.
 \item \code{add_fea} and \code{remove_fea} are used to respectively add or remove functional
 enrichment results items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{fea} slot.
+\item \code{fea} is the method to retrieve FE results stored in a \code{DeeDeeExperiment} object
+for a specific contrast, as a standardized format similar to the output of \code{GeneTonic} shakers.
 \item \code{show} is the method to nicely print out the information of a \code{DeeDeeExperiment}
+object.
+\item \code{summary} is the method to print a summary of the available DE and FE results in a \code{DeeDeeExperiment}
 object.
 }
 }
 \examples{
 data("de_named_list", package = "DeeDeeExperiment")
+data("topGO_results_list", package = "DeeDeeExperiment")
 library("SummarizedExperiment")
 
 rd_macrophage <- DataFrame(
@@ -159,4 +186,24 @@ dde_new
 # removing DEAs
 dde_removed <- remove_dea(dde, "ifng_vs_naive")
 dde_removed
+
+# add a new (set of) FE result(s)
+dde_new <- add_fea(dde, fea = topGO_results)
+
+# removing FEAs
+dde_rem <- remove_fea(dde_new, "ifng_vs_naive")
+
+# display available DEAs
+dea_names(dde)
+
+# display available FEAs
+fea_names(dde)
+
+# print a summary of the available DEAs and FEAs
+summary(dde, FDR= 0.01)
+
+# rename DEA
+dde_new <- dea_rename(dde_new, old_name = "salmonella_vs_naive",
+                      new_name = "Salmo_vs_Naive_renamed")
+
 }

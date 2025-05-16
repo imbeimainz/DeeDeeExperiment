@@ -32,21 +32,23 @@
 #' get or remove
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
 #' will be displayed. If FALSE, the function runs silently
-#' @param fea A named list of Functional Enrichment results
 #' @param old_name A character vector of existing DEA names to be renamed in a `DeeDeeExperiment` object
 #' @param new_name A character vector with new names to assign to existing DEA names in a
 #' `DeeDeeExperiment` object. It must be the same length of `old_name`, and contains unique values that
 #' don't overlap with existing DEA names.
+#' @param fea A named list of Functional Enrichment results. Each element can be
+#' either a data.frame (currently supports results from `topGO`, `enrichR`, `gProfiler`,
+#' `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers), or an `enrichResult`/`gseaResult`
+#' objects (currently supports `clusterProfiler`)
 #' @param fea_name Character value, specifying the name of the functional enrichment
 #' result to add or remove
-#' @param fea_res A data frame or a named list of data frames containing fea results.
-#' Each element should represent a table of enrichment terms (e.g., GO terms).
 #' @param de_name A character string to explicitly specify the name of the de result this fea should be linked to.
 #' If not provided, the function will attempt to match fea names to de results automatically.
 #' @param fe_name A character string giving a name to the FE results.
-#' It can only support `FDR` to adjust the threshold used for summarizing DE results.
-#' @param fea_type A character string indicating the FEA tool used. It take take the following
-#' values: "auto", "topGO", "clusterPro", "custom", and it defaults to "auto"
+#' @param fea_type A character string indicating the FEA tool used. It can take
+#' any of the following values : "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea",
+#' "fgsea", "enrichr", "gProfiler". When not specified, it defaults to "auto" and
+#' the tool is inferred automatically based on the input.
 #' @param force A logical, indicating whether to overwrite results when introducing the same
 #' results name. It defaults to FALSE.
 #'
@@ -54,28 +56,39 @@
 #' below.
 #'
 #' @details
+#'
+#' DEAs
+#'
 #' * `dea_info` and `dea_info<-` are the methods to get and set the `dea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
+#' * `dea_names` returns the names of the available DE contrasts in `DeeDeeExperiment` objects.
 #' * `dea_rename` is the method to rename one or multiple DEAs stored in a DeeDeeExperiment object.
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
-#' * `dea_names` returns the names of the available DE contrasts in `DeeDeeExperiment` objects.
 #' * `dea` and `get_dea_list` retrieve the `dea` information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
-#' * `fea` and `fea<-` are the methods to get and set the `fea` information as a
+#'
+#' FEAs
+#'
+#' * `fea_info` and `fea_info<-` are the methods to get and set the `fea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
 #' * `fea_names` returns the names of the available enrichment results in `DeeDeeExperiment` objects.
 #' * `fea_rename` is the method to rename one or multiple FEAs stored in a DeeDeeExperiment object.
 #' * `add_fea` and `remove_fea` are used to respectively add or remove functional
 #' enrichment results items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `fea` slot.
+#' * `fea` is the method to retrieve FE results stored in a `DeeDeeExperiment` object
+#' for a specific contrast, as a standardized format similar to the output of `GeneTonic` shakers.
 #' * `show` is the method to nicely print out the information of a `DeeDeeExperiment`
+#' object.
+#' * `summary` is the method to print a summary of the available DE and FE results in a `DeeDeeExperiment`
 #' object.
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDeeExperiment")
+#' data("topGO_results_list", package = "DeeDeeExperiment")
 #' library("SummarizedExperiment")
 #'
 #' rd_macrophage <- DataFrame(
@@ -911,12 +924,14 @@ setMethod("show",
 
 
 #' @rdname DeeDeeExperiment-misc
-#' @param ... additional arguments passed to the summary method, namely the FDR
+#' @param ... additional argument passed to the summary method. Currently supports `FDR`, which
+#' sets the significance threshold for subsetting differentially expressed genes based
+#' on adjusted p-values. Defaults to 0.05
 #' @export
 setMethod("summary",
           signature = signature(object = "DeeDeeExperiment"),
           definition = function(object,
-                                ...) {
+                                ...) { # using ellipsis because we can't change the summary method
 
             args <- list(...)
             FDR <- if (!is.null(args$FDR)) args$FDR else 0.05

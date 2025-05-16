@@ -14,10 +14,11 @@
 #' @param se A `SummarizedExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported by
-#' the package (currently: results from DESeq2, edgeR, limma).
-#' @param enrich_results A named list of functional enrichment results, in any of the
-#' formats supported by the package (currently: results from topGO, clusterprofiler,
-#' gsea, fgsea algorithms, or a data.frame generated with one of `GeneTonic` shakers)
+#' the package (currently: results from `DESeq2`, `edgeR`, `limma`).
+#' @param enrich_results A named list of functional enrichment results. Each element can be
+#' either a data.frame (currently supports results from `topGO`, `enrichR`, `gProfiler`,
+#' `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers), or an `enrichResult`/`gseaResult`
+#' objects (currently supports `clusterProfiler`)
 #'
 #' @details
 #' The `se` parameter can be optionally left unspecified. If this is the case,

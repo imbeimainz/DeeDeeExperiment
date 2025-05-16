@@ -13,11 +13,12 @@ DeeDeeExperiment(se = NULL, de_results = NULL, enrich_results = NULL)
 store the DE related information.}
 
 \item{de_results}{A named list of DE results, in any of the formats supported by
-the package (currently: results from DESeq2, edgeR, limma).}
+the package (currently: results from \code{DESeq2}, \code{edgeR}, \code{limma}).}
 
-\item{enrich_results}{A named list of functional enrichment results, in any of the
-formats supported by the package (currently: results from topGO, clusterprofiler,
-gsea, fgsea algorithms, or a data.frame generated with one of \code{GeneTonic} shakers)}
+\item{enrich_results}{A named list of functional enrichment results. Each element can be
+either a data.frame (currently supports results from \code{topGO}, \code{enrichR}, \code{gProfiler},
+\code{fgsea}, \code{gsea}, \code{DAVID}, and output of \code{GeneTonic} shakers), or an \code{enrichResult}/\code{gseaResult}
+objects (currently supports \code{clusterProfiler})}
 }
 \value{
 A \code{DeeDeeExperiment} object.
