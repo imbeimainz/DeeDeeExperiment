@@ -1,8 +1,17 @@
+# DeeDeeExperiment 0.4.0
+
+* New methods to rename DEA and FEA elements in `dde` objects
+
+* expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
+`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
+
 # DeeDeeExperiment 0.3.0
 
 ## New features
 
 * Methods to retrieve and manage the `fea` slot content are established
+
+* supported FEAs: topGO (data.frame) & enrichResult objects
 
 * A summary method is included to provide a quick overview of stored DEA and
 FEA results

@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     c(
         person(
@@ -18,7 +18,7 @@ Authors@R:
 Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiemnt
   class, designed to integrate and manage transciptomic analysis results. It introduces
   two dedicated slots to store Differential Expression (DE) analysis results and
-  Functional Enrichment analysis outcomes, providing a structured approach for
+  Functional Enrichment analysis results, providing a structured approach for
   downstream analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
