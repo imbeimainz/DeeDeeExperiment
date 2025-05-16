@@ -698,7 +698,7 @@ setMethod("add_fea",
           signature = c("DeeDeeExperiment",
                         "ANY"), # or should i force it to data.frame??
           definition = function(x,
-                                fea_res,
+                                fea,
                                 de_name= NA_character_,
                                 fe_name= NULL,
                                 fea_type = c("auto", "topGO", "clusterPro", "GeneTonic",
@@ -706,25 +706,30 @@ setMethod("add_fea",
                                 force = FALSE) {
 
             # x must be a DeeDeeExperiment
-            if (!is(x, "DeeDeeExperiment")) {
-              stop("x must be DeeDeeExperiment object!")
-            }
+            # if (!is(x, "DeeDeeExperiment")) {
+            #   stop("x must be DeeDeeExperiment object!")
+            # }
 
-            ## add checks for fea_res!!
+            ## add checks for fea!!
 
             # match and check fea_type, if the user doesn't use the argument
             # the default is auto
             fea_type <- match.arg(fea_type)
 
             # capture name inside the env where the func is called
-            entry_name <- deparse(substitute(fea_res, env = parent.frame()))
+            entry_name <- deparse(substitute(fea, env = parent.frame()))
 
             # check and preocess fea
-            fea_list <- .check_enrich_results(fea_res, entry_name)
+            fea_list <- .check_enrich_results(fea, entry_name)
 
             # fea must be named list
             if (is.null(names(fea_list))) {
-              stop("All elements in 'fea_res' list must have names!")
+              stop("All elements in 'fea' list must have names!")
+            }
+
+            #check that names are all unique
+            if (anyDuplicated(names(fea))) {
+              stop("Names in dea must be unique!")
             }
 
             # check that names are all unique, and do not overlap with the existing ones
@@ -736,7 +741,7 @@ setMethod("add_fea",
             overlapping_names <- intersect(new_names, existing_names)
 
             if (length(overlapping_names) > 0 && !force) {
-              stop("Names in 'fea_res' overlap with existing FEA results: ",
+              stop("Names in 'fea' overlap with existing FEA results: ",
                    paste(overlapping_names, collapse = ", "),
                    ". Set force = TRUE to overwrite.")
             }
@@ -938,12 +943,16 @@ setMethod("fea",
             }
 
 
+
+              fea <- fea_info(x)[[fea_name]]$shaken_results
+
+              if (is.null(fea)) {
                 warning("No shaken results available for '", fea_name,
                         "'. Returning original enrichment results instead.")
-                fea_res <- fea_info(x)[[fea_name]]$original_object
+                fea <- fea_info(x)[[fea_name]]$original_object
               }
 
-              return(fea_res)
+              return(fea)
           }
 )
 
