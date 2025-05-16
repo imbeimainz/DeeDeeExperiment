@@ -234,19 +234,17 @@ setMethod("dea_rename",
 #' @export
 setMethod("add_dea",
           signature = c("DeeDeeExperiment", "ANY"),
-          definition = function(x, dea) {
+          definition = function(x, dea, force = FALSE) {
 
             # dde must be a DeeDeeExp
-            if (!is(x, "DeeDeeExperiment")) {
-              stop("x must be DeeDeeExperiment object!")
-            }
+            # if (!is(x, "DeeDeeExperiment")) {
+            #   stop("x must be DeeDeeExperiment object!")
+            # }
             # dea must be named list
             if (is.null(names(dea))) {
               stop("All elements in dea list must have names!")
             }
 
-            # check that names are all unique, and do not overlap with the existing ones
-            if (anyDuplicated(c(names(dea), names(dea_info(x))))) {
               stop("Names in dea must be unique!")
             }
 
@@ -457,15 +455,32 @@ setMethod("remove_dea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea",
-          signature = c("DeeDeeExperiment", "character"),
+          signature = c("DeeDeeExperiment", "ANY"),
           definition = function(x,
-                                dea_name,
+                                dea_name = NULL,
                                 verbose = TRUE) {
+
             deas <- dea_info(x)
             dea_names <- names(deas)
 
+            if (is.null(dea_name)) {
+              if (length(dea_names) == 0) {
+                stop("No DEA results found")
+              }
+
+              warning("'dea_name' was not specified. Returning the 1st entry: ",
+                      dea_names[1])
+
+              dea_name <- dea_names[1]
+            }
+
+            if (!is.character(dea_name) || length(dea_name) != 1) {
+              stop("'dea_name' must be a single character string!")
+            }
+
             if (!(dea_name %in% dea_names)) {
-              stop("dea not found")
+              stop("Could not find '",dea_name,"' among DEA results.\n",
+                   "Available results: ", paste(dea_names,collapse = ","))
             }
 
             #
@@ -521,7 +536,6 @@ setMethod("dea",
 setMethod("get_dea_list",
           signature = c("DeeDeeExperiment"),
           definition = function(x, verbose = TRUE) {
-            verbose <- verbose
             deas <- dea_info(x)
             dea_names <- names(deas)
 
@@ -848,9 +862,9 @@ setMethod("remove_fea",
 #' @export
 setMethod("fea",
           signature = c("DeeDeeExperiment",
-                        "character"),
+                        "ANY"),
           definition = function(x,
-                                fea_name) {
+                                fea_name = NULL) {
 
             # get returns shaken table by default for a specific contrast
             # for now the only case where we won't have shaken results if the user
@@ -861,24 +875,33 @@ setMethod("fea",
 
             # check
             # x must be a DeeDeeExperiment
-            if (!is(x, "DeeDeeExperiment")) {
-              stop("x must be DeeDeeExperiment object!")
+            # if (!is(x, "DeeDeeExperiment")) {
+            #   stop("x must be DeeDeeExperiment object!")
+            # }
+
+            fea_names <- fea_names(x)
+
+            if (is.null(fea_name)) {
+              if (length(fea_names) == 0) {
+                stop("No FEA results found")
+              }
+
+              warning("'fea_name' was not specified. Returning the 1st entry: ",
+                      fea_names[1])
+
+              fea_name <- fea_names[1]
             }
 
             if (!is.character(fea_name) || length(fea_name) != 1) {
               stop("'fea_name' must be a single character string!")
             }
 
-            fea_names <- fea_names(x)
-
             if (!(fea_name %in% fea_names)) {
               stop("Could not find '",fea_name,"' among FEA results.\n",
                    "Available results: ", paste(fea_names,collapse = ","))
             }
 
-              fea_res <- fea_info(x)[[fea_name]]$shaken_results
 
-              if (is.null(fea_res)) {
                 warning("No shaken results available for '", fea_name,
                         "'. Returning original enrichment results instead.")
                 fea_res <- fea_info(x)[[fea_name]]$original_object

@@ -19,7 +19,7 @@ setGeneric("add_dea", function(x, dea, ...) standardGeneric("add_dea"))
 setGeneric("remove_dea", function(x, dea_name, ...) standardGeneric("remove_dea"))
 
 #' @export
-setGeneric("dea", function(x, dea_name, ...) standardGeneric("dea"))
+setGeneric("dea", function(x, dea_name = NULL, ...) standardGeneric("dea"))
 
 #' @export
 setGeneric("get_dea_list", function(x, ...) standardGeneric("get_dea_list"))
@@ -45,6 +45,6 @@ setGeneric("add_fea", function(x, fea, ...) standardGeneric("add_fea"))
 setGeneric("remove_fea", function(x, fea_name, ...) standardGeneric("remove_fea"))
 
 #' @export
-setGeneric("fea", function(x, fea_name, ...) standardGeneric("fea"))
+setGeneric("fea", function(x, fea_name = NULL, ...) standardGeneric("fea"))
 
 
