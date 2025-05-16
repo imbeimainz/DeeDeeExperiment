@@ -10,6 +10,9 @@ setGeneric("dea_info<-", function(x, value) standardGeneric("dea_info<-"))
 setGeneric("dea_names", function(x, value) standardGeneric("dea_names"))
 
 #' @export
+setGeneric("dea_rename", function(x, old_name, new_name) standardGeneric("dea_rename"))
+
+#' @export
 setGeneric("add_dea", function(x, dea, ...) standardGeneric("add_dea"))
 
 #' @export
@@ -31,6 +34,9 @@ setGeneric("fea_info<-", function(x, value) standardGeneric("fea_info<-"))
 
 #' @export
 setGeneric("fea_names", function(x, value) standardGeneric("fea_names"))
+
+#' @export
+setGeneric("fea_rename", function(x, old_name, new_name) standardGeneric("fea_rename"))
 
 #' @export
 setGeneric("add_fea", function(x, fea, ...) standardGeneric("add_fea"))

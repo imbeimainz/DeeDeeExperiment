@@ -6,6 +6,7 @@
 #' dea_info
 #' dea_info<-
 #' dea_names
+#' dea_rename
 #' add_dea
 #' remove_dea
 #' dea
@@ -13,6 +14,7 @@
 #' fea_info
 #' fea_info<-
 #' fea_names
+#' fea_rename
 #' add_fea
 #' remove_fea
 #' fea
@@ -31,6 +33,10 @@
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
 #' will be displayed. If FALSE, the function runs silently
 #' @param fea A named list of Functional Enrichment results
+#' @param old_name A character vector of existing DEA names to be renamed in a `DeeDeeExperiment` object
+#' @param new_name A character vector with new names to assign to existing DEA names in a
+#' `DeeDeeExperiment` object. It must be the same length of `old_name`, and contains unique values that
+#' don't overlap with existing DEA names.
 #' @param fea_name Character value, specifying the name of the functional enrichment
 #' result to add or remove
 #' @param fea_res A data frame or a named list of data frames containing fea results.
@@ -50,6 +56,7 @@
 #' @details
 #' * `dea_info` and `dea_info<-` are the methods to get and set the `dea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
+#' * `dea_rename` is the method to rename one or multiple DEAs stored in a DeeDeeExperiment object.
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
@@ -60,6 +67,7 @@
 #' * `fea` and `fea<-` are the methods to get and set the `fea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
 #' * `fea_names` returns the names of the available enrichment results in `DeeDeeExperiment` objects.
+#' * `fea_rename` is the method to rename one or multiple FEAs stored in a DeeDeeExperiment object.
 #' * `add_fea` and `remove_fea` are used to respectively add or remove functional
 #' enrichment results items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `fea` slot.
@@ -134,7 +142,80 @@ setMethod("dea_names",
           )
 
 ### TODO: add a setter for dea_names, in case one wants to rename the de res in
-### dde?
+### dde? or a new method
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("dea_rename",
+          signature = c("DeeDeeExperiment", "character", "character"),
+          definition = function(x,
+                                old_name,
+                                new_name){
+
+            # check uniqueness of new names, and that they don't overlap with
+            # existing ones
+            # dont forget to handle the naming of the current columns in the rowdata!!
+
+            deas <- dea_info(x)
+            current_names <- dea_names(x)
+            if (length(current_names) == 0) {
+              stop("No DEA results found")
+            }
+
+            if (length(old_name) != length(new_name)) {
+              stop("'old_name' and 'new_name' must be the same length!")
+            }
+
+            matching_index <- match(old_name, current_names)
+
+            if(any(is.na(matching_index))) {
+              missing_names <- old_name[is.na(matching_index)]
+              stop("The following DEA names where not found in dea slot:",
+                   paste(missing_names, collapse = ", "))
+            }
+
+            if(anyDuplicated(new_name)) {
+              stop("New names must be unique!")
+            }
+
+            overlapping_names <- intersect(new_name, current_names)
+            if(any(new_name %in% overlapping_names)) {
+              stop("New names overlap with existing DEA names: ",
+                   paste(overlapping_names, collapse = ", "))
+            }
+
+
+            names(deas)[matching_index] <- new_name
+            x@dea <- deas
+
+            rd <- rowData(x)
+            rd_colnames <- colnames(rd)
+            suffix <- c("_log2FoldChange","_pvalue","_padj")
+
+            for (i in seq_along(old_name)) {
+              old_prefix <- old_name[i]
+              new_prefix <- new_name[i]
+
+              for (j in suffix) {
+                old_col <- paste0(old_prefix, j)
+                new_col <- paste0(new_prefix, j)
+
+                if (old_col %in% rd_colnames) {
+                  colnames(rd)[which(rd_colnames == old_col)] <- new_col
+                }
+              }
+            }
+
+            rowData(x) <- rd
+
+            message("Renamed DEA entries: ", paste(old_name, "to", new_name, collapse = ","))
+
+            validObject(x)
+            x
+
+          }
+)
+
+
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -494,6 +575,57 @@ setMethod("fea_names",
           signature = "DeeDeeExperiment",
           definition = function(x){
             names(fea_info(x))
+          }
+)
+
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("fea_rename",
+          signature = c("DeeDeeExperiment", "character", "character"),
+          definition = function(x,
+                                old_name,
+                                new_name){
+
+            # check uniqueness of new names, and that they don't overlap with
+            # existing ones
+
+            feas <- fea_info(x)
+            current_names <- fea_names(x)
+            if (length(current_names) == 0) {
+              stop("No FEA results found")
+            }
+
+            if (length(old_name) != length(new_name)) {
+              stop("'old_name' and 'new_name' must be the same length!")
+            }
+
+            matching_index <- match(old_name, current_names)
+
+            if(any(is.na(matching_index))) {
+              missing_names <- old_name[is.na(matching_index)]
+              stop("The following FEA names where not found in fea slot:",
+                   paste(missing_names, collapse = ", "))
+            }
+
+            if(anyDuplicated(new_name)) {
+              stop("New names must be unique!")
+            }
+
+            overlapping_names <- intersect(new_name, current_names)
+            if(any(new_name %in% overlapping_names)) {
+              stop("New names overlap with existing FEA names: ",
+                   paste(overlapping_names, collapse = ", "))
+            }
+
+
+            names(feas)[matching_index] <- new_name
+            x@fea <- feas
+
+            message("Renamed FEA entries: ", paste(old_name, "to", new_name, collapse = ","))
+
+            validObject(x)
+            x
+
           }
 )
 
