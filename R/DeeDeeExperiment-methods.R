@@ -265,8 +265,24 @@ setMethod("add_dea",
               stop("All elements in dea list must have names!")
             }
 
+            #check that names are all unique
+            if (anyDuplicated(names(dea))) {
               stop("Names in dea must be unique!")
             }
+
+            # unless force is TRUE
+
+            new_names <- names(dea)
+            existing_names <- names(dea_info(x))
+
+            overlapping_names <- intersect(new_names, existing_names)
+
+            if (length(overlapping_names) > 0 && !force) {
+              stop("Names in 'dea' overlap with existing DEA results: ",
+                   paste(overlapping_names, collapse = ", "),
+                   ". Set force = TRUE to overwrite.")
+            }
+
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(dea, env = parent.frame()))
