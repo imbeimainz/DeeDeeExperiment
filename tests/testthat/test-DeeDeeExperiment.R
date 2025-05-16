@@ -204,6 +204,10 @@ test_that("adding and removing", {
   expect_s4_class(dde_limma, "DeeDeeExperiment")
   expect_equal(length(dea_info(dde_limma)), 5)
 
+  expect_no_error(add_dea(dde_limma,
+                          dea = list(de_limma = de_limma),
+                          force = TRUE))
+
   genes <- rownames(de_limma)[1:20]
 
   de_custom <- data.frame(p_val = rep(0.5,20),
@@ -215,7 +219,7 @@ test_that("adding and removing", {
   topGO_Salm_naive <- topGO_results$salmonella_vs_naive
   topGO_IFNg_naive <- topGO_results$ifng_vs_naive
 
-  dde2 <- add_fea(dde, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+  dde2 <- add_fea(dde, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                             topGO_IFNg_naive = topGO_IFNg_naive),
                   fea_type = "topGO")
 
@@ -232,18 +236,21 @@ test_that("adding and removing", {
   expect_s3_class(fea(dde2, "topGO_Salm_naive"), "data.frame")
 
   dde3 <- DeeDeeExperiment(se = se_macrophage_noassays)
-  expect_warning(add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+  expect_warning(add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                                       topGO_IFNg_naive = topGO_IFNg_naive)))
 
-  expect_error(add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+  expect_error(add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                                               topGO_IFNg_naive)))
 
-  dde3 <- add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive,
+  dde3 <- add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                                        topGO_IFNg_naive = topGO_IFNg_naive))
   expect_error({
-    add_fea(dde3, fea_res = list(topGO_Salm_naive = topGO_Salm_naive),
+    add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive),
             force = FALSE)
   })
+
+  expect_error(add_fea(dde3, fea = list(FE1 = topGO_Salm_naive,
+                                        FE1 = topGO_IFNg_naive)))
 
   expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
                                   de_results = de_named_list,
@@ -258,16 +265,58 @@ test_that("adding and removing", {
   expect_warning({
     remove_fea(dde3, fea_name)})
 
-  dde3 <- add_fea(dde3, fea_res = list(gPro_salmonella_vs_naive = gost_res$result))
+  dde3 <- add_fea(dde3, fea = list(gPro_salmonella_vs_naive = gost_res$result))
 
   expect_equal(fea_info(dde3)$gPro_salmonella_vs_naive$fe_tool, "gProfiler")
 
   expect_message(dde3 <- add_fea(dde3,
-                                 fea_res =
+                                 fea =
                                    list(salmonella_vs_naive = enrichr_res$KEGG_2019_Human)))
 
+  dde_rename <- dea_rename(dde,old_name = "salmonella_vs_naive" ,
+                           new_name = "SalmvsNaive")
+  expect_s4_class(dde_rename, "DeeDeeExperiment")
+
+  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
+                          new_name = "ifng_vs_naive"))
+
+  expect_error(dea_rename(dde, old_name = "contrast1",
+                          new_name = "ifng_vs_naive"))
+
+  expect_error(dea_rename(dde, old_name = 1,
+                          new_name = "1"))
+
+  expect_error(dea_rename(dde3, old_name = 1,
+                          new_name = "1"))
+
+  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
+                          new_name = c("ifng_vs_naive","new_column")))
+
+  expect_error(dea_rename(dde, old_name = c("salmonella_vs_naive","salmo_both"),
+                          new_name = c("salmonel_vs_naive", "salmonel_vs_naive")))
 
 
+  fea_rename <- fea_rename(dde3,old_name = "topGO_Salm_naive" ,
+                           new_name = "topGO_SalmonellavsNaive")
+  expect_s4_class(fea_rename, "DeeDeeExperiment")
+
+  expect_error(fea_rename(dde3, old_name = "topGO_Salm_naive",
+                          new_name = "topGO_IFNg_naive"))
+
+  expect_error(fea_rename(dde3, old_name = c("topGO_Salm_naive", "topGO_IFNg_naive"),
+                          new_name = "salmo_naive", "salmo_naive"))
+
+  expect_error(fea_rename(dde3, old_name = "contrast1",
+                          new_name = "topGO_IFNg_naive"))
+
+  expect_error(fea_rename(dde, old_name = "topGO_Salm_naive",
+                          new_name = c("salmonella_vs_naive","new_column")))
+
+  expect_warning(dea(dde))
+
+  expect_error(dea(dde3, dea_name = "contrast1"))
+
+  expect_error(dea(dde, dea_name = c("salmonella_vs_naive","salmo_both")))
 
 })
 
