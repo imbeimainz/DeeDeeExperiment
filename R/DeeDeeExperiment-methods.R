@@ -867,9 +867,9 @@ setMethod("remove_fea",
           definition = function(x, fea_name) {
 
             # x must be a DeeDeeExp
-            if(!is(x,"DeeDeeExperiment")) {
-              stop("x must be a DeeDeeExperiment object!")
-            }
+            # if(!is(x,"DeeDeeExperiment")) {
+            #   stop("x must be a DeeDeeExperiment object!")
+            # }
 
             feas <- fea_names(x)
 
