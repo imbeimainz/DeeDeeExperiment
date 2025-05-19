@@ -53,6 +53,11 @@
 #' the tool is inferred automatically based on the input.
 #' @param force A logical, indicating whether to overwrite results when introducing the same
 #' results name. It defaults to FALSE.
+#' @param format A character string, specifying the DEA/FEAs output format.
+#' It takes either "minimal" to return only essential columns
+#' (e.g. log2FC, p-value, adjusted p-value for DEAs,
+#' or gs_id, gs_description, gs_pvalue, gs_genes... for FEAs), or "original" to return the full
+#' result object. It defaults to "minimal"
 #'
 #' @return Return value varies depending on the individual methods, as described
 #' below.
@@ -68,7 +73,7 @@
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
-#' * `dea` and `get_dea_list` retrieve the `dea` information and provide
+#' * `dea` and `get_dea_list` retrieve the DEA information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
 #'

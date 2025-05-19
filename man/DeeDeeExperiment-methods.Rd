@@ -50,7 +50,7 @@
 
 \S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
 
-\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, verbose = TRUE)
+\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", verbose = TRUE)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
 
@@ -74,7 +74,10 @@
 
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
 
-\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL)
+\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = "minimal")
+
+\S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal")
+
 \S4method{assign_dea_to_fea}{DeeDeeExperiment,character,character}(x, dea_name, fea_name, force = FALSE)
 }
 \arguments{
@@ -96,6 +99,12 @@ results name. It defaults to FALSE.}
 
 \item{dea_name}{Character value, specifying the name of the DE analysis to
 get or remove, or match against (e.g., to fetch associated FEA results)}
+
+\item{format}{A character string, specifying the DEA/FEAs output format.
+It takes either "minimal" to return only essential columns
+(e.g. log2FC, p-value, adjusted p-value for DEAs,
+or gs_id, gs_description, gs_pvalue, gs_genes... for FEAs), or "original" to return the full
+result object. It defaults to "minimal"}
 
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
@@ -137,7 +146,7 @@ whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{add_dea} and \code{remove_dea} are used to respectively add or remove DE-results
 items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{dea} slot.
-\item \code{dea} and \code{get_dea_list} retrieve the \code{dea} information and provide
+\item \code{dea} and \code{get_dea_list} retrieve the DEA information and provide
 this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
 element for each reported analysis.
 }
