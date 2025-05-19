@@ -318,6 +318,25 @@ test_that("adding and removing", {
 
   expect_error(dea(dde, dea_name = c("salmonella_vs_naive","salmo_both")))
 
+  expect_error(assign_dea_to_fea(dde,
+                                 dea_name = "contrast1",
+                                 fea_name = "topGO_IFNg_naive"))
+
+  expect_error(assign_dea_to_fea(dde,
+                                 dea_name = "salmonella_vs_naive",
+                                 fea_name = "topGO"))
+
+  expect_error(get_fea_list(dde3,dea_name = c("salmonella_vs_naive", "salmo_both")))
+  expect_error(get_fea_list(dde))
+
+  expect_error(add_dea(dde, "ifng_vs_naive"))
+
+  expect_error(dea(dde, format = "simple"))
+  expect_error(fea(dde, format = "simple"))
+
+  expect_error(dea(dde3))
+  expect_error(fea(dde))
+
 })
 
 
