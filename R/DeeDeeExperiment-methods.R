@@ -506,10 +506,16 @@ setMethod("dea",
           signature = c("DeeDeeExperiment", "ANY"),
           definition = function(x,
                                 dea_name = NULL,
+                                format = "minimal",
                                 verbose = TRUE) {
 
             deas <- dea_info(x)
             dea_names <- names(deas)
+
+            if (!(format %in% c("minimal", "original"))) {
+              stop("'format' not supported. Please use 'minimal' to return the ",
+                   "essential columns, or 'original' to return the original object")
+            }
 
             if (is.null(dea_name)) {
               if (length(dea_names) == 0) {
@@ -532,50 +538,56 @@ setMethod("dea",
             }
 
             #
+            if (format == "minimal") {
+              rd_info <- paste0(dea_name,
+                                c("_log2FoldChange", "_pvalue", "_padj"))
+              #print(rd_info)
 
-            rd_info <- paste0(dea_name,
-                              c("_log2FoldChange", "_pvalue", "_padj"))
-            #print(rd_info)
+              # if (! all(rd_info %in% colnames(rowData(x)))) {
+              #   stop("Columns not found")
+              # }
 
-            # if (! all(rd_info %in% colnames(rowData(x)))) {
-            #   stop("Columns not found")
-            # }
-
-            # check for missing columns, for a more precise feedback on the error
-            missing_cols <- rd_info[!rd_info %in% colnames(rowData(x))]
-            #print(missing_cols)
+              # check for missing columns, for a more precise feedback on the error
+              missing_cols <- rd_info[!rd_info %in% colnames(rowData(x))]
+              #print(missing_cols)
 
 
-            # maybe check for rowname mismatches potential gene version issue?
-            # maybe not interesting to print back all missmatches in casee all rownames
-            # dont match
-            rownames_x <- rownames(rowData(x))
-            rownames_y <- rownames(dea_info(x)[[dea_name]][["original_object"]])
-            mismatched_rows <- sum(!rownames_x %in% rownames_y)
+              # maybe check for rowname mismatches potential gene version issue?
+              # maybe not interesting to print back all missmatches in casee all rownames
+              # dont match
+              rownames_x <- rownames(rowData(x))
+              rownames_y <- rownames(dea_info(x)[[dea_name]][["original_object"]])
+              mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
-            affected_deas <- character()
-            if (mismatched_rows > 0) {
-              affected_deas <- c(affected_deas, dea_name)
+              affected_deas <- character()
+              if (mismatched_rows > 0) {
+                affected_deas <- c(affected_deas, dea_name)
+              }
+
+              if (length(affected_deas) > 0) {
+                if (verbose)
+                  warning(
+                    "Mismatch detected between `rownames(rowData(x))` and rownames for the following dea element(s): ",
+                    paste(unique(affected_deas), collapse = ", ")
+                  )
+              }
+
+              if (length(missing_cols) > 0) {
+                stop("The following columns are missing: ",
+                     paste(missing_cols, collapse = ", "))
+              }
+
+
+
+              out <- rowData(x)[, rd_info]
+
+              return(out)
+            } else if (format == "original") {
+              out <- dea_info(x)[[dea_name]][["original_object"]]
+              return(out)
             }
 
-            if (length(affected_deas) > 0) {
-              if (verbose)
-                warning(
-                  "Mismatch detected between `rownames(rowData(x))` and rownames for the following dea element(s): ",
-                  paste(unique(affected_deas), collapse = ", ")
-                )
-            }
 
-            if (length(missing_cols) > 0) {
-              stop("The following columns are missing: ",
-                   paste(missing_cols, collapse = ", "))
-            }
-
-
-
-            out <- rowData(x)[, rd_info]
-
-            return(out)
           }
 )
 
@@ -583,38 +595,45 @@ setMethod("dea",
 #' @export
 setMethod("get_dea_list",
           signature = c("DeeDeeExperiment"),
-          definition = function(x, verbose = TRUE) {
+          definition = function(x,
+                                format = "minimal",
+                                verbose = TRUE) {
+
+            if (!(format %in% c("minimal", "original"))) {
+              stop("'format' not supported. Please use 'minimal' to return the ",
+                   "essential columns, or 'original' to return the original object")
+            }
+
             deas <- dea_info(x)
             dea_names <- names(deas)
 
             dea_list <- list()
-            mismatch_info <- list()
             affected_deas <- character()
 
             for (i in dea_names) {
-              dea_list[[i]] <- as.data.frame(dea(x, i, verbose))
-              colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
+              # dea_list[[i]] <- as.data.frame(dea(x, i, verbose))
+              dea_list[[i]] <- as.data.frame(
+                dea(x, dea_name = i, format = format, verbose = verbose))
 
-              # maybe check for rowname mismatches potential gene version issue?
-              # maybe not interesting to print back all missmatches in casee all rownames
-              # dont match
-              rownames_x <- rownames(rowData(x))
-              rownames_y <- rownames(deas[[i]][["original_object"]])
+              if (format == "minimal") {
+                colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
 
-              mismatched_rows <- sum(!rownames_x %in% rownames_y)
-
-              if (mismatched_rows > 0) {
-                affected_deas <- c(affected_deas, i)
+                # maybe check for rowname mismatches potential gene version issue?
+                # maybe not interesting to print back all missmatches in casee all rownames
+                # dont match
+                # rownames_x <- rownames(rowData(x))
+                # rownames_y <- rownames(deas[[i]][["original_object"]])
+                #
+                # mismatched_rows <- sum(!rownames_x %in% rownames_y)
+                #
+                # if (mismatched_rows > 0) {
+                #   affected_deas <- c(affected_deas, i)
+                # }
               }
+
             }
 
-
-            # if (length(affected_deas) > 0) {
-            #   warning(
-            #     "Mismatch detected between `rownames(rowData(x))` and rownames for dea element(s): ",
-            #     paste(unique(affected_deas), collapse = ", ")
-            #   )
-            # } # not needed since the warnings will be triggered from dea
+            # not needed to check mismatch since the warnings will be triggered from dea
 
             return(dea_list)
           }
@@ -917,7 +936,8 @@ setMethod("fea",
           signature = c("DeeDeeExperiment",
                         "ANY"),
           definition = function(x,
-                                fea_name = NULL) {
+                                fea_name = NULL,
+                                format = "minimal") {
 
             # get returns shaken table by default for a specific contrast
             # for now the only case where we won't have shaken results if the user
@@ -931,6 +951,11 @@ setMethod("fea",
             # if (!is(x, "DeeDeeExperiment")) {
             #   stop("x must be DeeDeeExperiment object!")
             # }
+
+            if (!(format %in% c("minimal", "original"))) {
+              stop("'format' not supported. Please use 'minimal' to return the ",
+                   "essential columns, or 'original' to return the original object")
+            }
 
             fea_names <- fea_names(x)
 
@@ -955,8 +980,9 @@ setMethod("fea",
             }
 
 
+            if (format == "minimal") {
 
-              fea <- fea_info(x)[[fea_name]]$shaken_results
+              fea <- fea_info(x)[[fea_name]][["shaken_results"]]
 
               if (is.null(fea)) {
                 warning("No shaken results available for '", fea_name,
@@ -964,8 +990,16 @@ setMethod("fea",
                 fea <- fea_info(x)[[fea_name]]$original_object
               }
 
-              return(fea)
+
+            } else if (format == "original") {
+              fea <- fea_info(x)[[fea_name]][["original_object"]]
+
+
+            }
+
+            return(fea)
           }
+
 )
 
 
