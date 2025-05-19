@@ -18,6 +18,7 @@
 #' add_fea
 #' remove_fea
 #' fea
+#' get_fea_list
 #'
 #' @description
 #' The [DeeDeeExperiment()] class provides a family of methods to get
@@ -29,7 +30,7 @@
 #' @param dea A named list of DE results, in any of the formats supported by
 #' the package (currently: results from DESeq2, edgeR, limma).
 #' @param dea_name Character value, specifying the name of the DE analysis to
-#' get or remove
+#' get or remove, or match against (e.g., to fetch associated FEA results)
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
 #' will be displayed. If FALSE, the function runs silently
 #' @param old_name A character vector of existing DEA names to be renamed in a `DeeDeeExperiment` object
@@ -81,6 +82,8 @@
 #' content in the `fea` slot.
 #' * `fea` is the method to retrieve FE results stored in a `DeeDeeExperiment` object
 #' for a specific contrast, as a standardized format similar to the output of `GeneTonic` shakers.
+#' * `get_fea_list` is the method that retrieves FEA results as a list. if the `dea_name` is indicated, the method
+#' will return only FEAs linked to that `dea_name`, otherwise it returns all FEAs in the `fea` slot.
 #' * `show` is the method to nicely print out the information of a `DeeDeeExperiment`
 #' object.
 #' * `summary` is the method to print a summary of the available DE and FE results in a `DeeDeeExperiment`
@@ -954,6 +957,79 @@ setMethod("fea",
 
               return(fea)
           }
+)
+
+
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("get_fea_list",
+          signature = c("DeeDeeExperiment", "ANY"),
+          definition = function(x,
+                                dea_name = NULL,
+                                format = "minimal") {
+
+    if (!(format %in% c("minimal", "original"))) {
+      stop(
+        "'format' not supported. Please use 'minimal' to return the ",
+        "essential columns, or 'original' to return the original object"
+      )
+    }
+
+    all_fea_names <- fea_names(x)
+
+    if (length(all_fea_names) == 0) {
+      stop("No FEA results found")
+    }
+
+    matched_feas <- list()
+
+    if (!is.null(dea_name) && (!is.character(dea_name) || length(dea_name) != 1)) {
+      stop("'dea_name' must be a single character string")
+    }
+
+    for (i in all_fea_names) {
+      # catch the corresponding dea
+      de_name <- fea_info(x)[[i]][["de_name"]]
+
+      #if dea_name is not indicated, return all feas
+      # otherwise return only the specific feas associated with that dea_name
+
+
+      if (is.null(dea_name) || !is.null(de_name) && de_name == dea_name) {
+
+        if (format == "minimal") {
+          fe_res <- fea_info(x)[[i]][["shaken_results"]]
+
+          if (!is.null(fe_res)) {
+            matched_feas[[i]] <- fe_res
+
+          } else {
+            warning(
+              "No shaken results available for '",
+              i,
+              "'. Returning original enrichment results instead."
+            )
+
+            matched_feas[[i]] <- fea_info(x)[[i]][["original_object"]]
+
+          }
+        } else if (format == "original") {
+          matched_feas[[i]] <- fea_info(x)[[i]][["original_object"]]
+        }
+      }
+    }
+
+    if (length(matched_feas) == 0) {
+      if (!is.null(dea_name)) {
+      warning("No FEA results found for '", dea_name, "'")
+      } else {
+      warning("No FEA results returned")
+      }
+    }
+
+    return(matched_feas)
+
+  }
 )
 
 

@@ -47,4 +47,7 @@ setGeneric("remove_fea", function(x, fea_name, ...) standardGeneric("remove_fea"
 #' @export
 setGeneric("fea", function(x, fea_name = NULL, ...) standardGeneric("fea"))
 
+#' @export
+setGeneric("get_fea_list", function(x, dea_name = NULL, ...) standardGeneric("get_fea_list"))
+
 

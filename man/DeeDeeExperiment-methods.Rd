@@ -17,6 +17,7 @@
 \alias{add_fea}
 \alias{remove_fea}
 \alias{fea}
+\alias{get_fea_list}
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
@@ -32,6 +33,7 @@
 \alias{add_fea,DeeDeeExperiment-method}
 \alias{remove_fea,DeeDeeExperiment,character-method}
 \alias{fea,DeeDeeExperiment-method}
+\alias{get_fea_list,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -48,7 +50,7 @@
 
 \S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, verbose = TRUE)
 
-\S4method{get_dea_list}{DeeDeeExperiment}(x, verbose = TRUE)
+\S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
 
 \S4method{fea_info}{DeeDeeExperiment}(x)
 
@@ -90,7 +92,7 @@ the package (currently: results from DESeq2, edgeR, limma).}
 results name. It defaults to FALSE.}
 
 \item{dea_name}{Character value, specifying the name of the DE analysis to
-get or remove}
+get or remove, or match against (e.g., to fetch associated FEA results)}
 
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
@@ -148,6 +150,8 @@ enrichment results items. These methods also return \code{DeeDeeExperiment} obje
 content in the \code{fea} slot.
 \item \code{fea} is the method to retrieve FE results stored in a \code{DeeDeeExperiment} object
 for a specific contrast, as a standardized format similar to the output of \code{GeneTonic} shakers.
+\item \code{get_fea_list} is the method that retrieves FEA results as a list. if the \code{dea_name} is indicated, the method
+will return only FEAs linked to that \code{dea_name}, otherwise it returns all FEAs in the \code{fea} slot.
 \item \code{show} is the method to nicely print out the information of a \code{DeeDeeExperiment}
 object.
 \item \code{summary} is the method to print a summary of the available DE and FE results in a \code{DeeDeeExperiment}
