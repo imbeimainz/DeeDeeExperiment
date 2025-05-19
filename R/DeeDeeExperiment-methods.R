@@ -144,6 +144,12 @@
 #' dde_new <- dea_rename(dde_new, old_name = "salmonella_vs_naive",
 #'                       new_name = "Salmo_vs_Naive_renamed")
 #'
+#' # assign DEA to FEA
+#'
+#' dde_new <- assign_dea_to_fea(dde_new,
+#'                              dea_name = "ifngsalmo_vs_naive",
+#'                              fea_name = "ifngsalmo_vs_naive")
+#'
 NULL
 
 
