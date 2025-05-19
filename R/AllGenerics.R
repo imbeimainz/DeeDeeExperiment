@@ -50,4 +50,8 @@ setGeneric("fea", function(x, fea_name = NULL, ...) standardGeneric("fea"))
 #' @export
 setGeneric("get_fea_list", function(x, dea_name = NULL, ...) standardGeneric("get_fea_list"))
 
+#' @export
+setGeneric("assign_dea_to_fea", function(x, dea_name, fea_name, ...) standardGeneric("assign_dea_to_fea"))
+
+
 

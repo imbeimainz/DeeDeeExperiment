@@ -19,6 +19,7 @@
 #' remove_fea
 #' fea
 #' get_fea_list
+#' assign_dea_to_fea
 #'
 #' @description
 #' The [DeeDeeExperiment()] class provides a family of methods to get
@@ -84,6 +85,8 @@
 #' for a specific contrast, as a standardized format similar to the output of `GeneTonic` shakers.
 #' * `get_fea_list` is the method that retrieves FEA results as a list. if the `dea_name` is indicated, the method
 #' will return only FEAs linked to that `dea_name`, otherwise it returns all FEAs in the `fea` slot.
+#' * `assign_dea_to_fea` is the method that allows the user to manually link a FEA result to a specific DEA result
+#'
 #' * `show` is the method to nicely print out the information of a `DeeDeeExperiment`
 #' object.
 #' * `summary` is the method to print a summary of the available DE and FE results in a `DeeDeeExperiment`
@@ -1033,6 +1036,55 @@ setMethod("get_fea_list",
 )
 
 
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("assign_dea_to_fea",
+          signature = c("DeeDeeExperiment", "character", "character"),
+          definition = function(x,
+                                dea_name,
+                                fea_name,
+                                force = FALSE) {
+
+            # check fea_name & dea_name are character
+
+
+            dea_names <- dea_names(x)
+            fea_names <- fea_names(x)
+
+
+            if (!(fea_name %in% fea_names)) {
+              stop("FEA result: '",fea_name,"' not found")
+            }
+
+            if (!(dea_name %in% dea_names)) {
+              stop("DEA result: '",dea_name,"' not found")
+            }
+
+            # do we have existing link?
+            current_de_name <- fea_info(x)[[fea_name]][["de_name"]]
+
+            if (!is.null(current_de_name) && !is.na(current_de_name) && current_de_name != dea_name) {
+              if(!force) {
+                stop("FEA '", fea_name, "' is already linked to DEA '", current_de_name,
+                     "'. Use `force = TRUE` to overwrite")
+              } else {
+                warning("FEA '", fea_name, "' was linked to DEA '", current_de_name,
+                        ". Now linked to '", dea_name, "'")
+              }
+
+            }
+
+            # assign
+            message("Assigning DEA '", dea_name, "' to FEA '", fea_name, "'")
+
+            fea_info(x)[[fea_name]][["de_name"]] <- dea_name
+
+            validObject(x)
+            x
+          }
+          )
+
+
 # misc - show & more ------------------------------------------------------
 
 #' @name DeeDeeExperiment-misc
@@ -1122,9 +1174,6 @@ setMethod("summary",
 
             # fea summary
 
-            ##########
-            #### needs more work, prove to errors
-            ########
 
             fea <- fea_info(object)
             if (length(fea) > 0) {

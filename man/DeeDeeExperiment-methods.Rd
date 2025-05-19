@@ -18,6 +18,7 @@
 \alias{remove_fea}
 \alias{fea}
 \alias{get_fea_list}
+\alias{assign_dea_to_fea}
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
@@ -34,6 +35,7 @@
 \alias{remove_fea,DeeDeeExperiment,character-method}
 \alias{fea,DeeDeeExperiment-method}
 \alias{get_fea_list,DeeDeeExperiment-method}
+\alias{assign_dea_to_fea,DeeDeeExperiment,character,character-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -73,6 +75,7 @@
 \S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
 
 \S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL)
+\S4method{assign_dea_to_fea}{DeeDeeExperiment,character,character}(x, dea_name, fea_name, force = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
@@ -152,6 +155,7 @@ content in the \code{fea} slot.
 for a specific contrast, as a standardized format similar to the output of \code{GeneTonic} shakers.
 \item \code{get_fea_list} is the method that retrieves FEA results as a list. if the \code{dea_name} is indicated, the method
 will return only FEAs linked to that \code{dea_name}, otherwise it returns all FEAs in the \code{fea} slot.
+\item \code{assign_dea_to_fea} is the method that allows the user to manually link a FEA result to a specific DEA result
 \item \code{show} is the method to nicely print out the information of a \code{DeeDeeExperiment}
 object.
 \item \code{summary} is the method to print a summary of the available DE and FE results in a \code{DeeDeeExperiment}
