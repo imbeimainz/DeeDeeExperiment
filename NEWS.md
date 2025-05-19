@@ -1,9 +1,10 @@
 # DeeDeeExperiment 0.4.0
 
-* New methods to rename DEA and FEA elements in `dde` objects
+* New methods to rename DEA and FEA elements in `dde` objects, get all FEAs for
+a specific DEA, assign DEA to FEA
 
 * expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
-`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
+`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers
 
 # DeeDeeExperiment 0.3.0
 
