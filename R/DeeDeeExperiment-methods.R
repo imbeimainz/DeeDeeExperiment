@@ -34,6 +34,8 @@
 #' get or remove, or match against (e.g., to fetch associated FEA results)
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
 #' will be displayed. If FALSE, the function runs silently
+#' @param extra_rd A character vector of additional columns from rowData(x) to include. It
+#' defaults to c("gene_id", "SYMBOL").
 #' @param old_name A character vector of existing DEA names to be renamed in a `DeeDeeExperiment` object
 #' @param new_name A character vector with new names to assign to existing DEA names in a
 #' `DeeDeeExperiment` object. It must be the same length of `old_name`, and contains unique values that
@@ -73,7 +75,7 @@
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
-#' * `dea` and `get_dea_list` retrieve the DEA information and provide
+#' * `dea` and `get_dea_list` retrieve the DEA information, as well as some extra rowData information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
 #'
@@ -512,6 +514,7 @@ setMethod("dea",
           definition = function(x,
                                 dea_name = NULL,
                                 format = "minimal",
+                                extra_rd = c("gene_id", "SYMBOL"),
                                 verbose = TRUE) {
 
             deas <- dea_info(x)
@@ -546,6 +549,24 @@ setMethod("dea",
             if (format == "minimal") {
               rd_info <- paste0(dea_name,
                                 c("_log2FoldChange", "_pvalue", "_padj"))
+
+              extra_info <- extra_rd
+              extra_cols <- extra_info[extra_info %in% colnames(rowData(x))] # drop if missing
+              all_cols <- c(extra_cols,rd_info)
+
+              overlap <- intersect(extra_info, rd_info)
+
+              if (length(overlap) > 0) {
+                stop("The following `extra_rd` are already part of the core `dea` columns and should not be repeated: ",
+                     paste(overlap, collapse = ", "))
+              }
+
+
+              if (verbose && length(setdiff(extra_info, extra_cols)) > 0) {
+                warning("Some 'extra_rd' are not available in rowData: ",
+                        paste(setdiff(extra_info, extra_cols), collapse = ", "))
+              }
+
               #print(rd_info)
 
               # if (! all(rd_info %in% colnames(rowData(x)))) {
@@ -584,14 +605,14 @@ setMethod("dea",
 
 
 
-              out <- rowData(x)[, rd_info]
+              out <- rowData(x)[, all_cols]
 
-              return(out)
+
             } else if (format == "original") {
               out <- dea_info(x)[[dea_name]][["original_object"]]
-              return(out)
-            }
 
+            }
+            return(out)
 
           }
 )
