@@ -71,7 +71,7 @@
 #' * `dea_info` and `dea_info<-` are the methods to get and set the `dea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
 #' * `dea_names` returns the names of the available DE contrasts in `DeeDeeExperiment` objects.
-#' * `dea_rename` is the method to rename one or multiple DEAs stored in a DeeDeeExperiment object.
+#' * `dea_rename` is the method to rename one or multiple DEAs stored in a `DeeDeeExperiment` object.
 #' * `add_dea` and `remove_dea` are used to respectively add or remove DE-results
 #' items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `dea` slot.
@@ -84,7 +84,7 @@
 #' * `fea_info` and `fea_info<-` are the methods to get and set the `fea` information as a
 #' whole. These methods return `DeeDeeExperiment` objects.
 #' * `fea_names` returns the names of the available enrichment results in `DeeDeeExperiment` objects.
-#' * `fea_rename` is the method to rename one or multiple FEAs stored in a DeeDeeExperiment object.
+#' * `fea_rename` is the method to rename one or multiple FEAs stored in a `DeeDeeExperiment``` object.
 #' * `add_fea` and `remove_fea` are used to respectively add or remove functional
 #' enrichment results items. These methods also return `DeeDeeExperiment` objects, with updated
 #' content in the `fea` slot.

@@ -50,7 +50,13 @@
 
 \S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
 
-\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", verbose = TRUE)
+\S4method{dea}{DeeDeeExperiment}(
+  x,
+  dea_name = NULL,
+  format = "minimal",
+  extra_rd = c("gene_id", "SYMBOL"),
+  verbose = TRUE
+)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
 
@@ -106,6 +112,9 @@ It takes either "minimal" to return only essential columns
 or gs_id, gs_description, gs_pvalue, gs_genes... for FEAs), or "original" to return the full
 result object. It defaults to "minimal"}
 
+\item{extra_rd}{A character vector of additional columns from rowData(x) to include. It
+defaults to c("gene_id", "SYMBOL").}
+
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
 
@@ -142,11 +151,11 @@ DEAs
 \item \code{dea_info} and \verb{dea_info<-} are the methods to get and set the \code{dea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{dea_names} returns the names of the available DE contrasts in \code{DeeDeeExperiment} objects.
-\item \code{dea_rename} is the method to rename one or multiple DEAs stored in a DeeDeeExperiment object.
+\item \code{dea_rename} is the method to rename one or multiple DEAs stored in a \code{DeeDeeExperiment} object.
 \item \code{add_dea} and \code{remove_dea} are used to respectively add or remove DE-results
 items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{dea} slot.
-\item \code{dea} and \code{get_dea_list} retrieve the DEA information and provide
+\item \code{dea} and \code{get_dea_list} retrieve the DEA information, as well as some extra rowData information and provide
 this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
 element for each reported analysis.
 }
@@ -156,7 +165,7 @@ FEAs
 \item \code{fea_info} and \verb{fea_info<-} are the methods to get and set the \code{fea} information as a
 whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{fea_names} returns the names of the available enrichment results in \code{DeeDeeExperiment} objects.
-\item \code{fea_rename} is the method to rename one or multiple FEAs stored in a DeeDeeExperiment object.
+\item \code{fea_rename} is the method to rename one or multiple FEAs stored in a `DeeDeeExperiment``` object.
 \item \code{add_fea} and \code{remove_fea} are used to respectively add or remove functional
 enrichment results items. These methods also return \code{DeeDeeExperiment} objects, with updated
 content in the \code{fea} slot.
