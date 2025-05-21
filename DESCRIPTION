@@ -36,6 +36,18 @@ Suggests:
     macrophage,
     knitr,
     BiocStyle,
+    mosdef,
+    DT,
+    org.Hs.eg.db,
+    biomaRt,
+    topGO,
+    clusterProfiler,
+    GeneTonic,
+    ReactomePA,
+    pcaExplorer,
+    BIUMmisc,
+    enrichplot,
+    ideal,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 biocViews: Software, Infrastructure, DataRepresentation, GeneExpression, Transcription,
