@@ -50,13 +50,7 @@
 
 \S4method{remove_dea}{DeeDeeExperiment}(x, dea_name)
 
-\S4method{dea}{DeeDeeExperiment}(
-  x,
-  dea_name = NULL,
-  format = "minimal",
-  extra_rd = c("gene_id", "SYMBOL"),
-  verbose = TRUE
-)
+\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = TRUE)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
 

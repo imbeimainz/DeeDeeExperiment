@@ -98,25 +98,25 @@ test_that("creating", {
 
   dde_list <- DeeDeeExperiment(de_results = de_res_list)
 
-  expect_warning({get_dea_list(dde_list)})
+  expect_warning(get_dea_list(dde_list), regexp = NULL)
 
-  expect_warning({dea(dde_list, dea_name = "dge_lrt")})
+  expect_warning(dea(dde_list, dea_name = "dge_lrt") , regexp = NULL)
 
-  expect_warning({DeeDeeExperiment(se = se_macrophage_noassays,
-                                   de_results = dea1)})
+  expect_warning(DeeDeeExperiment(se = se_macrophage_noassays,
+                                   de_results = dea1))
 
   dea2 <- dge_exact_IFNg_both
-  expect_warning({DeeDeeExperiment(se = se_macrophage_noassays,
-                                   de_results = dea2)})
+  expect_warning(DeeDeeExperiment(se = se_macrophage_noassays,
+                                   de_results = dea2))
 
   fea1 <- topGO_results
 
-  expect_warning({DeeDeeExperiment(enrich_results = fea1)})
+  expect_warning(DeeDeeExperiment(enrich_results = fea1))
 
   contrast1 <- topGO_results$ifng_vs_naive
 
-  expect_warning({DeeDeeExperiment(de_results = de_named_list,
-                                  enrich_results = contrast1)})
+  expect_warning(DeeDeeExperiment(de_results = de_named_list,
+                                  enrich_results = contrast1))
 
 
 
@@ -262,7 +262,7 @@ test_that("adding and removing", {
                                                         topGO_IFNg_naive = topGO_IFNg_naive)))
 
   fea_name <- character(0)
-  expect_warning({
+  expect_error({
     remove_fea(dde3, fea_name)})
 
   dde3 <- add_fea(dde3, fea = list(gPro_salmonella_vs_naive = gost_res$result))
@@ -273,38 +273,6 @@ test_that("adding and removing", {
                                  fea =
                                    list(salmonella_vs_naive = enrichr_res$KEGG_2019_Human)))
 
-  dde_rename <- dea_rename(dde,old_name = "salmonella_vs_naive" ,
-                           new_name = "SalmvsNaive")
-  expect_s4_class(dde_rename, "DeeDeeExperiment")
-
-  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
-                          new_name = "ifng_vs_naive"))
-
-  expect_error(dea_rename(dde, old_name = "contrast1",
-                          new_name = "ifng_vs_naive"))
-
-  expect_error(dea_rename(dde, old_name = 1,
-                          new_name = "1"))
-
-  expect_error(dea_rename(dde3, old_name = 1,
-                          new_name = "1"))
-
-  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
-                          new_name = c("ifng_vs_naive","new_column")))
-
-  expect_error(dea_rename(dde, old_name = c("salmonella_vs_naive","salmo_both"),
-                          new_name = c("salmonel_vs_naive", "salmonel_vs_naive")))
-
-
-  fea_rename <- fea_rename(dde3,old_name = "topGO_Salm_naive" ,
-                           new_name = "topGO_SalmonellavsNaive")
-  expect_s4_class(fea_rename, "DeeDeeExperiment")
-
-  expect_error(fea_rename(dde3, old_name = "topGO_Salm_naive",
-                          new_name = "topGO_IFNg_naive"))
-
-  expect_error(fea_rename(dde3, old_name = c("topGO_Salm_naive", "topGO_IFNg_naive"),
-                          new_name = "salmo_naive", "salmo_naive"))
 
   expect_error(fea_rename(dde3, old_name = "contrast1",
                           new_name = "topGO_IFNg_naive"))
@@ -336,6 +304,111 @@ test_that("adding and removing", {
 
   expect_error(dea(dde3))
   expect_error(fea(dde))
+
+  dde_overlap <- DeeDeeExperiment(se_macrophage_noassays,
+                                  de_results = de_named_list,
+                                  enrich_results = topGO_results)
+
+  expect_error(add_dea(dde_overlap,
+                       dea =list(ifng_vs_naive = de_named_list$ifng_vs_naive)))
+
+  dde_de_empty <- DeeDeeExperiment(se_macrophage_noassays)
+
+  expect_error(dea_rename(dde_de_empty,
+                          old_name = "ifng_vs_naive", new_name = "IFNgvsNaive"))
+
+  expect_error(dea(dde_overlap,
+      dea_name = "ifng_vs_naive",
+      extra_rd = "ifng_vs_naive_pvalue"))
+
+  extract_dea <- dea(dde_overlap, dea_name = "ifng_vs_naive", format = "original")
+
+  expect_s4_class(extract_dea, "DESeqResults")
+
+  expect_error(get_dea_list(dde_overlap, format = "simple"))
+
+  expect_error(fea_rename(dde_overlap,
+                          old_name = c("ifng_vs_naive", "ifngsalmo_vs_naive"),
+                          new_name = "naive"))
+
+  expect_error(fea_rename(dde_overlap,
+                          old_name = c("ifng_vs_naive", "ifngsalmo_vs_naive"),
+                          new_name = c("naive", "naive")))
+
+  expect_error(fea_rename(dde_overlap,
+                          old_name = c("ifng_vs_naive"),
+                          new_name = c("ifngsalmo_vs_naive")))
+
+
+  expect_error(add_fea(dde_de_empty, fea = list(topGO_results$salmo_both)))
+
+  expect_warning(fea(dde_overlap))
+
+  expect_error(fea(dde_overlap, fea_name = c("salmonella_vs_naive", "ifng_vs_naive")))
+
+  expect_error(fea(dde_overlap, fea_name = "sthg else"))
+
+  expect_s3_class(fea(dde_overlap, fea_name = "salmonella_vs_naive",
+                      format = "original"), "data.frame")
+
+  expect_error(assign_dea_to_fea(dde_de_empty,
+                                 "not there",
+                                 "not there"))
+
+  expect_error(assign_dea_to_fea(dde_overlap,
+                                 "new_name",
+                                 "salmonella_vs_naive"))
+
+  expect_warning(assign_dea_to_fea(dde_overlap,
+                                 "ifng_vs_naive",
+                                 "salmonella_vs_naive",
+                                 force = TRUE))
+
+
+
+})
+
+test_that("renaming", {
+  dde <- DeeDeeExperiment(
+    se_macrophage_noassays,
+    de_results = de_named_list
+  )
+
+
+  dde_rename <- dea_rename(dde,old_name = "salmonella_vs_naive" ,
+                           new_name = "SalmvsNaive")
+  expect_s4_class(dde_rename, "DeeDeeExperiment")
+
+  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
+                          new_name = "ifng_vs_naive"))
+
+  expect_error(dea_rename(dde, old_name = "contrast1",
+                          new_name = "ifng_vs_naive"))
+
+  expect_error(dea_rename(dde, old_name = 1,
+                          new_name = "1"))
+
+  dde3 <- add_fea(dde_rename,fea = topGO_results)
+
+  expect_error(dea_rename(dde3, old_name = 1,
+                          new_name = "1"))
+
+  expect_error(dea_rename(dde, old_name = "salmonella_vs_naive",
+                          new_name = c("ifng_vs_naive","new_column")))
+
+  expect_error(dea_rename(dde, old_name = c("salmonella_vs_naive","salmo_both"),
+                          new_name = c("salmonel_vs_naive", "salmonel_vs_naive")))
+
+
+  fea_rename <- fea_rename(dde3,old_name = "salmonella_vs_naive" ,
+                           new_name = "topGO_SalmonellavsNaive")
+  expect_s4_class(fea_rename, "DeeDeeExperiment")
+
+  expect_equal(fea_names(fea_rename), c("ifng_vs_naive",
+                                        "ifngsalmo_vs_naive",
+                                        "topGO_SalmonellavsNaive",
+                                        "salmo_both"))
+
 
 })
 
@@ -398,11 +471,6 @@ test_that("validity and so", {
                                 fe_tool = "chico"))
   }
   )
-
-
-
-
-
 
 
 })
