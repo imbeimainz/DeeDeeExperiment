@@ -198,7 +198,7 @@ setMethod("dea_names",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea_rename",
-          signature = c("DeeDeeExperiment", "character", "character"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 old_name,
                                 new_name){
@@ -279,6 +279,7 @@ setMethod("add_dea",
             # if (!is(x, "DeeDeeExperiment")) {
             #   stop("x must be DeeDeeExperiment object!")
             # }
+
             # dea must be named list
             if (is.null(names(dea))) {
               stop("All elements in dea list must have names!")
@@ -475,7 +476,7 @@ setMethod("add_dea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("remove_dea",
-          signature = c("DeeDeeExperiment", "character"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x, dea_name) {
             # x must be a DeeDeeExp
 
@@ -510,7 +511,7 @@ setMethod("remove_dea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea",
-          signature = c("DeeDeeExperiment", "ANY"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
                                 format = "minimal",
@@ -535,6 +536,7 @@ setMethod("dea",
 
               dea_name <- dea_names[1]
             }
+
 
             if (!is.character(dea_name) || length(dea_name) != 1) {
               stop("'dea_name' must be a single character string!")
@@ -701,7 +703,7 @@ setMethod("fea_names",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("fea_rename",
-          signature = c("DeeDeeExperiment", "character", "character"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 old_name,
                                 new_name){
@@ -751,27 +753,29 @@ setMethod("fea_rename",
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("add_fea",
-          signature = c("DeeDeeExperiment",
-                        "ANY"), # or should i force it to data.frame??
-          definition = function(x,
-                                fea,
-                                de_name= NA_character_,
-                                fe_name= NULL,
-                                fea_type = c("auto", "topGO", "clusterPro", "GeneTonic",
-                                             "DAVID", "gsea", "fgsea", "enrichr", "gProfiler"),
-                                force = FALSE) {
-
-            # x must be a DeeDeeExperiment
-            # if (!is(x, "DeeDeeExperiment")) {
-            #   stop("x must be DeeDeeExperiment object!")
-            # }
-
-            ## add checks for fea!!
-
-            # match and check fea_type, if the user doesn't use the argument
-            # the default is auto
-            fea_type <- match.arg(fea_type)
+setMethod(
+  "add_fea",
+  signature = c("DeeDeeExperiment"),
+  definition = function(x,
+                        fea,
+                        de_name = NA_character_,
+                        fe_name = NULL,
+                        fea_type = c(
+                          "auto",
+                          "topGO",
+                          "clusterPro",
+                          "GeneTonic",
+                          "DAVID",
+                          "gsea",
+                          "fgsea",
+                          "enrichr",
+                          "gProfiler"
+                        ),
+                        force = FALSE) {
+    # x must be a DeeDeeExperiment
+    # if (!is(x, "DeeDeeExperiment")) {
+    #   stop("x must be DeeDeeExperiment object!")
+    # }
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(fea, env = parent.frame()))
@@ -920,7 +924,7 @@ setMethod("add_fea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("remove_fea",
-          signature = c("DeeDeeExperiment", "character"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x, fea_name) {
 
             # x must be a DeeDeeExp
@@ -959,8 +963,7 @@ setMethod("remove_fea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("fea",
-          signature = c("DeeDeeExperiment",
-                        "ANY"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 fea_name = NULL,
                                 format = "minimal") {
@@ -1032,7 +1035,7 @@ setMethod("fea",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("get_fea_list",
-          signature = c("DeeDeeExperiment", "ANY"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
                                 format = "minimal") {
@@ -1105,7 +1108,7 @@ setMethod("get_fea_list",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("assign_dea_to_fea",
-          signature = c("DeeDeeExperiment", "character", "character"),
+          signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name,
                                 fea_name,

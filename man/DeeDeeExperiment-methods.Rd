@@ -22,20 +22,20 @@
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
-\alias{dea_rename,DeeDeeExperiment,character,character-method}
+\alias{dea_rename,DeeDeeExperiment-method}
 \alias{add_dea,DeeDeeExperiment-method}
-\alias{remove_dea,DeeDeeExperiment,character-method}
+\alias{remove_dea,DeeDeeExperiment-method}
 \alias{dea,DeeDeeExperiment-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
 \alias{fea_info,DeeDeeExperiment-method}
 \alias{fea_info<-,DeeDeeExperiment-method}
 \alias{fea_names,DeeDeeExperiment-method}
-\alias{fea_rename,DeeDeeExperiment,character,character-method}
+\alias{fea_rename,DeeDeeExperiment-method}
 \alias{add_fea,DeeDeeExperiment-method}
-\alias{remove_fea,DeeDeeExperiment,character-method}
+\alias{remove_fea,DeeDeeExperiment-method}
 \alias{fea,DeeDeeExperiment-method}
 \alias{get_fea_list,DeeDeeExperiment-method}
-\alias{assign_dea_to_fea,DeeDeeExperiment,character,character-method}
+\alias{assign_dea_to_fea,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -44,11 +44,11 @@
 
 \S4method{dea_names}{DeeDeeExperiment}(x)
 
-\S4method{dea_rename}{DeeDeeExperiment,character,character}(x, old_name, new_name)
+\S4method{dea_rename}{DeeDeeExperiment}(x, old_name, new_name)
 
 \S4method{add_dea}{DeeDeeExperiment}(x, dea, force = FALSE)
 
-\S4method{remove_dea}{DeeDeeExperiment,character}(x, dea_name)
+\S4method{remove_dea}{DeeDeeExperiment}(x, dea_name)
 
 \S4method{dea}{DeeDeeExperiment}(
   x,
@@ -66,7 +66,7 @@
 
 \S4method{fea_names}{DeeDeeExperiment}(x)
 
-\S4method{fea_rename}{DeeDeeExperiment,character,character}(x, old_name, new_name)
+\S4method{fea_rename}{DeeDeeExperiment}(x, old_name, new_name)
 
 \S4method{add_fea}{DeeDeeExperiment}(
   x,
@@ -78,13 +78,13 @@
   force = FALSE
 )
 
-\S4method{remove_fea}{DeeDeeExperiment,character}(x, fea_name)
+\S4method{remove_fea}{DeeDeeExperiment}(x, fea_name)
 
 \S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = "minimal")
 
 \S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal")
 
-\S4method{assign_dea_to_fea}{DeeDeeExperiment,character,character}(x, dea_name, fea_name, force = FALSE)
+\S4method{assign_dea_to_fea}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}

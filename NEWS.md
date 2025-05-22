@@ -3,6 +3,9 @@
 * New methods to rename DEA and FEA elements in `dde` objects, get all FEAs for
 a specific DEA, assign DEA to FEA
 
+* Method dispatch is now only base on x being `DeeDeeExperiment`, other arguments
+are no longer part of the method signature
+
 * expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers
 
@@ -33,4 +36,5 @@ FEA results
 ## New features
 
 * The `DeeDeeExperiment` class is now being developed in its own standalone
-package, following its separation from the original `DeeDee_legacy` repository: https://github.com/imbeimainz/DeeDee_legacy
+package, following its separation from the original `DeeDee_legacy` repository:
+https://github.com/imbeimainz/DeeDee_legacy
