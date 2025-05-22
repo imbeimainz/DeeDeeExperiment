@@ -532,6 +532,10 @@ setMethod("dea",
                                 extra_rd = c("gene_id", "SYMBOL"),
                                 verbose = TRUE) {
 
+            if (!is.character(extra_rd)) {
+              stop("'extra_rd' must be a character vector!")
+            }
+
             deas <- dea_info(x)
             dea_names <- names(deas)
 
