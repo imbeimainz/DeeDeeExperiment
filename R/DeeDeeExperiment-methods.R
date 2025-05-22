@@ -679,7 +679,7 @@ setMethod("get_dea_list",
 
               if (format == "minimal") {
                 # remove the first two columns
-                dea_list[[i]] <- dea_list[[i]][, -c(1,2)]                
+                # dea_list[[i]] <- dea_list[[i]][, -c(1,2)]                
                 colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
 
                 # maybe check for rowname mismatches potential gene version issue?
