@@ -803,152 +803,157 @@ setMethod(
     #   stop("x must be DeeDeeExperiment object!")
     # }
 
-            # capture name inside the env where the func is called
-            entry_name <- deparse(substitute(fea, env = parent.frame()))
     if (!is.character(de_name) || length(de_name) != 1) {
       stop("'de_name' must be a single character string or NA_character_")
     } # should it be a vector of different de_name???
 
-            # check and preocess fea
-            fea_list <- .check_enrich_results(fea, entry_name)
+    ## add checks for fea!!
 
-            # fea must be named list
-            if (is.null(names(fea_list))) {
-              stop("All elements in 'fea' list must have names!")
-            }
+    # match and check fea_type, if the user doesn't use the argument
+    # the default is auto
+    fea_type <- match.arg(fea_type)
 
-            #check that names are all unique
-            if (anyDuplicated(names(fea))) {
-              stop("Names in dea must be unique!")
-            }
+    # capture name inside the env where the func is called
+    entry_name <- deparse(substitute(fea, env = parent.frame()))
 
-            # check that names are all unique, and do not overlap with the existing ones
-            # unless force is TRUE
+    # check and preocess fea
+    fea_list <- .check_enrich_results(fea, entry_name)
 
-            new_names <- names(fea_list)
-            existing_names <- names(fea_info(x))
+    # fea must be named list
+    if (is.null(names(fea_list))) {
+      stop("All elements in 'fea' list must have names!")
+    }
 
-            overlapping_names <- intersect(new_names, existing_names)
+    #check that names are all unique
+    if (anyDuplicated(names(fea))) {
+      stop("Names in dea must be unique!")
+    }
 
-            if (length(overlapping_names) > 0 && !force) {
-              stop("Names in 'fea' overlap with existing FEA results: ",
-                   paste(overlapping_names, collapse = ", "),
-                   ". Set force = TRUE to overwrite.")
-            }
+    # check that names are all unique, and do not overlap with the existing ones
+    # unless force is TRUE
 
-            # get existing results in the fea slot
-            fea_contrasts <- fea_info(x)
+    new_names <- names(fea_list)
+    existing_names <- names(fea_info(x))
 
-            for (fe in names(fea_list)) {
-              res_enrich <- fea_list[[fe]]
-              if (!is.null(dea_info(x)) &&
-                  length(dea_info(x)) > 0) {
-                matched_name <- .match_fe_to_de(fe, names(dea_info(x)))
-                if (!is.na(matched_name) &&
-                    matched_name %in% names(dea_info(x))) {
-                  de_res_name <- matched_name
-                  if (fe != matched_name) { ### if the name is exactly the same do we need a msg or it s obvious???
-                    message("FEA '", fe, "' matched to DE contrast '", matched_name, "'")
-                  } else{
-                    message("FEA '",
-                            fe,
-                            "' matched **directly** to DE contrast '", # in case of the same name
-                            matched_name, "'")
-                  }
-                } else {
-                  de_res_name <- NA_character_
-                  warning(
-                    "Could not match FEA '",
-                    fe,
-                    "' to any DE contrast.\n",
-                    "Available DE results: ",
-                    paste(names(dea_info(x)), collapse = ", "),
-                    "\n",
-                    "Consider naming your enrich_results starting with one of the following prefixes:",
-                    " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
-                    "followed by the contrast name"
-                  )
-                }
-              } else {
-                de_res_name <- NA_character_
-                warning("Could not match FEA '",
-                        fe,
-                        "' to a DE contrast because no DE results were provided.\n")
-              }
+    overlapping_names <- intersect(new_names, existing_names)
 
-              if (fea_type == "auto") {
-                # auto detect
-                fe_tool <- .detect_fea_tool(res_enrich)
-              } else {
-                fe_tool <- fea_type
-              }
+    if (length(overlapping_names) > 0 && !force) {
+      stop(
+        "Names in 'fea' overlap with existing FEA results: ",
+        paste(overlapping_names, collapse = ", "),
+        ". Set force = TRUE to overwrite."
+      )
+    }
 
-              res_enrich_shaken <- NULL # default
+    # get existing results in the fea slot
+    fea_contrasts <- fea_info(x)
 
-              if (fe_tool == "topGO") {
-                # shake using shake_topGOtableResult
-                res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
-              }
+    for (fe in names(fea_list)) {
+      res_enrich <- fea_list[[fe]]
+      if (!is.null(dea_info(x)) &&length(dea_info(x)) > 0) {
 
-              else if (fe_tool == "clusterPro") {
-                #shake using shake_enrichResult
-                res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
-              }
-
-              else if (fe_tool == "GeneTonic") {
-                # shake based on specific columns or return original object
-                res_enrich_shaken <- res_enrich # input already shaken
-              }
-
-              else if (fe_tool == "DAVID") {
-                # we are not taking the output of the file!!  so we cannot
-                # use genetonic shakers!!
-                # create shakers for that
-                res_enrich_shaken <- .DeeDeefy_david(res_enrich)
-              }
-
-              else if (fe_tool == "fgsea") {
-                res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
-              }
-
-              else if (fe_tool == "gsea") {
-                  res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
-              }
-
-              else if (fe_tool == "enrichr") {
-                res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
-              }
-
-              else if (fe_tool == "gProfiler") {
-                res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
-              }
-
-              if (is.null(res_enrich_shaken)) {
-                message("No shaking method available for this functional enrichment results.",
-                        " Returning only the original object.")
-              }
-
-
-              fea_contrast <- list(
-                de_name = de_res_name,# links to de result
-                fe_name = fe_name,
-                shaken_results = res_enrich_shaken , # return shaken results for later use in GeneTonic
-                original_object = res_enrich,
-                fe_tool = fe_tool
-              )
-
-
-              fea_contrasts[[fe]] <- fea_contrast
-            }
-            # update the fea slot
-            fea_info(x) <- fea_contrasts
-            # check here the validity
-            validObject(x)
-            # return the object
-            return(x)
+        if (!is.na(de_name)) {
+          if (de_name %in% names(dea_info(x))) {
+            de_res_name <- de_name
+          } else {
+            warning("Provided 'de_name' ('", de_name,"') not found among DE results. Coercing into NA_character_")
+            de_res_name <- NA_character_
           }
-)
+        } else {
+          matched_name <- .match_fe_to_de(fe, names(dea_info(x)))
+          if (!is.na(matched_name) && matched_name %in% names(dea_info(x))) {
+            de_res_name <- matched_name
+            if (fe != matched_name) {
+              ### if the name is exactly the same do we need a msg or it s obvious???
+              message("FEA '", fe, "' matched to DE contrast '", matched_name,"'")
+            } else{
+              # in case of the same name
+              message("FEA '", fe, "' matched **directly** to DE contrast '", matched_name,"'")
+            }
+          } else {
+            de_res_name <- NA_character_
+            warning("Could not match FEA '", fe, "' to any DE contrast.\n",
+              "Available DE results: ", paste(names(dea_info(x)), collapse = ", "), "\n",
+              "Consider naming your enrich_results starting with one of the following prefixes:",
+              " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+              "followed by the contrast name"
+            )
+          }
 
+        }
+
+      } else {
+        de_res_name <- NA_character_
+        warning("Could not match FEA '", fe, "' to a DE contrast because no DE results were provided.\n")
+      }
+
+
+      if (fea_type == "auto") {
+        # auto detect
+        fe_tool <- .detect_fea_tool(res_enrich)
+      } else {
+        fe_tool <- fea_type
+      }
+      res_enrich_shaken <- NULL # default
+
+      if (fe_tool == "topGO") {
+        # shake using shake_topGOtableResult
+        res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
+
+        } else if (fe_tool == "clusterPro") {
+          #shake using shake_enrichResult
+          res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
+
+        } else if (fe_tool == "GeneTonic") {
+          # shake based on specific columns or return original object
+          res_enrich_shaken <- res_enrich # input already shaken
+
+        } else if (fe_tool == "DAVID") {
+          # we are not taking the output of the file!!  so we cannot
+          # use genetonic shakers!!
+          # create shakers for that
+          res_enrich_shaken <- .DeeDeefy_david(res_enrich)
+
+        } else if (fe_tool == "fgsea") {
+          res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
+
+        } else if (fe_tool == "gsea") {
+          res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
+
+        } else if (fe_tool == "enrichr") {
+          res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
+
+        } else if (fe_tool == "gProfiler") {
+          res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
+      }
+
+      if (is.null(res_enrich_shaken)) {
+        message(
+          "No shaking method available for this functional enrichment results.",
+          " Returning only the original object."
+        )
+      }
+
+      fea_contrast <- list(
+        de_name = de_res_name,
+        # links to de result
+        fe_name = fe_name,
+        shaken_results = res_enrich_shaken ,
+        # return shaken results for later use in GeneTonic
+        original_object = res_enrich,
+        fe_tool = fe_tool
+      )
+
+      fea_contrasts[[fe]] <- fea_contrast
+    }
+    # update the fea slot
+    fea_info(x) <- fea_contrasts
+    # check here the validity
+    validObject(x)
+    # return the object
+    return(x)
+  }
+)
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
