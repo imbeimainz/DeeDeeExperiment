@@ -162,6 +162,8 @@ NULL
 
 # dea slot - get & set ---------------------------------------------------------
 
+## dea_info --------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea_info",
@@ -170,6 +172,7 @@ setMethod("dea_info",
             x@dea
           })
 
+## dea_info <- -----------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -184,6 +187,8 @@ setReplaceMethod("dea_info",
 
 # dea info - add, remove, get --------------------------------------------------
 
+## dea_names -------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea_names",
@@ -192,6 +197,8 @@ setMethod("dea_names",
             names(dea_info(x))
           }
           )
+
+## dea_rename ------------------------------------------------------------------
 
 ### TODO: add a setter for dea_names, in case one wants to rename the de res in
 ### dde? or a new method
@@ -276,6 +283,7 @@ setMethod("dea_rename",
 )
 
 
+## add_dea ---------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -483,6 +491,9 @@ setMethod("add_dea",
 ## also add_dea() need a way to handle adding again 1 entry
 
 
+
+## remove_dea ------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("remove_dea",
@@ -521,6 +532,7 @@ setMethod("remove_dea",
 
 
 
+## dea -------------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -637,6 +649,10 @@ setMethod("dea",
           }
 )
 
+
+
+## get_dea_list ----------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("get_dea_list",
@@ -691,6 +707,8 @@ setMethod("get_dea_list",
 
 # fea slot - get & set ---------------------------------------------------------
 
+## fea_info --------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("fea_info",
@@ -698,6 +716,8 @@ setMethod("fea_info",
           definition = function(x) {
             x@fea
           })
+
+## fea_info <- -----------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -711,6 +731,9 @@ setReplaceMethod("fea_info",
 
 
 # fea info - add, remove, get --------------------------------------------------
+
+## fea_names -------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("fea_names",
@@ -719,6 +742,8 @@ setMethod("fea_names",
             names(fea_info(x))
           }
 )
+
+## fea_rename ------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -778,6 +803,8 @@ setMethod("fea_rename",
 
           }
 )
+
+## add_fea ---------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -957,6 +984,10 @@ setMethod(
   }
 )
 
+
+
+## remove_fea ------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("remove_fea",
@@ -999,6 +1030,8 @@ setMethod("remove_fea",
           }
 )
 
+
+## fea -------------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -1072,6 +1105,9 @@ setMethod("fea",
 )
 
 
+
+## get_fea_list ----------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("get_fea_list",
@@ -1144,6 +1180,9 @@ setMethod("get_fea_list",
   }
 )
 
+
+
+## assign_dea_to_fea -----------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -1221,6 +1260,8 @@ setMethod("assign_dea_to_fea",
 NULL
 
 
+## show ------------------------------------------------------------------------
+
 #' @rdname DeeDeeExperiment-misc
 #' @export
 setMethod("show",
@@ -1237,6 +1278,8 @@ setMethod("show",
             )
           })
 
+
+## summary ---------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-misc
 #' @param ... additional argument passed to the summary method. Currently supports `FDR`, which
