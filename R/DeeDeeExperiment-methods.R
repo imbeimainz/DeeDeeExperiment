@@ -207,6 +207,14 @@ setMethod("dea_rename",
             # existing ones
             # dont forget to handle the naming of the current columns in the rowdata!!
 
+            if (!is.character(old_name) ||  length(old_name) == 0) {
+              stop("'old_name' must be a non empty character vector!")
+            }
+
+            if (!is.character(new_name) ||  length(new_name) == 0) {
+              stop("'new_name' must be a non empty character vector!")
+            }
+
             deas <- dea_info(x)
             current_names <- dea_names(x)
             if (length(current_names) == 0) {
@@ -219,18 +227,18 @@ setMethod("dea_rename",
 
             matching_index <- match(old_name, current_names)
 
-            if(any(is.na(matching_index))) {
+            if (any(is.na(matching_index))) {
               missing_names <- old_name[is.na(matching_index)]
               stop("The following DEA names where not found in dea slot:",
                    paste(missing_names, collapse = ", "))
             }
 
-            if(anyDuplicated(new_name)) {
+            if (anyDuplicated(new_name)) {
               stop("New names must be unique!")
             }
 
             overlapping_names <- intersect(new_name, current_names)
-            if(any(new_name %in% overlapping_names)) {
+            if (length(overlapping_names) > 0) {
               stop("New names overlap with existing DEA names: ",
                    paste(overlapping_names, collapse = ", "))
             }
@@ -272,8 +280,10 @@ setMethod("dea_rename",
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("add_dea",
-          signature = c("DeeDeeExperiment", "ANY"),
-          definition = function(x, dea, force = FALSE) {
+          signature = c("DeeDeeExperiment"),
+          definition = function(x,
+                                dea,
+                                force = FALSE) {
 
             # dde must be a DeeDeeExp
             # if (!is(x, "DeeDeeExperiment")) {
@@ -479,6 +489,10 @@ setMethod("remove_dea",
           signature = c("DeeDeeExperiment"),
           definition = function(x, dea_name) {
             # x must be a DeeDeeExp
+
+            if (!is.character(dea_name) || length(dea_name) == 0) {
+              stop("'dea_name' must be a non empty character vector!")
+            }
 
             # dea must be char vector
             deas <- names(dea_info(x))
@@ -711,6 +725,14 @@ setMethod("fea_rename",
             # check uniqueness of new names, and that they don't overlap with
             # existing ones
 
+            if (!is.character(old_name) ||  length(old_name) == 0) {
+              stop("'old_name' must be a non empty character vector!")
+            }
+
+            if (!is.character(new_name) ||  length(new_name) == 0) {
+              stop("'new_name' must be a non empty character vector!")
+            }
+
             feas <- fea_info(x)
             current_names <- fea_names(x)
             if (length(current_names) == 0) {
@@ -779,6 +801,9 @@ setMethod(
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(fea, env = parent.frame()))
+    if (!is.character(de_name) || length(de_name) != 1) {
+      stop("'de_name' must be a single character string or NA_character_")
+    } # should it be a vector of different de_name???
 
             # check and preocess fea
             fea_list <- .check_enrich_results(fea, entry_name)
@@ -931,6 +956,10 @@ setMethod("remove_fea",
             # if(!is(x,"DeeDeeExperiment")) {
             #   stop("x must be a DeeDeeExperiment object!")
             # }
+
+            if (!is.character(fea_name) || length(fea_name) == 0) {
+              stop("'fea_name' must be a non empty character vector!")
+            }
 
             feas <- fea_names(x)
 
@@ -1115,38 +1144,48 @@ setMethod("assign_dea_to_fea",
                                 force = FALSE) {
 
             # check fea_name & dea_name are character
+            if (!is.character(dea_name) ||  length(dea_name) == 0) {
+              stop("'dea_name' must be a single character string!")
+            }
+
+            if (!is.character(fea_name) ||  length(fea_name) == 0) {
+              stop("'fea_name' must be a non empty character vector!")
+            }
 
 
             dea_names <- dea_names(x)
             fea_names <- fea_names(x)
 
 
-            if (!(fea_name %in% fea_names)) {
-              stop("FEA result: '",fea_name,"' not found")
-            }
-
             if (!(dea_name %in% dea_names)) {
               stop("DEA result: '",dea_name,"' not found")
             }
 
-            # do we have existing link?
-            current_de_name <- fea_info(x)[[fea_name]][["de_name"]]
-
-            if (!is.null(current_de_name) && !is.na(current_de_name) && current_de_name != dea_name) {
-              if(!force) {
-                stop("FEA '", fea_name, "' is already linked to DEA '", current_de_name,
-                     "'. Use `force = TRUE` to overwrite")
-              } else {
-                warning("FEA '", fea_name, "' was linked to DEA '", current_de_name,
-                        ". Now linked to '", dea_name, "'")
+            for (fea in fea_name) {
+              if (!(fea %in% fea_names)) {
+                stop("FEA result: '",fea,"' not found")
               }
 
+              # do we have existing link?
+              current_de_name <- fea_info(x)[[fea]][["de_name"]]
+
+              if (!is.null(current_de_name) && !is.na(current_de_name) && current_de_name != dea_name) {
+                if(!force) {
+                  stop("FEA '", fea, "' is already linked to DEA '", current_de_name,
+                       "'. Use `force = TRUE` to overwrite")
+                } else {
+                  warning("FEA '", fea, "' was linked to DEA '", current_de_name,
+                          ". Now linked to '", dea_name, "'")
+                }
+
+              }
+
+              # assign
+              message("Assigning DEA '", dea_name, "' to FEA '", fea, "'")
+
+              fea_info(x)[[fea]][["de_name"]] <- dea_name
+
             }
-
-            # assign
-            message("Assigning DEA '", dea_name, "' to FEA '", fea_name, "'")
-
-            fea_info(x)[[fea_name]][["de_name"]] <- dea_name
 
             validObject(x)
             x
