@@ -760,7 +760,7 @@ setMethod("fea_rename",
             }
 
             overlapping_names <- intersect(new_name, current_names)
-            if(any(new_name %in% overlapping_names)) {
+            if(length(overlapping_names) > 0) {
               stop("New names overlap with existing FEA names: ",
                    paste(overlapping_names, collapse = ", "))
             }
