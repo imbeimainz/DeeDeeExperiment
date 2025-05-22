@@ -315,7 +315,7 @@ setMethod("add_dea",
 
 
             # capture name inside the env where the func is called
-            entry_name <- deparse(substitute(dea, env = parent.frame()))
+            entry_name <- deparse(substitute(dea))
 
             # check and preocess dea
             dea <- .check_de_results(dea, entry_name)
@@ -662,6 +662,8 @@ setMethod("get_dea_list",
                 dea(x, dea_name = i, format = format, verbose = verbose))
 
               if (format == "minimal") {
+                # remove the first two columns
+                dea_list[[i]] <- dea_list[[i]][, -c(1,2)]                
                 colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
 
                 # maybe check for rowname mismatches potential gene version issue?
@@ -814,7 +816,7 @@ setMethod(
     fea_type <- match.arg(fea_type)
 
     # capture name inside the env where the func is called
-    entry_name <- deparse(substitute(fea, env = parent.frame()))
+    entry_name <- deparse(substitute(fea))
 
     # check and preocess fea
     fea_list <- .check_enrich_results(fea, entry_name)
