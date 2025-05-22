@@ -529,10 +529,10 @@ setMethod("dea",
           definition = function(x,
                                 dea_name = NULL,
                                 format = "minimal",
-                                extra_rd = c("gene_id", "SYMBOL"),
+                                extra_rd = NULL,
                                 verbose = TRUE) {
 
-            if (!is.character(extra_rd)) {
+            if (!is.null(extra_rd) && !is.character(extra_rd)) {
               stop("'extra_rd' must be a character vector!")
             }
 
