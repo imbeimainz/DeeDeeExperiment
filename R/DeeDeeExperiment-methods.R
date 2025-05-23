@@ -11,6 +11,7 @@
 #' remove_dea
 #' dea
 #' get_dea_list
+#' add_scenario_info
 #' fea_info
 #' fea_info<-
 #' fea_names
@@ -31,7 +32,8 @@
 #' @param dea A named list of DE results, in any of the formats supported by
 #' the package (currently: results from DESeq2, edgeR, limma).
 #' @param dea_name Character value, specifying the name of the DE analysis to
-#' get or remove, or match against (e.g., to fetch associated FEA results)
+#' get or remove, or match against (e.g., to fetch associated FEA results), or to which
+#' additional context and information can be attached
 #' @param verbose Logical, whether or not to display warnings. If TRUE, warnings/messages
 #' will be displayed. If FALSE, the function runs silently
 #' @param extra_rd A character vector of additional columns from rowData(x) to include. It
@@ -60,6 +62,8 @@
 #' (e.g. log2FC, p-value, adjusted p-value for DEAs,
 #' or gs_id, gs_description, gs_pvalue, gs_genes... for FEAs), or "original" to return the full
 #' result object. It defaults to "minimal"
+#' @param info A character vector, containing contextual information about the
+#' specified DE analysis. It defaults to NULL
 #'
 #' @return Return value varies depending on the individual methods, as described
 #' below.
@@ -78,6 +82,11 @@
 #' * `dea` and `get_dea_list` retrieve the DEA information, as well as some extra rowData information and provide
 #' this as a `DataFrame` object (for a specific analysis) or as a list, with one
 #' element for each reported analysis.
+#' * `add_scenario_info` is the method to add user defined contextual information for a specific DE analysis.
+#' It allows users to attach free-text notes to a specific DEA results that stored in a
+#' `DeeDeeExperiment` object. This information can include any other relevant information to help document
+#' that DEA scenario. This context is stored in the `dea` slot under the name `scenario_info`,
+#' which is not a default element in `dea`.
 #'
 #' FEAs
 #'
@@ -702,6 +711,52 @@ setMethod("get_dea_list",
             return(dea_list)
           }
 )
+
+
+## add_scenario_info -----------------------------------------------------------
+
+#' @rdname DeeDeeExperiment-methods
+#' @export
+setMethod("add_scenario_info",
+          signature = c("DeeDeeExperiment"),
+          definition = function(x,
+                                dea_name,
+                                info = NULL,
+                                force = FALSE){
+            dea_names <- dea_names(x)
+            existing_info <- dea_info(x)[[dea_name]][["scenario_info"]]
+
+            # checks on dea_name
+            if (!is.character(dea_name) || length(dea_name) != 1) {
+              stop("'dea_name' must be a single character string!")
+            }
+
+            # checks on info
+            if (!is.null(info) && !is.character(info)) {
+              stop("'info' must be a character vector (e.g. one or more strings)")
+            }
+
+            if (!(dea_name %in% dea_names)) {
+              stop("'dea_name'", dea_name,"not found among DEA results.\n",
+                   "Available results: ", paste(dea_names,collapse = ","))
+            }
+
+            if (!is.null(existing_info) && !force) {
+              stop("Existing scenario_info for '", dea_name, "' already exists.",
+                   "Set force = TRUE to overwrite")
+            }
+
+            # when both info and existing_info are null -> do nothing
+
+            dea_info(x)[[dea_name]][["scenario_info"]] <- info
+
+            # update object
+            validObject(x)
+            x
+
+          }
+)
+
 
 
 

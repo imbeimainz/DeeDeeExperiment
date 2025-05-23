@@ -10,6 +10,7 @@
 \alias{remove_dea}
 \alias{dea}
 \alias{get_dea_list}
+\alias{add_scenario_info}
 \alias{fea_info}
 \alias{fea_info<-}
 \alias{fea_names}
@@ -27,6 +28,7 @@
 \alias{remove_dea,DeeDeeExperiment-method}
 \alias{dea,DeeDeeExperiment-method}
 \alias{get_dea_list,DeeDeeExperiment-method}
+\alias{add_scenario_info,DeeDeeExperiment-method}
 \alias{fea_info,DeeDeeExperiment-method}
 \alias{fea_info<-,DeeDeeExperiment-method}
 \alias{fea_names,DeeDeeExperiment-method}
@@ -53,6 +55,8 @@
 \S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = TRUE)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
+
+\S4method{add_scenario_info}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
 
 \S4method{fea_info}{DeeDeeExperiment}(x)
 
@@ -98,7 +102,8 @@ the package (currently: results from DESeq2, edgeR, limma).}
 results name. It defaults to FALSE.}
 
 \item{dea_name}{Character value, specifying the name of the DE analysis to
-get or remove, or match against (e.g., to fetch associated FEA results)}
+get or remove, or match against (e.g., to fetch associated FEA results), or to which
+additional context and information can be attached}
 
 \item{format}{A character string, specifying the DEA/FEAs output format.
 It takes either "minimal" to return only essential columns
@@ -111,6 +116,9 @@ defaults to c("gene_id", "SYMBOL").}
 
 \item{verbose}{Logical, whether or not to display warnings. If TRUE, warnings/messages
 will be displayed. If FALSE, the function runs silently}
+
+\item{info}{A character vector, containing contextual information about the
+specified DE analysis. It defaults to NULL}
 
 \item{fea}{A named list of Functional Enrichment results. Each element can be
 either a data.frame (currently supports results from \code{topGO}, \code{enrichR}, \code{gProfiler},
@@ -152,6 +160,11 @@ content in the \code{dea} slot.
 \item \code{dea} and \code{get_dea_list} retrieve the DEA information, as well as some extra rowData information and provide
 this as a \code{DataFrame} object (for a specific analysis) or as a list, with one
 element for each reported analysis.
+\item \code{add_scenario_info} is the method to add user defined contextual information for a specific DE analysis.
+It allows users to attach free-text notes to a specific DEA results that stored in a
+\code{DeeDeeExperiment} object. This information can include any other relevant information to help document
+that DEA scenario. This context is stored in the \code{dea} slot under the name \code{scenario_info},
+which is not a default element in \code{dea}.
 }
 
 FEAs
