@@ -1327,7 +1327,9 @@ setMethod("assign_dea_to_fea",
 #' for example, show and summary methods.
 #'
 #' @param object a \code{\link{DeeDeeExperiment}} object
-#'
+#' @param ... additional argument passed to the summary method. Currently supports `FDR`, which
+#' sets the significance threshold for subsetting differentially expressed genes based
+#' on adjusted p-values. Defaults to 0.05
 #' @return Returns NULL
 NULL
 
@@ -1354,9 +1356,6 @@ setMethod("show",
 ## summary ---------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-misc
-#' @param ... additional argument passed to the summary method. Currently supports `FDR`, which
-#' sets the significance threshold for subsetting differentially expressed genes based
-#' on adjusted p-values. Defaults to 0.05
 #' @export
 setMethod("summary",
           signature = signature(object = "DeeDeeExperiment"),
