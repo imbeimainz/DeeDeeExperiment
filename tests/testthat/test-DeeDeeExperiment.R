@@ -364,6 +364,27 @@ test_that("adding and removing", {
                                  "salmonella_vs_naive",
                                  force = TRUE))
 
+  expect_error(add_scenario_info(dde_overlap,
+                    dea_name = "i dont exist"))
+
+  expect_error(add_scenario_info(dde_overlap,
+                                 dea_name = 2))
+
+  dde_with_info <- add_scenario_info(dde_overlap,
+                                     dea_name = "ifng_vs_naive",
+                                     info = "here goes some txt about the contrast ifng_vs_naive")
+
+  expect_s4_class(dde_with_info, "DeeDeeExperiment")
+
+  expect_error(add_scenario_info(dde_with_info,
+                                 dea_name = "ifng_vs_naive",
+                                 info = "sthg else about ifng_vs_naive"))
+
+  expect_error(add_scenario_info(dde_overlap,
+                                 dea_name = c("i dont exist", "ifng_vs_naive")))
+
+
+
 
 
 })
