@@ -1215,7 +1215,7 @@ setMethod("get_fea_list",
       # otherwise return only the specific feas associated with that dea_name
 
 
-      if (is.null(dea_name) || !is.null(de_name) && de_name == dea_name) {
+      if (is.null(dea_name) || (!is.na(de_name) && de_name == dea_name)) {
 
         if (format == "minimal") {
           fe_res <- fea_info(x)[[i]][["shaken_results"]]
