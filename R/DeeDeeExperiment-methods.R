@@ -283,6 +283,23 @@ setMethod("dea_rename",
 
             rowData(x) <- rd
 
+            # also rename in fea slot in there is a linked fea
+
+            fea_names <- fea_names(x)
+
+            for (fea in fea_names) {
+
+              current_link <- fea_info(x)[[fea]][["de_name"]]
+              if (!is.null(current_link) && current_link %in% old_name) {
+                new_index <- match(current_link, old_name)
+                updated_name <- new_name[new_index]
+
+                fea_info(x)[[fea]][["de_name"]]  <- updated_name
+              }
+
+            }
+
+
             message("Renamed DEA entries: ", paste(old_name, "to", new_name, collapse = ","))
 
             validObject(x)
