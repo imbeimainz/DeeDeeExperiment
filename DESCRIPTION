@@ -50,6 +50,8 @@ Suggests:
     ideal,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
+URL: https://github.com/imbeimainz/DeeDeeExperiment
+BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
 biocViews: Software, Infrastructure, DataRepresentation, GeneExpression, Transcription,
   Transcriptomics, DifferentialExpression, Pathways, GO
 Config/testthat/edition: 3

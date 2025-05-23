@@ -16,6 +16,14 @@ It introduces two dedicated slots to store Differential Expression (DE) analysis
 results and Functional Enrichment analysis outcomes, providing a structured approach
 for downstream analysis.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/imbeimainz/DeeDeeExperiment}
+  \item Report bugs at \url{https://github.com/imbeimainz/DeeDeeExperiment/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Najla Abassi \email{abassi.nejla96@gmail.com} (\href{https://orcid.org/0000-0001-8357-0938}{ORCID})
 
