@@ -1371,7 +1371,7 @@ setMethod("summary",
             if (length(dea) > 0) {
               cat("DE Results Summary:\n")
               de_table <- data.frame(
-                Contrast = names(dea),
+                DEA_name = names(dea),
 
                 Up = sapply(names(dea), function(contrast) {
                   lfc_col <- paste0(contrast, "_log2FoldChange")
