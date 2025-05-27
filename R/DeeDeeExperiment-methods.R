@@ -53,6 +53,8 @@
 #' @param fe_name A character string giving a name to the FE results.
 #' @param fea_type A character string indicating the FEA tool used. It can take
 #' any of the following values : "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea",
+#' @param remove_linked_fea A logical, specifying whether to remove or not the linked FEA when
+#' a DEA results is removed
 #' "fgsea", "enrichr", "gProfiler". When not specified, it defaults to "auto" and
 #' the tool is inferred automatically based on the input.
 #' @param force A logical, indicating whether to overwrite results when introducing the same
@@ -524,7 +526,9 @@ setMethod("add_dea",
 #' @export
 setMethod("remove_dea",
           signature = c("DeeDeeExperiment"),
-          definition = function(x, dea_name) {
+          definition = function(x,
+                                dea_name,
+                                remove_linked_fea = FALSE) {
             # x must be a DeeDeeExp
 
             if (!is.character(dea_name) || length(dea_name) == 0) {
@@ -537,16 +541,45 @@ setMethod("remove_dea",
             deas_to_remove <- intersect(dea_name, deas)
 
             # warning() if nothing to remove
-            if(length(deas_to_remove) == 0){
-              warning("No matching dea entries found to remove.")
+            if (length(deas_to_remove) == 0){
+              warning("Some elements in 'dea_name' were not found among DEA results.\n",
+                      "Available results: ", paste(deas,collapse = ","))
             }
+
 
             for (i in deas_to_remove) {
               cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue", "_padj")))
               rowData(x) <- rowData(x)[, !(colnames(rowData(x)) %in% cols_to_remove)]
               # update the de slot
               dea_info(x)[[i]] <- NULL
+
+              if (remove_linked_fea) { ## fea is not removed!!!!!
+                feas <- fea_info(x)
+                removed_fea <- character()
+                for (fea_name in names(feas)) {
+                  if (!is.null(feas[[fea_name]][["de_name"]]) &&
+                      feas[[fea_name]][["de_name"]] %in% deas_to_remove) {
+                    removed_fea <- c(removed_fea, fea_name)
+                    feas[[fea_name]] <- NULL
+                    fea_info(x) <- feas
+                  }
+                }
+                if (length(removed_fea) > 0) {
+                  message("The following linked FEA entries were removed: ",
+                          paste(removed_fea, collapse = ", "))
+                }
+              }
+
+
+              # unlink
+              fea_info(x)[[i]][["de_name"]] <- NULL
+
             }
+            removed_fea <- character()
+
+
+
+
 
             # here check some validity?
             validObject(x)

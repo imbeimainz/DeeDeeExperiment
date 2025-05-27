@@ -50,7 +50,7 @@
 
 \S4method{add_dea}{DeeDeeExperiment}(x, dea, force = FALSE)
 
-\S4method{remove_dea}{DeeDeeExperiment}(x, dea_name)
+\S4method{remove_dea}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
 
 \S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = TRUE)
 
@@ -104,6 +104,9 @@ results name. It defaults to FALSE.}
 \item{dea_name}{Character value, specifying the name of the DE analysis to
 get or remove, or match against (e.g., to fetch associated FEA results), or to which
 additional context and information can be attached}
+
+\item{remove_linked_fea}{A logical, specifying whether to remove or not the linked FEA when
+a DEA results is removed}
 
 \item{format}{A character string, specifying the DEA/FEAs output format.
 It takes either "minimal" to return only essential columns
