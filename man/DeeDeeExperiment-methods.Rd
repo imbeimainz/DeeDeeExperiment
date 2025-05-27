@@ -71,7 +71,7 @@
   fea,
   de_name = NA_character_,
   fe_name = NULL,
-  fea_type = c("auto", "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea", "fgsea",
+  fea_tool = c("auto", "topGO", "clusterProfiler", "GeneTonic", "DAVID", "gsea", "fgsea",
     "enrichr", "gProfiler"),
   force = FALSE
 )
@@ -133,8 +133,8 @@ If not provided, the function will attempt to match fea names to de results auto
 
 \item{fe_name}{A character string giving a name to the FE results.}
 
-\item{fea_type}{A character string indicating the FEA tool used. It can take
-any of the following values : "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea",
+\item{fea_tool}{A character string indicating the FEA tool used. It can take
+any of the following values : "topGO", "clusterProfiler", "GeneTonic", "DAVID", "gsea",
 "fgsea", "enrichr", "gProfiler". When not specified, it defaults to "auto" and
 the tool is inferred automatically based on the input.}
 

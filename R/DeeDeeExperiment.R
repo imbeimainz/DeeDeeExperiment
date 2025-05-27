@@ -329,7 +329,7 @@ DeeDeeExperiment <- function(se = NULL,
             paste(names(de_results), collapse = ", "),
             "\n",
             "Consider naming your enrich_results starting with one of the following prefixes:",
-            " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+            " 'topGO_', 'clusterProfiler_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
             "followed by the contrast name"
           )
         }
@@ -356,7 +356,7 @@ DeeDeeExperiment <- function(se = NULL,
         # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
         res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
 
-      } else if (fe_tool == "clusterPro") {
+      } else if (fe_tool == "clusterProfiler") {
         if (is(res_enrich, "enrichResult")) {
           res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
         }

@@ -51,10 +51,10 @@
 #' @param de_name A character string to explicitly specify the name of the de result this fea should be linked to.
 #' If not provided, the function will attempt to match fea names to de results automatically.
 #' @param fe_name A character string giving a name to the FE results.
-#' @param fea_type A character string indicating the FEA tool used. It can take
-#' any of the following values : "topGO", "clusterPro", "GeneTonic", "DAVID", "gsea",
 #' @param remove_linked_fea A logical, specifying whether to remove or not the linked FEA when
 #' a DEA results is removed
+#' @param fea_tool A character string indicating the FEA tool used. It can take
+#' any of the following values : "topGO", "clusterProfiler", "GeneTonic", "DAVID", "gsea",
 #' "fgsea", "enrichr", "gProfiler". When not specified, it defaults to "auto" and
 #' the tool is inferred automatically based on the input.
 #' @param force A logical, indicating whether to overwrite results when introducing the same
@@ -923,7 +923,7 @@ setMethod(
                         fea_type = c(
                           "auto",
                           "topGO",
-                          "clusterPro",
+                          "clusterProfiler",
                           "GeneTonic",
                           "DAVID",
                           "gsea",
@@ -1009,7 +1009,7 @@ setMethod(
             warning("Could not match FEA '", fe, "' to any DE contrast.\n",
               "Available DE results: ", paste(names(dea_info(x)), collapse = ", "), "\n",
               "Consider naming your enrich_results starting with one of the following prefixes:",
-              " 'topGO_', 'ClusterPro_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+              " 'topGO_', 'clusterProfiler_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
               "followed by the contrast name"
             )
           }
@@ -1034,7 +1034,7 @@ setMethod(
         # shake using shake_topGOtableResult
         res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
 
-        } else if (fe_tool == "clusterPro") {
+        } else if (fe_tool == "clusterProfiler") {
           #shake using shake_enrichResult
           res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
 
@@ -1148,7 +1148,7 @@ setMethod("fea",
 
             # get returns shaken table by default for a specific contrast
             # for now the only case where we won't have shaken results if the user
-            # introduces fea that is not generate with {topGO,clusterPro,...}
+            # introduces fea that is not generate with {topGO,clusterProfiler,...}
             #we can handle the other types later
 
             # or should we give the user the freedom to choose which table to fetch??? using another arg

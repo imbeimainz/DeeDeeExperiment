@@ -250,7 +250,7 @@ for (name in names(de_named_list)) {
 #save
 save(topGO_results, file = "data/topGO_results_list.RData", compress = "xz")
 
-# FE with clusterPro ----------------------------------------------------------------
+# FE with clusterProfiler ----------------------------------------------------------------
 library("clusterProfiler")
 
 de_results_2 <- list(ifng_vs_naive = IFNg_naive,

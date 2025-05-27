@@ -57,7 +57,7 @@ validDeeDeeExperiment <- function(object) {
                 enrichResult, or a gseaResult object")
           }
 
-      if (!(entry$fe_tool %in% c("topGO", "clusterPro", "GeneTonic", "DAVID",
+      if (!(entry$fe_tool %in% c("topGO", "clusterProfiler", "GeneTonic", "DAVID",
                                  "fgsea", "gsea", "enrichr", "gProfiler",
                                  "Not Specified"))) {
         msg <- c(msg, "Some FEA entries have invalid or unrecognized `fe_tool` values")

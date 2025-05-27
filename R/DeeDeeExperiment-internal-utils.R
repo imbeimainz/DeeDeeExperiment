@@ -334,7 +334,7 @@
   # check the columns for each df
   required_enrich_cols <- list(
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
-    clusterPro = c("ID", "Description", "pvalue", "geneID", "Count"),
+    clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
     GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes", "gs_de_count"),
     DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
               "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
@@ -393,7 +393,7 @@
 #' if no match found
 #' @noRd
 .match_fe_to_de <- function(fea_name, dea_names,
-                            pattern = "^(topGO_|ClusterPro_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
+                            pattern = "^(topGO_|clusterProfiler_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
 
   # if an attribute was assigned
 
@@ -411,7 +411,7 @@
   }
 }
 
-#' detect the fe input type (e.g. topGO, clusterPro...)
+#' detect the fe input type (e.g. topGO, clusterProfiler...)
 #'
 #' @param fe_res FE result table
 #' @noRd
@@ -423,7 +423,7 @@
   #detect fea type from what columns are found in fea
   required_enrich_cols <- list(
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
-    clusterPro = c("ID", "Description", "pvalue", "geneID", "Count"),
+    clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
     GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes"), # genetonic shaker output
     DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
               "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
@@ -866,4 +866,5 @@
 
   return(mydf)
 }
+
 
