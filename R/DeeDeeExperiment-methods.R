@@ -301,8 +301,7 @@ setMethod("dea_rename",
 
             }
 
-
-            message("Renamed DEA entries: ", paste(old_name, "to", new_name, collapse = ","))
+            cli::cli_alert_success("Renamed DEA entries: {.val {old_name}} to {.val {new_name}}")
 
             validObject(x)
             x
@@ -901,7 +900,7 @@ setMethod("fea_rename",
             names(feas)[matching_index] <- new_name
             x@fea <- feas
 
-            message("Renamed FEA entries: ", paste(old_name, "to", new_name, collapse = ","))
+            cli::cli_alert_success("Renamed FEA entries: {.val {old_name}} to {.val {new_name}}")
 
             validObject(x)
             x
@@ -999,10 +998,14 @@ setMethod(
             de_res_name <- matched_name
             if (fe != matched_name) {
               ### if the name is exactly the same do we need a msg or it s obvious???
-              message("FEA '", fe, "' matched to DE contrast '", matched_name,"'")
+              #message("FEA '", fe, "' matched to DE contrast '", matched_name,"'")
+              cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
+
+
             } else{
               # in case of the same name
-              message("FEA '", fe, "' matched **directly** to DE contrast '", matched_name,"'")
+              #message("FEA '", fe, "' matched **directly** to DE contrast '", matched_name,"'")
+              cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
             }
           } else {
             de_res_name <- NA_character_

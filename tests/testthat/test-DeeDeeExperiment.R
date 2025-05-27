@@ -472,7 +472,7 @@ test_that("validity and so", {
   expect_error(validObject(dde4))
 
   expect_error({
-    add_fea(dde4, fea = "meow", fea_type = "fujitsu")
+    add_fea(dde4, fea = "meow", fea_tool = "fujitsu")
   })
 
 
