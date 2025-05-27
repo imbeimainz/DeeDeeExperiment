@@ -13,9 +13,14 @@
 \arguments{
 \item{object}{a \code{\link{DeeDeeExperiment}} object}
 
-\item{...}{additional argument passed to the summary method. Currently supports \code{FDR}, which
-sets the significance threshold for subsetting differentially expressed genes based
-on adjusted p-values. Defaults to 0.05}
+\item{...}{additional argument passed to the summary method.
+Currently supports:
+\itemize{
+\item \code{FDR}: Numeric, sets the significance threshold for subsetting differentially
+expressed genes based on adjusted p-values. Defaults to 0.05
+\item \code{show_scenario_info}: Logical; if \code{TRUE}, displays the associated
+scenario info for each DE contrast, if available.
+}}
 }
 \value{
 Returns NULL

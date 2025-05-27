@@ -1327,9 +1327,14 @@ setMethod("link_dea_and_fea",
 #' for example, show and summary methods.
 #'
 #' @param object a \code{\link{DeeDeeExperiment}} object
-#' @param ... additional argument passed to the summary method. Currently supports `FDR`, which
-#' sets the significance threshold for subsetting differentially expressed genes based
-#' on adjusted p-values. Defaults to 0.05
+#' @param ... additional argument passed to the summary method.
+#' Currently supports:
+#' \itemize{
+#'   \item `FDR`: Numeric, sets the significance threshold for subsetting differentially
+#'   expressed genes based on adjusted p-values. Defaults to 0.05
+#'   \item `show_scenario_info`: Logical; if \code{TRUE}, displays the associated
+#'   scenario info for each DE contrast, if available.
+#'   }
 #' @return Returns NULL
 NULL
 
@@ -1359,12 +1364,13 @@ setMethod("show",
 #' @export
 setMethod("summary",
           signature = signature(object = "DeeDeeExperiment"),
-          definition = function(object,
-                                ...) { # using ellipsis because we can't change the summary method
-
+          definition = function(object, ...) {
+            # using ellipsis because we can't change the summary method
             args <- list(...)
-            FDR <- if (!is.null(args$FDR)) args$FDR else 0.05
-
+            FDR <- if (!is.null(args$FDR))
+              args$FDR
+            else 0.05
+            show_scenario_info <- isTRUE(args$show_scenario_info)
             # dea summary
             dea <- dea_info(object)
 
@@ -1372,7 +1378,6 @@ setMethod("summary",
               cat("DE Results Summary:\n")
               de_table <- data.frame(
                 Contrast = names(dea),
-
                 Up = sapply(names(dea), function(contrast) {
                   lfc_col <- paste0(contrast, "_log2FoldChange")
                   padj_col <- paste0(contrast, "_padj")
@@ -1380,11 +1385,10 @@ setMethod("summary",
                     lfc <- rowData(object)[[lfc_col]]
                     padj <- rowData(object)[[padj_col]]
                     sum(lfc > 0 & padj < FDR, na.rm = TRUE)
-                  } else {
-                    NA_integer_
-                  }
-                }),
-
+                    } else {
+                      NA_integer_
+                      }
+                  }),
                 Down = sapply(names(dea), function(contrast) {
                   lfc_col <- paste0(contrast, "_log2FoldChange")
                   padj_col <- paste0(contrast, "_padj")
@@ -1392,19 +1396,20 @@ setMethod("summary",
                     lfc <- rowData(object)[[lfc_col]]
                     padj <- rowData(object)[[padj_col]]
                     sum(lfc < 0 & padj < FDR, na.rm = TRUE)
-                  } else {
-                    NA_integer_
-                  }
-                }),
+                    } else {
+                      NA_integer_
+                      }
+                  }),
 
                 FDR = rep(FDR, length(dea))
-              )
+                )
               print(de_table, row.names = FALSE)
-              cat("\n")
-            } else {
-              cat("No DEA results stored.\n\n")
-            }
 
+              cat("\n")
+
+              } else {
+                cat("No DEA results stored.\n\n")
+                }
             # fea summary
 
 
@@ -1414,25 +1419,60 @@ setMethod("summary",
               fea_table <- data.frame(
                 FEA_Name = names(fea),
                 Linked_DE = sapply(fea, function(object) {
-                  if (!is.null(object$de_name) && !is.na(object$de_name)) object$de_name else "."
-                }),
-                FE_Type = sapply(fea, function(object) {
-                  if (!is.null(object$fe_tool)) object$fe_tool else "Not Specified"
-                }),
-                Term_Number = sapply(fea, function(object) {
-                  if (!is.null(object$original_object) && is.data.frame(object$original_object)) {
-                    nrow(object$original_object)
+                  if (!is.null(object$de_name) && !is.na(object$de_name)) {
+                    object$de_name
                   } else {
-                    NA_integer_
+                    "."
                   }
-                })
-              )
+                  }),
+                FE_Type = sapply(fea, function(object) {
+                  if (!is.null(object$fe_tool)) {
+                    object$fe_tool
+                  } else {
+                    "Not Specified"
+                  }
+                  }),
+                Term_Number = sapply(fea, function(object) {
+                  if (!is.null(object$original_object) &&
+                      is.data.frame(object$original_object)) {
+                    NROW(object$original_object)
+                    } else {
+                      NA_integer_
+                      }
+                  })
+                )
               print(fea_table, row.names = FALSE)
 
-            } else {
-              cat("No FEA results stored.\n")
+              } else {
+                cat("No FEA results stored.\n")
+              }
+
+            # scenario info (only if show_scenario_info is TRUE)
+            if (show_scenario_info && length(dea) > 0) {
+              cat("\nScenario Info:\n")
+              missing <- character()
+              for (de_name in names(dea)) {
+                scenario_info <- dea[[de_name]][["scenario_info"]]
+                if (!is.null(scenario_info)) {
+                  cat(" -", de_name, ":\n")
+
+                  wrapped_txt <- stringr::str_wrap(scenario_info,
+                                          width = 80,
+                                          indent = 1,
+                                          exdent = 2)
+
+                  cat(paste(wrapped_txt, "\n"), "\n")
+                } else {
+                  missing <- c(missing, de_name)
+                }
+              }
+
+              if (length(missing) > 0) {
+                cat("\nNo scenario info for:", paste(missing, collapse = ", "), "\n")
+              }
+
+              cat("\n")
             }
 
-          })
-
-
+    }
+)
