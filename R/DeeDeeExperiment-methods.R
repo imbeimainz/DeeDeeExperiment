@@ -944,6 +944,7 @@ setMethod(
 
     # match and check fea_type, if the user doesn't use the argument
     # the default is auto
+
     fea_tool <- match.arg(fea_tool)
 
     # capture name inside the env where the func is called
@@ -1025,11 +1026,12 @@ setMethod(
       }
 
 
-      if (this_tool == "auto") {
+
+      if (fea_tool == "auto") {
         # auto detect
         fe_tool <- .detect_fea_tool(res_enrich)
       } else {
-        fe_tool <- this_tool
+        fe_tool <- fea_tool
       }
       res_enrich_shaken <- NULL # default
 
