@@ -221,7 +221,7 @@ test_that("adding and removing", {
 
   dde2 <- add_fea(dde, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                             topGO_IFNg_naive = topGO_IFNg_naive),
-                  fea_type = "topGO")
+                  fea_tool = "topGO")
 
   expect_s4_class(dde2, "DeeDeeExperiment")
   expect_equal(length(fea_info(dde2)), 2)
@@ -382,6 +382,7 @@ test_that("adding and removing", {
 
   expect_error(add_scenario_info(dde_overlap,
                                  dea_name = c("i dont exist", "ifng_vs_naive")))
+
 
 
 

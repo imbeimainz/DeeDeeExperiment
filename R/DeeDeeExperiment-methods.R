@@ -920,7 +920,7 @@ setMethod(
                         fea,
                         de_name = NA_character_,
                         fe_name = NULL,
-                        fea_type = c(
+                        fea_tool = c(
                           "auto",
                           "topGO",
                           "clusterProfiler",
@@ -1022,11 +1022,11 @@ setMethod(
       }
 
 
-      if (fea_type == "auto") {
+      if (this_tool == "auto") {
         # auto detect
         fe_tool <- .detect_fea_tool(res_enrich)
       } else {
-        fe_tool <- fea_type
+        fe_tool <- this_tool
       }
       res_enrich_shaken <- NULL # default
 
