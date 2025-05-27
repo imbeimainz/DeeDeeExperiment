@@ -1473,8 +1473,7 @@ setMethod("summary",
                   }
                   }),
                 Term_Number = sapply(fea, function(object) {
-                  if (!is.null(object$original_object) &&
-                      is.data.frame(object$original_object)) {
+                  if (!is.null(object$original_object)) {
                     NROW(object$original_object)
                     } else {
                       NA_integer_
