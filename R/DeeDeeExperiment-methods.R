@@ -944,7 +944,7 @@ setMethod(
 
     # match and check fea_type, if the user doesn't use the argument
     # the default is auto
-    fea_type <- match.arg(fea_type)
+    fea_tool <- match.arg(fea_tool)
 
     # capture name inside the env where the func is called
     entry_name <- deparse(substitute(fea))
