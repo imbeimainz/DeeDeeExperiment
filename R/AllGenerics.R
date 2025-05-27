@@ -51,7 +51,7 @@ setGeneric("fea", function(x, ...) standardGeneric("fea"))
 setGeneric("get_fea_list", function(x, ...) standardGeneric("get_fea_list"))
 
 #' @export
-setGeneric("assign_dea_to_fea", function(x, ...) standardGeneric("assign_dea_to_fea"))
+setGeneric("link_dea_and_fea", function(x, ...) standardGeneric("link_dea_and_fea"))
 
 #' @export
 setGeneric("add_scenario_info", function(x, ...) standardGeneric("add_scenario_info"))

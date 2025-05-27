@@ -20,7 +20,7 @@
 #' remove_fea
 #' fea
 #' get_fea_list
-#' assign_dea_to_fea
+#' link_dea_and_fea
 #'
 #' @description
 #' The [DeeDeeExperiment()] class provides a family of methods to get
@@ -101,7 +101,7 @@
 #' for a specific contrast, as a standardized format similar to the output of `GeneTonic` shakers.
 #' * `get_fea_list` is the method that retrieves FEA results as a list. if the `dea_name` is indicated, the method
 #' will return only FEAs linked to that `dea_name`, otherwise it returns all FEAs in the `fea` slot.
-#' * `assign_dea_to_fea` is the method that allows the user to manually link a FEA result to a specific DEA result
+#' * `link_dea_and_fea` is the method that allows the user to manually link a FEA result to a specific DEA result
 #'
 #' * `show` is the method to nicely print out the information of a `DeeDeeExperiment`
 #' object.
@@ -162,7 +162,7 @@
 #'
 #' # assign DEA to FEA
 #'
-#' dde_new <- assign_dea_to_fea(dde_new,
+#' dde_new <- link_dea_and_fea(dde_new,
 #'                              dea_name = "ifngsalmo_vs_naive",
 #'                              fea_name = "ifngsalmo_vs_naive")
 #'
@@ -1254,11 +1254,11 @@ setMethod("get_fea_list",
 
 
 
-## assign_dea_to_fea -----------------------------------------------------------
+## link_dea_and_fea -----------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("assign_dea_to_fea",
+setMethod("link_dea_and_fea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name,

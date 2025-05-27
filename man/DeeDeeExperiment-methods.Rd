@@ -19,7 +19,7 @@
 \alias{remove_fea}
 \alias{fea}
 \alias{get_fea_list}
-\alias{assign_dea_to_fea}
+\alias{link_dea_and_fea}
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
@@ -37,7 +37,7 @@
 \alias{remove_fea,DeeDeeExperiment-method}
 \alias{fea,DeeDeeExperiment-method}
 \alias{get_fea_list,DeeDeeExperiment-method}
-\alias{assign_dea_to_fea,DeeDeeExperiment-method}
+\alias{link_dea_and_fea,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
 \S4method{dea_info}{DeeDeeExperiment}(x)
@@ -82,7 +82,7 @@
 
 \S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal")
 
-\S4method{assign_dea_to_fea}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
+\S4method{link_dea_and_fea}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
@@ -180,7 +180,7 @@ content in the \code{fea} slot.
 for a specific contrast, as a standardized format similar to the output of \code{GeneTonic} shakers.
 \item \code{get_fea_list} is the method that retrieves FEA results as a list. if the \code{dea_name} is indicated, the method
 will return only FEAs linked to that \code{dea_name}, otherwise it returns all FEAs in the \code{fea} slot.
-\item \code{assign_dea_to_fea} is the method that allows the user to manually link a FEA result to a specific DEA result
+\item \code{link_dea_and_fea} is the method that allows the user to manually link a FEA result to a specific DEA result
 \item \code{show} is the method to nicely print out the information of a \code{DeeDeeExperiment}
 object.
 \item \code{summary} is the method to print a summary of the available DE and FE results in a \code{DeeDeeExperiment}
@@ -241,7 +241,7 @@ dde_new <- dea_rename(dde_new, old_name = "salmonella_vs_naive",
 
 # assign DEA to FEA
 
-dde_new <- assign_dea_to_fea(dde_new,
+dde_new <- link_dea_and_fea(dde_new,
                              dea_name = "ifngsalmo_vs_naive",
                              fea_name = "ifngsalmo_vs_naive")
 

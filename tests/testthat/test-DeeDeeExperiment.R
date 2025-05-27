@@ -286,11 +286,11 @@ test_that("adding and removing", {
 
   expect_error(dea(dde, dea_name = c("salmonella_vs_naive","salmo_both")))
 
-  expect_error(assign_dea_to_fea(dde,
+  expect_error(link_dea_and_fea(dde,
                                  dea_name = "contrast1",
                                  fea_name = "topGO_IFNg_naive"))
 
-  expect_error(assign_dea_to_fea(dde,
+  expect_error(link_dea_and_fea(dde,
                                  dea_name = "salmonella_vs_naive",
                                  fea_name = "topGO"))
 
@@ -351,15 +351,15 @@ test_that("adding and removing", {
   expect_s3_class(fea(dde_overlap, fea_name = "salmonella_vs_naive",
                       format = "original"), "data.frame")
 
-  expect_error(assign_dea_to_fea(dde_de_empty,
+  expect_error(link_dea_and_fea(dde_de_empty,
                                  "not there",
                                  "not there"))
 
-  expect_error(assign_dea_to_fea(dde_overlap,
+  expect_error(link_dea_and_fea(dde_overlap,
                                  "new_name",
                                  "salmonella_vs_naive"))
 
-  expect_warning(assign_dea_to_fea(dde_overlap,
+  expect_warning(link_dea_and_fea(dde_overlap,
                                  "ifng_vs_naive",
                                  "salmonella_vs_naive",
                                  force = TRUE))
