@@ -919,17 +919,7 @@ setMethod(
                         fea,
                         de_name = NA_character_,
                         fe_name = NULL,
-                        fea_tool = c(
-                          "auto",
-                          "topGO",
-                          "clusterProfiler",
-                          "GeneTonic",
-                          "DAVID",
-                          "gsea",
-                          "fgsea",
-                          "enrichr",
-                          "gProfiler"
-                        ),
+                        fea_tool = "auto",
                         force = FALSE) {
     # x must be a DeeDeeExperiment
     # if (!is(x, "DeeDeeExperiment")) {
@@ -940,12 +930,20 @@ setMethod(
       stop("'de_name' must be a single character string or NA_character_")
     } # should it be a vector of different de_name???
 
-    ## add checks for fea!!
 
-    # match and check fea_type, if the user doesn't use the argument
-    # the default is auto
+    # allowed fea_tools
 
-    fea_tool <- match.arg(fea_tool)
+    allowed_fea_tools <- c("auto", "topGO", "clusterProfiler", "GeneTonic",
+                           "DAVID", "gsea", "fgsea", "enrichr", "gProfiler")
+
+    if (!is.character(fea_tool)) {
+      stop("fea_tool should be a character vector!")
+    }
+
+    if (!all(fea_tool %in% allowed_fea_tools)) {
+      stop("fea_tool should be one of the following: topGO, clusterProfiler, GeneTonic,
+                          DAVID, gsea, fgsea, enrichr, gProfiler")
+    }
 
     # capture name inside the env where the func is called
     entry_name <- deparse(substitute(fea))
@@ -979,12 +977,13 @@ setMethod(
       )
     }
 
+
     # get existing results in the fea slot
     fea_contrasts <- fea_info(x)
 
     for (fe in names(fea_list)) {
       res_enrich <- fea_list[[fe]]
-      if (!is.null(dea_info(x)) &&length(dea_info(x)) > 0) {
+      if (!is.null(dea_info(x)) && length(dea_info(x)) > 0) {
 
         if (!is.na(de_name)) {
           if (de_name %in% names(dea_info(x))) {
@@ -1026,12 +1025,29 @@ setMethod(
       }
 
 
+      n_fea <- length(fea_list)
 
-      if (fea_tool == "auto") {
+      if (length(fea_tool) == 1 && fea_tool == "auto") {
+        fea_tool_vec <- rep("auto", n_fea)
+      } else if (length(fea_tool) == 1 && fea_tool %in% allowed_fea_tools) {
+        fea_tool_vec <- rep(fea_tool, n_fea)
+      } else if (length(fea_tool) == n_fea && all(fea_tool %in% allowed_fea_tools)) {
+        fea_tool_vec <- fea_tool
+      } else {
+        stop("'fea_tool' must be either: A single valid tool name (e.g.",
+             paste(allowed_fea_tools, collapse = ", "), "or a character vector of length ",
+             n_fea, " with tool names matching the FEA elements in order")
+      }
+
+      names(fea_tool_vec) <- names(fea_list)
+
+      this_tool <- fea_tool_vec[[fe]]
+
+      if (this_tool == "auto") {
         # auto detect
         fe_tool <- .detect_fea_tool(res_enrich)
       } else {
-        fe_tool <- fea_tool
+        fe_tool <- this_tool
       }
       res_enrich_shaken <- NULL # default
 

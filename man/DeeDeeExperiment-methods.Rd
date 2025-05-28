@@ -71,8 +71,7 @@
   fea,
   de_name = NA_character_,
   fe_name = NULL,
-  fea_tool = c("auto", "topGO", "clusterProfiler", "GeneTonic", "DAVID", "gsea", "fgsea",
-    "enrichr", "gProfiler"),
+  fea_tool = "auto",
   force = FALSE
 )
 
