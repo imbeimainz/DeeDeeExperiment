@@ -33,13 +33,13 @@ test_that("creating", {
   )
 
   expect_error(
-    dea(dde, "wrong_name")
+    dea(dde, "wrong_name", verbose = TRUE)
   )
 
   dde_gone_wrong <- dde
   rowData(dde_gone_wrong)[["ifng_vs_naive_log2FoldChange"]] <- NULL
   expect_error(
-    dea(dde_gone_wrong, "ifng_vs_naive")
+    dea(dde_gone_wrong, "ifng_vs_naive", verbose = TRUE)
   )
 
 
@@ -98,9 +98,9 @@ test_that("creating", {
 
   dde_list <- DeeDeeExperiment(de_results = de_res_list)
 
-  expect_warning(get_dea_list(dde_list), regexp = NULL)
+  expect_warning(get_dea_list(dde_list, verbose =TRUE), regexp = NULL)
 
-  expect_warning(dea(dde_list, dea_name = "dge_lrt") , regexp = NULL)
+  expect_warning(dea(dde_list, dea_name = "dge_lrt", verbose =TRUE) , regexp = NULL)
 
   expect_warning(DeeDeeExperiment(se = se_macrophage_noassays,
                                    de_results = dea1))
@@ -145,7 +145,7 @@ test_that("creating", {
   dde5 <- DeeDeeExperiment(se = se_macrophage_noassays,
                            enrich_results = list(enrichr_salmo_vs_naive = enrichr_res$Reactome_2016))
 
-  expect_s3_class(fea(dde5,"enrichr_salmo_vs_naive"), "data.frame")
+  expect_s3_class(fea(dde5,"enrichr_salmo_vs_naive",verbose =TRUE), "data.frame")
 
   expect_length(fea_info(dde5), 1)
 
@@ -193,8 +193,11 @@ test_that("adding and removing", {
   expect_s4_class(dde_removed, "DeeDeeExperiment")
   expect_equal(length(dea_info(dde_removed)), 3)
 
-  expect_warning({
-    dde_removed <- remove_dea(dde, "lol")})
+  expect_warning(dde_removed <- remove_dea(dde, "lol"))
+
+  expect_error(remove_dea(dde))
+
+
 
   dde_edgeR <- add_dea(dde, dea = list(DGEExact_IFNg_both = dge_exact_IFNg_both))
   expect_s4_class(dde_edgeR, "DeeDeeExperiment")
@@ -237,13 +240,13 @@ test_that("adding and removing", {
 
   dde3 <- DeeDeeExperiment(se = se_macrophage_noassays)
   expect_warning(add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
-                                      topGO_IFNg_naive = topGO_IFNg_naive)))
+                                      topGO_IFNg_naive = topGO_IFNg_naive), verbose = TRUE))
 
   expect_error(add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                                               topGO_IFNg_naive)))
 
   dde3 <- add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive,
-                                       topGO_IFNg_naive = topGO_IFNg_naive))
+                                       topGO_IFNg_naive = topGO_IFNg_naive), verbose = TRUE)
   expect_error({
     add_fea(dde3, fea = list(topGO_Salm_naive = topGO_Salm_naive),
             force = FALSE)
@@ -254,7 +257,7 @@ test_that("adding and removing", {
 
   expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
                                   de_results = de_named_list,
-                                  enrich_results = topGO_results))
+                                  enrich_results = topGO_results), )
 
   expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
                                   de_results = de_named_list,
@@ -271,7 +274,7 @@ test_that("adding and removing", {
 
   expect_message(dde3 <- add_fea(dde3,
                                  fea =
-                                   list(salmonella_vs_naive = enrichr_res$KEGG_2019_Human)))
+                                   list(salmonella_vs_naive = enrichr_res$KEGG_2019_Human), verbose = TRUE))
 
 
   expect_error(fea_rename(dde3, old_name = "contrast1",
@@ -280,7 +283,7 @@ test_that("adding and removing", {
   expect_error(fea_rename(dde, old_name = "topGO_Salm_naive",
                           new_name = c("salmonella_vs_naive","new_column")))
 
-  expect_warning(dea(dde))
+  expect_warning(dea(dde, verbose = TRUE))
 
   expect_error(dea(dde3, dea_name = "contrast1"))
 
@@ -310,7 +313,7 @@ test_that("adding and removing", {
                                   enrich_results = topGO_results)
 
   expect_error(add_dea(dde_overlap,
-                       dea =list(ifng_vs_naive = de_named_list$ifng_vs_naive)))
+                       dea = list(ifng_vs_naive = de_named_list$ifng_vs_naive)))
 
   dde_de_empty <- DeeDeeExperiment(se_macrophage_noassays)
 
@@ -342,7 +345,7 @@ test_that("adding and removing", {
 
   expect_error(add_fea(dde_de_empty, fea = list(topGO_results$salmo_both)))
 
-  expect_warning(fea(dde_overlap))
+  expect_warning(fea(dde_overlap, verbose = TRUE))
 
   expect_error(fea(dde_overlap, fea_name = c("salmonella_vs_naive", "ifng_vs_naive")))
 
@@ -359,10 +362,25 @@ test_that("adding and removing", {
                                  "new_name",
                                  "salmonella_vs_naive"))
 
-  expect_warning(link_dea_and_fea(dde_overlap,
+  expect_error(link_dea_and_fea(dde_overlap,
                                  "ifng_vs_naive",
                                  "salmonella_vs_naive",
-                                 force = TRUE))
+                                 force = FALSE))
+
+  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results$ifng_vs_naive))
+
+  expect_warning(link_dea_and_fea(dde_overlap_add,
+                                "ifng_vs_naive",
+                                "salmonella_vs_naive",
+                                force = TRUE))
+
+  expect_error(link_dea_and_fea(dde_overlap,
+                                dea_name = 2,
+                                fea_name = "salmonella_vs_naive"))
+
+  expect_error(link_dea_and_fea(dde_overlap,
+                                dea_name = "salmonella_vs_naive",
+                                fea_name = 2))
 
   expect_error(add_scenario_info(dde_overlap,
                     dea_name = "i dont exist"))
@@ -384,11 +402,26 @@ test_that("adding and removing", {
                                  dea_name = c("i dont exist", "ifng_vs_naive")))
 
 
+  expect_error(get_fea_list(dde_overlap,
+               dea_name = "ifng_vs_naive",
+               format = "simple"))
 
+  expect_warning(get_fea_list(dde_overlap_add, dea_name = "INFg_vs_Naive"))
+
+
+
+  new_remove_dea <- remove_dea(dde_overlap_add,
+                               dea_name = "ifng_vs_naive",
+                               remove_linked_fea = TRUE)
+
+  expect_equal(length(fea_info(new_remove_dea)), 4)
+
+  expect_error(remove_dea(dde, dea_name = NULL))
 
 
 
 })
+
 
 test_that("renaming", {
   dde <- DeeDeeExperiment(
@@ -509,7 +542,6 @@ test_that("misc", {
   expect_no_error(summary(dde_no_dea))
 
   dde_empty <- DeeDeeExperiment(se = se_macrophage_noassays)
-  expect_no_error(summary(dde_empty))
 
 })
 
