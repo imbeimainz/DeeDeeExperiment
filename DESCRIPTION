@@ -51,6 +51,8 @@ Suggests:
     enrichplot,
     ideal,
     testthat (>= 3.0.0)
+Remotes:
+    federicomarini/topGO@devel
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
 BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
