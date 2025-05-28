@@ -774,13 +774,14 @@ setMethod("add_scenario_info",
                                 dea_name,
                                 info = NULL,
                                 force = FALSE){
-            dea_names <- dea_names(x)
-            existing_info <- dea_info(x)[[dea_name]][["scenario_info"]]
-
+            
             # checks on dea_name
             if (!is.character(dea_name) || length(dea_name) != 1) {
               stop("'dea_name' must be a single character string!")
             }
+            
+            dea_names <- dea_names(x)
+            existing_info <- dea_info(x)[[dea_name]][["scenario_info"]]
 
             # checks on info
             if (!is.null(info) && !is.character(info)) {
