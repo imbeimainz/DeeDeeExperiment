@@ -664,7 +664,11 @@ test_that("misc", {
   dde_empty <- DeeDeeExperiment(se = se_macrophage_noassays)
   expect_no_error(summary(dde_empty))
 
-
+  dde_with_scenario <- 
+    add_scenario_info(dde_no_fea, dea_name = "ifng_vs_naive", 
+                      info = "this is the interferon gamma vs naive setting")
+  
+  expect_no_error(summary(dde_with_scenario, show_scenario_info = TRUE))
 
 })
 
