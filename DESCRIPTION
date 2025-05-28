@@ -47,9 +47,7 @@ Suggests:
     GeneTonic,
     ReactomePA,
     pcaExplorer,
-    BIUMmisc,
     enrichplot,
-    ideal,
     testthat (>= 3.0.0)
 Remotes:
     federicomarini/topGO@devel
