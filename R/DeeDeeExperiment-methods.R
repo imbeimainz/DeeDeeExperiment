@@ -955,9 +955,10 @@ setMethod(
     fea_list <- .check_enrich_results(fea, entry_name)
 
     # fea must be named list
-    if (is.null(names(fea_list))) {
-      stop("All elements in 'fea' list must have names!")
-    }
+    # it s gonna fail anyway in the line before
+    # if (is.null(names(fea_list))) {
+    #   stop("All elements in 'fea' list must have names!")
+    # }
 
     #check that names are all unique
     if (anyDuplicated(names(fea))) {
