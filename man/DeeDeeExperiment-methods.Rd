@@ -52,9 +52,9 @@
 
 \S4method{remove_dea}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
 
-\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = TRUE)
+\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = FALSE)
 
-\S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = TRUE)
+\S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = FALSE)
 
 \S4method{add_scenario_info}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
 
@@ -72,14 +72,15 @@
   de_name = NA_character_,
   fe_name = NULL,
   fea_tool = "auto",
-  force = FALSE
+  force = FALSE,
+  verbose = FALSE
 )
 
 \S4method{remove_fea}{DeeDeeExperiment}(x, fea_name)
 
-\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = "minimal")
+\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = "minimal", verbose = FALSE)
 
-\S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal")
+\S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", verbose = FALSE)
 
 \S4method{link_dea_and_fea}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
 }

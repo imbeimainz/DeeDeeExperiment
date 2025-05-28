@@ -602,7 +602,7 @@ setMethod("dea",
                                 dea_name = NULL,
                                 format = "minimal",
                                 extra_rd = NULL,
-                                verbose = TRUE) {
+                                verbose = FALSE) {
 
             if (!is.null(extra_rd) && !is.character(extra_rd)) {
               stop("'extra_rd' must be a character vector!")
@@ -719,7 +719,7 @@ setMethod("get_dea_list",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 format = "minimal",
-                                verbose = TRUE) {
+                                verbose = FALSE) {
 
             if (!(format %in% c("minimal", "original"))) {
               stop("'format' not supported. Please use 'minimal' to return the ",
@@ -922,7 +922,8 @@ setMethod(
                         de_name = NA_character_,
                         fe_name = NULL,
                         fea_tool = "auto",
-                        force = FALSE) {
+                        force = FALSE,
+                        verbose = FALSE) {
     # x must be a DeeDeeExperiment
     # if (!is(x, "DeeDeeExperiment")) {
     #   stop("x must be DeeDeeExperiment object!")
@@ -1174,7 +1175,8 @@ setMethod("fea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 fea_name = NULL,
-                                format = "minimal") {
+                                format = "minimal",
+                                verbose = FALSE) {
 
             # get returns shaken table by default for a specific contrast
             # for now the only case where we won't have shaken results if the user
@@ -1222,8 +1224,10 @@ setMethod("fea",
               fea <- fea_info(x)[[fea_name]][["shaken_results"]]
 
               if (is.null(fea)) {
-                warning("No shaken results available for '", fea_name,
-                        "'. Returning original enrichment results instead.")
+                if (verbose) {
+                  warning("No shaken results available for '", fea_name,
+                          "'. Returning original enrichment results instead.")
+                }
                 fea <- fea_info(x)[[fea_name]]$original_object
               }
 
@@ -1249,7 +1253,8 @@ setMethod("get_fea_list",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
-                                format = "minimal") {
+                                format = "minimal",
+                                verbose = FALSE) {
 
     if (!(format %in% c("minimal", "original"))) {
       stop(
@@ -1287,11 +1292,13 @@ setMethod("get_fea_list",
             matched_feas[[i]] <- fe_res
 
           } else {
-            warning(
-              "No shaken results available for '",
-              i,
-              "'. Returning original enrichment results instead."
-            )
+            if (verbose) {
+              warning(
+                "No shaken results available for '",
+                i,
+                "'. Returning original enrichment results instead."
+              )
+            }
 
             matched_feas[[i]] <- fea_info(x)[[i]][["original_object"]]
 
