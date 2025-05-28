@@ -1425,6 +1425,7 @@ setMethod("show",
               paste(names(object@fea), collapse = ", "),
               sep = ""
             )
+            cat("\n")
           })
 
 
