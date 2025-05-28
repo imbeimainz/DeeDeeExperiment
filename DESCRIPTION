@@ -32,6 +32,7 @@ Imports:
     DESeq2,
     edgeR,
     limma,
+    stringr,
     cli
 Suggests: 
     macrophage,
@@ -49,7 +50,6 @@ Suggests:
     BIUMmisc,
     enrichplot,
     ideal,
-    stringr,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
