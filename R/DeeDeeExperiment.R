@@ -109,7 +109,8 @@ DeeDeeExperiment <- function(se = NULL,
       stop("You have to provide at least an se object or a de_results object!")
     }
     # if no se passed but de_results is not empty, create a mock from it
-    message("creating a mock SE from the rows of the DE result objects")
+    #message("creating a mock SE from the rows of the DE result objects")
+    cli::cli_alert_info("creating a mock SE from the rows of the DE result objects, if available")
     # mock up the se from the de_results
     #first_de <- de_results[[1]]
 
@@ -308,16 +309,21 @@ DeeDeeExperiment <- function(se = NULL,
             matched_name %in% names(de_results)) {
           de_res_name <- matched_name
           if (fe != matched_name) {
-            message("FEA '",
-                    fe,
-                    "' matched to DE contrast '", # in case of formatted name
-                    matched_name,
-                    "'")
+            # message("FEA '",
+            #         fe,
+            #         "' matched to DE contrast '", # in case of formatted name
+            #         matched_name,
+            #         "'")
+
+            cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
+
           } else{
-            message("FEA '",
-                    fe,
-                    "' matched **directly** to DE contrast '", # in case of the same name
-                    matched_name, "'")
+            # message("FEA '",
+            #         fe,
+            #         "' matched **directly** to DE contrast '", # in case of the same name
+            #         matched_name, "'")
+
+            cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
           }
         } else {
           de_res_name <- NA_character_
@@ -392,10 +398,13 @@ DeeDeeExperiment <- function(se = NULL,
 
 
       if (is.null(res_enrich_shaken)) {
-        message(
-          "No shaking method available for this functional enrichment results.",
-          " Returning only the original object."
-        )
+        # message(
+        #   "No shaking method available for this functional enrichment results.",
+        #   " Returning only the original object."
+        # )
+
+        cli::cli_alert_info("No shaking method available for this functional enrichment results.
+                            Returning only the original object.")
       }
 
 

@@ -564,8 +564,10 @@ setMethod("remove_dea",
                   }
                 }
                 if (length(removed_fea) > 0) {
-                  message("The following linked FEA entries were removed: ",
-                          paste(removed_fea, collapse = ", "))
+                  # message("The following linked FEA entries were removed: ",
+                  #         paste(removed_fea, collapse = ", "))
+
+                  cli::cli_alert_success("The following linked FEA entries were removed: {.val {paste(removed_fea, collapse = ', ')}} ")
                 }
               }
 
@@ -999,13 +1001,17 @@ setMethod(
             if (fe != matched_name) {
               ### if the name is exactly the same do we need a msg or it s obvious???
               #message("FEA '", fe, "' matched to DE contrast '", matched_name,"'")
-              cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
-
+              if (verbose) {
+                cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
+              }
 
             } else{
               # in case of the same name
               #message("FEA '", fe, "' matched **directly** to DE contrast '", matched_name,"'")
-              cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
+              if (verbose) {
+                cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
+              }
+
             }
           } else {
             de_res_name <- NA_character_
@@ -1083,10 +1089,13 @@ setMethod(
       }
 
       if (is.null(res_enrich_shaken)) {
-        message(
-          "No shaking method available for this functional enrichment results.",
-          " Returning only the original object."
-        )
+        # message(
+        #   "No shaking method available for this functional enrichment results.",
+        #   " Returning only the original object."
+        # )
+
+        cli::cli_alert_info("No shaking method available for this functional enrichment results.
+                            Returning only the original object.")
       }
 
       fea_contrast <- list(
