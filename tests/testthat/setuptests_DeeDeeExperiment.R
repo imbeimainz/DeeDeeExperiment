@@ -26,3 +26,9 @@ data("clusterPro_res", package = "DeeDeeExperiment")
 
 data("gost_res", package = "DeeDeeExperiment")
 
+data("fgseaRes", package = "DeeDeeExperiment")
+
+data("gsea_res", package = "DeeDeeExperiment")
+
+
+
