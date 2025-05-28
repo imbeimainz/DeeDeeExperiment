@@ -1092,7 +1092,7 @@ setMethod(
       fea_contrast <- list(
         de_name = de_res_name,
         # links to de result
-        fe_name = fe_name,
+        fe_name = if (!is.null(fe_name)) fe_name else fe,
         shaken_results = res_enrich_shaken ,
         # return shaken results for later use in GeneTonic
         original_object = res_enrich,
