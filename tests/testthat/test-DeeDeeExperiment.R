@@ -509,8 +509,22 @@ test_that("adding and removing", {
   expect_length(get_fea_list(dde_overlap_add, format = "minimal", verbose = TRUE), 6)
 
   expect_length(get_fea_list(dde_overlap_add, dea_name = "ifng_vs_naive", format = "original", verbose = TRUE), 1)
+  
+  
 
+  # testing DAVID's output --------------------------------------------------
+  summary(dde_with_info)
+  
+  df_david <- read.delim(
+    file = system.file("extdata", "david_output_chart_BPonly_ifng_vs_naive.txt",
+                       package = "DeeDeeExperiment"),
+    sep = "\t")
+  
+  dde_w_david <- add_fea(dde_with_info, fea = df_david, fea_tool = "DAVID",
+                         de_name = "ifng_vs_naive") 
 
+  expect_true("df_david" %in% fea_names(dde_w_david))
+  
 })
 
 
