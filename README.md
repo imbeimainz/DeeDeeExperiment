@@ -32,7 +32,8 @@ along with relevant metadata (currently supports results from `DESeq2`, `edgeR`,
 along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
 
-TODO: later attach a schematic representation of the class
+![](./vignettes/DeeDeeExperiment_Anatomy.png)
+
 
 ## Example
 
