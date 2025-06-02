@@ -774,12 +774,12 @@ setMethod("add_scenario_info",
                                 dea_name,
                                 info = NULL,
                                 force = FALSE){
-            
+
             # checks on dea_name
             if (!is.character(dea_name) || length(dea_name) != 1) {
               stop("'dea_name' must be a single character string!")
             }
-            
+
             dea_names <- dea_names(x)
             existing_info <- dea_info(x)[[dea_name]][["scenario_info"]]
 
@@ -1375,7 +1375,9 @@ setMethod("link_dea_and_fea",
               }
 
               # assign
-              message("Assigning DEA '", dea_name, "' to FEA '", fea, "'")
+             #message("Assigning DEA '", dea_name, "' to FEA '", fea, "'")
+
+              cli::cli_alert_success("Assigning DEA: {.val {dea_name}} to FEA {.val {fea}}")
 
               fea_info(x)[[fea]][["de_name"]] <- dea_name
 
