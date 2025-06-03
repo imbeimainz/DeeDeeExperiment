@@ -60,7 +60,7 @@ This vignette introduces the class structure, demonstrates how to create and wor
 
 The `DeeDeeExperiment` class inherits from the core Bioconductor `SummarizedExperiment` object. This means it inherits all the slots, methods, and compatibility with tools built for `SummarizedExperiment`, while introducing additional components to streamline downstream analysis.
 
-![](./vignettes/DeeDeeExperiment_Anatomy.png)
+![](DeeDeeExperiment_Anatomy.png)
 
 Specifically, `DeeDeeExperiment` has two new slots:
 
