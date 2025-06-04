@@ -537,7 +537,7 @@
     "Old.P.value", "Old.Adjusted.P.value", "Odds.Ratio",
     "Combined.Score", "Genes"
   )
-  if (!all(colnames(enrichr_output) %in% exp_colnames)) {
+  if (!all(exp_colnames %in% colnames(enrichr_output))) {
     stop("I could not find some of the usual column names from the Enrichr output")
   }
 
