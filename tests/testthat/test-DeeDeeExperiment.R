@@ -90,7 +90,14 @@ test_that("creating", {
   expect_error(DeeDeeExperiment(de_results = list(salmo_both = salmo_both,
                                                   broken_salmo_both = broken_de_res)))
 
-
+  expect_true(is(.check_de_results(list(salmo_both = salmo_both)), "list"))
+  expect_error(.check_de_results(
+    list(salmo_both = salmo_both,
+         simple_list = list())
+    ),
+    "All elements in the list must be of type"
+  )
+  
   dea1 <- de_limma
 
   de_res_list <- list(de_deseq = salmo_both,
