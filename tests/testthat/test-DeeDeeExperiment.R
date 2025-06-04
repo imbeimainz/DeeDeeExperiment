@@ -180,11 +180,31 @@ test_that("creating", {
   expect_equal(fea_info(new_dde)$gPro_res$fe_tool, "gProfiler")
 
   expect_equal(fea_info(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
-
-
-}
-
-)
+  
+  failing_fgsea <- fgseaRes
+  expect_error({
+    .DeeDeefy_fgseaResult(matrix())
+  }, regexp = "should be a data.frame")
+  
+  expect_error({
+    fail1 <- failing_fgsea[, -1]
+    .DeeDeefy_fgseaResult(fail1)
+  }, "I could not find some of the usual column names")
+  
+  expect_error({
+    fail2 <- failing_fgsea
+    fail2$leadingEdge <- as.character(fail2$leadingEdge)
+    .DeeDeefy_fgseaResult(fail2)
+  }, "Expecting 'leadingEdge' column to be a list")
+  
+  expect_error({
+    fail_enrichr <- enrichr_res$Reactome_2016
+    fail_enrichr$Genes <- NULL
+    .DeeDeefy_enrichr(fail_enrichr)
+  }, "I could not find some of the usual column names")
+  
+})
+  
 
 
 test_that("adding and removing", {
@@ -192,7 +212,7 @@ test_that("adding and removing", {
     se_macrophage_noassays,
     de_results = de_named_list
   )
-
+  
   new_del <- list(
     ifng2 = de_named_list$ifng_vs_naive,
     ifngsalmo2 = de_named_list$ifngsalmo_vs_naive
