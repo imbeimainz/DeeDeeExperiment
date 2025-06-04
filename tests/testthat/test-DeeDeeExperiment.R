@@ -528,7 +528,9 @@ test_that("adding and removing", {
                        "fgsea"
                        )))
 
-
+  expect_no_error(
+    summary(dde_with_info, show_scenario_info = TRUE)
+  )
 
   expect_warning(fea(dde_overlap_add, verbos = TRUE, format = "original"))
 
@@ -540,7 +542,6 @@ test_that("adding and removing", {
   
 
   # testing DAVID's output --------------------------------------------------
-  summary(dde_with_info)
   
   df_david <- read.delim(
     file = system.file("extdata", "david_output_chart_BPonly_ifng_vs_naive.txt",
