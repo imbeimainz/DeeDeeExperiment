@@ -169,7 +169,7 @@ dds_macrophage <- DESeq(dds_macrophage)
 dim(dds_macrophage)
 head(counts(dds_macrophage))
 
-BIUMmisc::plot_totcounts(dds_macrophage, "condition")
+# BIUMmisc::plot_totcounts(dds_macrophage, "condition")
 
 colData(dds_macrophage)
 
@@ -237,8 +237,8 @@ alltheresults <- function(resuSet,
   resuSet[[id_contrast]][["res_DESeq"]]$SYMBOL <- anno_df$gene_name[match(rownames(resuSet[[id_contrast]][["res_DESeq"]]), anno_df$gene_id)]
   
   message("Summary MAplot...")
-  resuSet[[id_contrast]][["maplot_res"]] <- 
-    ideal::plot_ma(resuSet[[id_contrast]][["res_DESeq"]], ylim = c(-4,4), title = id_contrast)
+  # resuSet[[id_contrast]][["maplot_res"]] <- 
+    # ideal::plot_ma(resuSet[[id_contrast]][["res_DESeq"]], ylim = c(-4,4), title = id_contrast)
   
   message("Extracting tables...")
   resuSet[[id_contrast]][["tbl_res_all"]] <- mosdef::deresult_to_df(resuSet[[id_contrast]][["res_DESeq"]])
