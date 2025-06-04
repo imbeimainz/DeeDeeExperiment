@@ -532,6 +532,16 @@ test_that("adding and removing", {
 
   expect_true("df_david" %in% fea_names(dde_w_david))
   
+  expect_error(
+    .DeeDeefy_david(matrix())
+  )
+  
+  expect_error({
+    fail_david <- df_david
+    fail_david$Term <- NULL
+    .DeeDeefy_david(fail_david)
+  }, "I could not find some of the usual")
+  
 })
 
 
