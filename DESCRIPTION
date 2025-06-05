@@ -37,6 +37,7 @@ Suggests:
     macrophage,
     knitr,
     BiocStyle,
+    apeglm,
     mosdef,
     DT,
     org.Hs.eg.db,
