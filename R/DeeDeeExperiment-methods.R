@@ -1532,7 +1532,7 @@ setMethod("summary",
                 if (!is.null(scenario_info)) {
                   cat(" -", de_name, ":\n")
 
-                  wrapped_txt <- stringr::str_wrap(scenario_info,
+                  wrapped_txt <- .basic_str_wrap(scenario_info,
                                           width = 80,
                                           indent = 1,
                                           exdent = 2)

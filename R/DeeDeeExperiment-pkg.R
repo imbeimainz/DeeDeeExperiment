@@ -21,7 +21,6 @@
 #' @importFrom utils packageVersion
 #' @importFrom methods show as callNextMethod is new validObject
 #' @import cli
-#' @importFrom stringr str_wrap
 #'
 #' @name DeeDeeExperiment-pkg
 #' @docType package

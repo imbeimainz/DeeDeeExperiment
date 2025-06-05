@@ -868,3 +868,7 @@
 }
 
 
+.basic_str_wrap <- function(x, width = 80, ...) {
+  paste(strwrap(x, width = width, ...), collapse = "\n")
+}
+
