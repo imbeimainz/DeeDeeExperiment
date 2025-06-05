@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
-Version: 0.4.0
+Version: 0.5.0
 Authors@R: 
     c(
         person(
@@ -50,8 +50,6 @@ Suggests:
     pcaExplorer,
     enrichplot,
     testthat (>= 3.0.0)
-Remotes:
-    federicomarini/topGO@devel
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
 BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
