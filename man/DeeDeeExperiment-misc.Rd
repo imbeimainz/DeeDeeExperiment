@@ -8,10 +8,16 @@
 \usage{
 \S4method{show}{DeeDeeExperiment}(object)
 
-\S4method{summary}{DeeDeeExperiment}(object, ...)
+\S4method{summary}{DeeDeeExperiment}(object, FDR = 0.05, show_scenario_info = FALSE, ...)
 }
 \arguments{
 \item{object}{a \code{\link{DeeDeeExperiment}} object}
+
+\item{FDR}{Numeric, sets the significance threshold for subsetting
+differentially expressed genes based on adjusted p-values. Defaults to 0.05}
+
+\item{show_scenario_info}{Logical; if TRUE, displays the associated scenario
+info for each DE contrast, if available. Defaults to FALSE}
 
 \item{...}{additional argument passed to the summary method.
 Currently supports:
