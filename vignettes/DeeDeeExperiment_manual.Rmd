@@ -33,7 +33,7 @@ editor_options:
 bibliography: DeeDeeExperiment_bibliography.bib
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -312,7 +312,7 @@ myresuset_macs$condition_IFNg_vs_naive$maplot_res
 DT::datatable(myresuset_macs$condition_IFNg_vs_naive$etbl_res_DE, escape = FALSE, rownames = FALSE)
 ```
 
-```{r}
+```{r limmavoomde}
 # DE with limma-voom
 
 limma_results <- function(resuSet,
@@ -732,7 +732,7 @@ summary(ddr, show_scenario_info = TRUE)
 
 ```
 
-```{r}
+```{r somenotesandideas}
 # TODO: more features
 
 # done # add the scenario as a freetext field, could be useful to generate a prompt for an LLM
@@ -745,6 +745,6 @@ summary(ddr, show_scenario_info = TRUE)
 
 # Session info {.unnumbered}
 
-```{r}
+```{r sessioinfo}
 sessionInfo()
 ```
