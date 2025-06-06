@@ -367,13 +367,15 @@
     }, logical(1))
 
     if (!any(matches)) {
-      stop(paste0("Element `",i,"` does not contain the required columns for any known enrichment type! \n",
-              "Please check that you re providing a valid enrichment result. \n",
-              "Current supported outputs are from topGO, enrichResult objects, gseaResult objects, or output from enrichR, fgsea, gprofiler, DAVID or results generated with one of `GeneTonic` shakers."
+      
+      stop(
+        c("Element `",i,"` does not contain the required columns for any known enrichment type! \n",
+          "Please check that you re providing a valid enrichment result. \n",
+          "Current supported outputs are from topGO, enrichResult objects, gseaResult objects, or output from enrichR, fgsea, gprofiler, DAVID or results generated with one of `GeneTonic` shakers."
         )
       )
     } ### long error msg?
-
+    
   }
 
   return(x)
