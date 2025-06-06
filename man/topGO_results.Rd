@@ -4,6 +4,9 @@
 \name{topGO_results}
 \alias{topGO_results}
 \title{\code{topGO_results}}
+\format{
+A list of data.frame objects
+}
 \value{
 A list
 }
@@ -13,3 +16,12 @@ A list of FE results generated with \code{mosdef::topGOtable()}
 \details{
 A list of FE results for the macrophage data
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{clusterPro_res}},
+\code{\link{enrichr_res}},
+\code{\link{fgseaRes}},
+\code{\link{gost_res}},
+\code{\link{gsea_res}}
+}
+\concept{enrich_resus}

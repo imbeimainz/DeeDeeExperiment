@@ -4,6 +4,9 @@
 \name{clusterPro_res}
 \alias{clusterPro_res}
 \title{\code{clusterPro_res}}
+\format{
+A list of \code{enrichResult} objects
+}
 \value{
 A list
 }
@@ -13,3 +16,12 @@ A list of FE results generated with \code{clusterProfiler::enrichGO()}
 \details{
 A list of FE result for the macrophage data (salmonella vs naive and IFNg vs naive)
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{enrichr_res}},
+\code{\link{fgseaRes}},
+\code{\link{gost_res}},
+\code{\link{gsea_res}},
+\code{\link{topGO_results}}
+}
+\concept{enrich_resus}

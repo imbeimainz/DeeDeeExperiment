@@ -4,6 +4,9 @@
 \name{enrichr_res}
 \alias{enrichr_res}
 \title{\code{enrichr_res}}
+\format{
+A list of data.frame objects
+}
 \value{
 A list
 }
@@ -13,3 +16,12 @@ A list of FE results generated with enrichr::enrichr()
 \details{
 A list of FE result for the macrophage data (salmonella vs naive)
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{clusterPro_res}},
+\code{\link{fgseaRes}},
+\code{\link{gost_res}},
+\code{\link{gsea_res}},
+\code{\link{topGO_results}}
+}
+\concept{enrich_resus}

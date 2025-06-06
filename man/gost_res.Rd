@@ -4,6 +4,9 @@
 \name{gost_res}
 \alias{gost_res}
 \title{\code{gost_res}}
+\format{
+A list, as returned by \code{gprofiler2}
+}
 \value{
 A list
 }
@@ -13,3 +16,12 @@ A list of FE results generated with \code{gprofiler2::gost()}
 \details{
 A list of FE result for the macrophage data (salmonella vs naive)
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{clusterPro_res}},
+\code{\link{enrichr_res}},
+\code{\link{fgseaRes}},
+\code{\link{gsea_res}},
+\code{\link{topGO_results}}
+}
+\concept{enrich_resus}

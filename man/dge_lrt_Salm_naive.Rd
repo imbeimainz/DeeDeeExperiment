@@ -4,6 +4,9 @@
 \name{dge_lrt_Salm_naive}
 \alias{dge_lrt_Salm_naive}
 \title{A sample \code{DGELRT} object}
+\format{
+A \code{DGELRT} object
+}
 \value{
 A sample \code{DGELRT} object, generated with \code{edgeR}
 }
@@ -24,3 +27,14 @@ Alasoo, et al. "Shared genetic effects on chromatin and gene
 expression indicate a role for enhancer priming in immune response",
 Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 }
+\seealso{
+Other edgeRresus: 
+\code{\link{dge_exact_IFNg_both}},
+\code{\link{dge_exact_IFNg_naive}},
+\code{\link{dge_exact_Salm_both}},
+\code{\link{dge_exact_Salm_naive}},
+\code{\link{dge_lrt_IFNg_both}},
+\code{\link{dge_lrt_IFNg_naive}},
+\code{\link{dge_lrt_Salm_both}}
+}
+\concept{edgeRresus}

@@ -4,12 +4,24 @@
 \name{gsea_res}
 \alias{gsea_res}
 \title{\code{gsea_res}}
+\format{
+A \code{gseaResult} object
+}
 \value{
-A list
+A \code{gseaResult} object
 }
 \description{
-A list of FE results generated with \code{clusterProfiler::gseGO()}
+An individual set of FE results generated with \code{clusterProfiler::gseGO()}
 }
 \details{
-A list of FE result for the macrophage data (IFNg vs naive)
+A set of FE results for the macrophage data (IFNg vs naive)
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{clusterPro_res}},
+\code{\link{enrichr_res}},
+\code{\link{fgseaRes}},
+\code{\link{gost_res}},
+\code{\link{topGO_results}}
+}
+\concept{enrich_resus}

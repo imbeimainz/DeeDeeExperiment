@@ -4,12 +4,24 @@
 \name{fgseaRes}
 \alias{fgseaRes}
 \title{\code{fgseaRes}}
+\format{
+A data.table/data.frame object
+}
 \value{
-A list
+A data.table/data.frame
 }
 \description{
-A list of FE results generated with \code{fgsea::fgsea()}
+A data frame of FE results generated with \code{fgsea::fgsea()}
 }
 \details{
-A list of FE result for the macrophage data (IFNg vs naive)
+Tabular representation of FE result for the macrophage data (IFNg vs naive)
 }
+\seealso{
+Other enrich_resus: 
+\code{\link{clusterPro_res}},
+\code{\link{enrichr_res}},
+\code{\link{gost_res}},
+\code{\link{gsea_res}},
+\code{\link{topGO_results}}
+}
+\concept{enrich_resus}
