@@ -367,6 +367,22 @@ setMethod("add_dea",
               # do different things according to what these objects are
               if (is(this_de, "DESeqResults")) {
 
+                # check for rowname mismatches
+                rownames_x <- rownames(rowData(x))
+                rownames_y <- rownames(this_de)
+                mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+                mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+                if (mismatch_percent > 50) {
+                  warning(
+                    "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+                    i,
+                    "Unmatched genes will have NA values in rowData. ",
+                    ". Consider synchronizing your rownames in both se and de_results elements."
+                  )
+                }
+
 
                 matched_ids <- match(rownames(x), rownames(this_de)) # we align de res with se
                 # only valid indices
@@ -395,6 +411,22 @@ setMethod("add_dea",
                   package = "DESeq2"
                 )
               } else if (is(this_de, "DGEExact") || is(this_de, "DGELRT")) {
+                # check for rowname mismatches
+                rownames_x <- rownames(rowData(x))
+                rownames_y <- rownames(this_de)
+                mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+                mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+                if (mismatch_percent > 50) {
+                  warning(
+                    "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+                    i,
+                    "Unmatched genes will have NA values in rowData. ",
+                    ". Consider synchronizing your rownames in both se and de_results elements."
+                  )
+                }
+
                 res_tbl <- topTags(
                   this_de,
                   n = nrow(this_de),
@@ -444,6 +476,23 @@ setMethod("add_dea",
                   package = "edgeR"
                 )
               } else if (is(this_de, "MArrayLM")) {
+
+                # check for rowname mismatches
+                rownames_x <- rownames(rowData(x))
+                rownames_y <- rownames(this_de)
+                mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+                mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+                if (mismatch_percent > 50) {
+                  warning(
+                    "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+                    i,
+                    "Unmatched genes will have NA values in rowData. ",
+                    ". Consider synchronizing your rownames in both se and de_results elements."
+                  )
+                }
+
                 res_tbl <- topTable(
                   this_de,
                   coef    = 2,
@@ -1435,8 +1484,8 @@ setMethod("show",
 
 ## summary ---------------------------------------------------------------------
 #' @exportMethod summary
-summary.DeeDeeExperiment <- function(object, 
-                                     FDR = 0.05, 
+summary.DeeDeeExperiment <- function(object,
+                                     FDR = 0.05,
                                      show_scenario_info = FALSE, ...) {
   # using ellipsis because we can't change the summary method
   # args <- list(...)
@@ -1446,13 +1495,13 @@ summary.DeeDeeExperiment <- function(object,
   # show_scenario_info <- isTRUE(args$show_scenario_info)
   # dea summary
   dea <- dea_info(object)
-  
+
   if (length(dea) > 0) {
     cat("DE Results Summary:\n")
     de_table <- data.frame(
-      
+
       DEA_name = names(dea),
-      
+
       Up = sapply(names(dea), function(contrast) {
         lfc_col <- paste0(contrast, "_log2FoldChange")
         padj_col <- paste0(contrast, "_padj")
@@ -1475,19 +1524,19 @@ summary.DeeDeeExperiment <- function(object,
           NA_integer_
         }
       }),
-      
+
       FDR = rep(FDR, length(dea))
     )
     print(de_table, row.names = FALSE)
-    
+
     cat("\n")
-    
+
   } else {
     cat("No DEA results stored.\n\n")
   }
   # fea summary
-  
-  
+
+
   fea <- fea_info(object)
   if (length(fea) > 0) {
     cat("FE Results Summary:\n")
@@ -1516,11 +1565,11 @@ summary.DeeDeeExperiment <- function(object,
       })
     )
     print(fea_table, row.names = FALSE)
-    
+
   } else {
     cat("No FEA results stored.\n")
   }
-  
+
   # scenario info (only if show_scenario_info is TRUE)
   if (show_scenario_info && length(dea) > 0) {
     cat("\nScenario Info:\n")
@@ -1529,36 +1578,36 @@ summary.DeeDeeExperiment <- function(object,
       scenario_info <- dea[[de_name]][["scenario_info"]]
       if (!is.null(scenario_info)) {
         cat(" -", de_name, ":\n")
-        
+
         wrapped_txt <- .basic_str_wrap(scenario_info,
                                        width = 80,
                                        indent = 1,
                                        exdent = 2)
-        
+
         cat(paste(wrapped_txt, "\n"), "\n")
       } else {
         missing <- c(missing, de_name)
       }
     }
-    
+
     if (length(missing) > 0) {
       cat("\nNo scenario info for:", paste(missing, collapse = ", "), "\n")
     }
-    
+
     cat("\n")
   }
-  
+
 }
 
 #' @rdname DeeDeeExperiment-misc
-#' 
+#'
 #' @method summary DeeDeeExperiment
-#' 
-#' @param FDR Numeric, sets the significance threshold for subsetting 
+#'
+#' @param FDR Numeric, sets the significance threshold for subsetting
 #' differentially expressed genes based on adjusted p-values. Defaults to 0.05
-#' @param show_scenario_info Logical; if TRUE, displays the associated scenario 
+#' @param show_scenario_info Logical; if TRUE, displays the associated scenario
 #' info for each DE contrast, if available. Defaults to FALSE
-#' 
+#'
 #' @export
 setMethod("summary",
           signature = signature(object = "DeeDeeExperiment"),
