@@ -1,3 +1,8 @@
+# DeeDeeExperiment 0.5.0
+
+* Reducing the dependency stack to make the class/package as slim as it can be,
+with a focus on the full interoperability with SE (therefore now a full dependency)
+
 # DeeDeeExperiment 0.4.0
 
 * New methods to rename DEA and FEA elements in `dde` objects, get all FEAs for
