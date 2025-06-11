@@ -3,3 +3,4 @@
 ^LICENSE\.md$
 ^\.github$
 vignettes/macrophDeeDee\.Rmd$
+vignettes/myresuset_macs.RData

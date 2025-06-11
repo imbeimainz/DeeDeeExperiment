@@ -552,7 +552,7 @@ emapplot(enrichplot::pairwise_termsim(myresuset_macs$condition_IFNg_vs_naive$rea
 ```
 
 ```{r saveall}
-save(myresuset_macs, file = "myresuset_macs.RData")
+# save(myresuset_macs, file = "myresuset_macs.RData")
 ```
 
 
