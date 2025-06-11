@@ -205,6 +205,7 @@ DeeDeeExperiment <- function(se = NULL,
         warning(
           "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
+          "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
@@ -231,6 +232,7 @@ DeeDeeExperiment <- function(se = NULL,
         warning(
           "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
+          "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
@@ -257,6 +259,7 @@ DeeDeeExperiment <- function(se = NULL,
         warning(
           "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
+          "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
