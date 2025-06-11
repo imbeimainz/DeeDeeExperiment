@@ -640,7 +640,10 @@ DeeDeeExperiment::fea(dde_macs, fea_name = "fea2", format = "original")
 
 head(DeeDeeExperiment::fea(dde_macs, fea_name = "feafede"))
 
-DeeDeeExperiment::fea_info(dde_macs)
+# DeeDeeExperiment::fea_info(dde_macs)
+DeeDeeExperiment::fea_info(dde_macs) |> names()
+DeeDeeExperiment::fea_info(dde_macs)[["fea2"]] |> names()
+# this would avoid too much printed text
 
 # done # TODO have the suggestion also for dea?
 
