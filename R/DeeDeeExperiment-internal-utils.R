@@ -367,15 +367,15 @@
     }, logical(1))
 
     if (!any(matches)) {
-      
+
       stop(
         c("Element `",i,"` does not contain the required columns for any known enrichment type! \n",
           "Please check that you re providing a valid enrichment result. \n",
-          "Current supported outputs are from topGO, enrichResult objects, gseaResult objects, or output from enrichR, fgsea, gprofiler, DAVID or results generated with one of `GeneTonic` shakers."
+          "Call `supported_fea_formats()` to see available formats"
         )
       )
     } ### long error msg?
-    
+
   }
 
   return(x)
@@ -872,5 +872,32 @@
 
 .basic_str_wrap <- function(x, width = 80, ...) {
   paste(strwrap(x, width = width, ...), collapse = "\n")
+}
+
+
+
+#' Display available FEA formats
+#' @returns a data.frame of possible FEA input formats
+#'
+#' @export
+supported_fea_formats <- function() {
+  data.frame(
+    Format = c("data.frame",
+               "enrichResult",
+               "gseaResult",
+               "fgseaResult",
+               "data.frame",
+               "data.frame",
+               "data.frame",
+               "data.frame"),
+    Package = c("topGO",
+                "clusterProfiler",
+                "clusterProfiler",
+                "fgsea",
+                "gprofiler2",
+                "enrichR",
+                "DAVID",
+                "GeneTonic")
+  )
 }
 
