@@ -121,9 +121,11 @@ DeeDeeExperiment <- function(se = NULL,
     ## check
     #stopifnot(!any(sapply(de_results, function(x) is.null(rownames(x)))))
 
-    if(any(sapply(de_results, function(x) is.null(rownames(x))))) {
+
+    if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
       stop("Some elements in the de_results list do not have rownames!")
     }
+
 
     ## taking rather the union of all de_res elements
     ids <- unique(unlist(lapply(de_results, rownames)))

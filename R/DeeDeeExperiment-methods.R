@@ -1502,7 +1502,7 @@ summary.DeeDeeExperiment <- function(object,
 
       DEA_name = names(dea),
 
-      Up = sapply(names(dea), function(contrast) {
+      Up = vapply(names(dea), function(contrast) {
         lfc_col <- paste0(contrast, "_log2FoldChange")
         padj_col <- paste0(contrast, "_padj")
         if (all(c(lfc_col, padj_col) %in% colnames(rowData(object)))) {
@@ -1512,8 +1512,10 @@ summary.DeeDeeExperiment <- function(object,
         } else {
           NA_integer_
         }
-      }),
-      Down = sapply(names(dea), function(contrast) {
+      }, integer(1)),
+
+
+      Down = vapply(names(dea), function(contrast) {
         lfc_col <- paste0(contrast, "_log2FoldChange")
         padj_col <- paste0(contrast, "_padj")
         if (all(c(lfc_col, padj_col) %in% colnames(rowData(object)))) {
@@ -1523,7 +1525,8 @@ summary.DeeDeeExperiment <- function(object,
         } else {
           NA_integer_
         }
-      }),
+      }, integer(1)),
+
 
       FDR = rep(FDR, length(dea))
     )
@@ -1542,27 +1545,30 @@ summary.DeeDeeExperiment <- function(object,
     cat("FE Results Summary:\n")
     fea_table <- data.frame(
       FEA_Name = names(fea),
-      Linked_DE = sapply(fea, function(object) {
+      Linked_DE = vapply(fea, function(object) {
         if (!is.null(object$de_name) && !is.na(object$de_name)) {
           object$de_name
         } else {
           "."
         }
-      }),
-      FE_Type = sapply(fea, function(object) {
+      }, character(1)),
+
+      FE_Type = vapply(fea, function(object) {
         if (!is.null(object$fe_tool)) {
           object$fe_tool
         } else {
           "Not Specified"
         }
-      }),
-      Term_Number = sapply(fea, function(object) {
+      }, character(1)),
+
+
+      Term_Number = vapply(fea, function(object) {
         if (!is.null(object$original_object)) {
           NROW(object$original_object)
         } else {
           NA_integer_
         }
-      })
+      }, integer(1))
     )
     print(fea_table, row.names = FALSE)
 
