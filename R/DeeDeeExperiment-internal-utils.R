@@ -880,6 +880,8 @@
 #' @returns a data.frame of possible FEA input formats
 #'
 #' @export
+#' @examples
+#' supported_fea_formats()
 supported_fea_formats <- function() {
   data.frame(
     Format = c("data.frame",

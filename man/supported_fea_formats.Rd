@@ -12,3 +12,6 @@ a data.frame of possible FEA input formats
 \description{
 Display available FEA formats
 }
+\examples{
+supported_fea_formats()
+}
