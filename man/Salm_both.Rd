@@ -4,6 +4,9 @@
 \name{Salm_both}
 \alias{Salm_both}
 \title{A sample \code{DESeqResults} object}
+\format{
+A \code{DESeqResults} object
+}
 \value{
 A sample \code{DESeqResults} object, generated with \code{DESeq2}
 }
@@ -24,3 +27,10 @@ Alasoo, et al. "Shared genetic effects on chromatin and gene
 expression indicate a role for enhancer priming in immune response",
 Nature Genetics, January 2018 doi: 10.1038/s41588-018-0046-7.
 }
+\seealso{
+Other DEresus: 
+\code{\link{IFNg_both}},
+\code{\link{IFNg_naive}},
+\code{\link{Salm_naive}}
+}
+\concept{DEresus}

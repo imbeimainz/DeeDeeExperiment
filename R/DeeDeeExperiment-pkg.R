@@ -20,6 +20,7 @@
 #' rowData rowData<- SummarizedExperiment
 #' @importFrom utils packageVersion
 #' @importFrom methods show as callNextMethod is new validObject
+#' @importFrom cli cli_alert_success cli_alert_info
 #'
 #' @name DeeDeeExperiment-pkg
 #' @docType package

@@ -2,8 +2,8 @@
 
 `DeeDeeExperiment` is an S4 class extending the `SummarizedExperiment` framework to
 facilitate the integration and management of transcriptomic analysis results.
-It introduces two dedicated slots to store Differential Expression (DE) analysis
-results and Functional Enrichment analysis outcomes, providing a structured approach
+It introduces two dedicated slots to store Differential Expression analysis (DEA)
+results and Functional Enrichment analysis (FEA) results, providing a structured approach
 for downstream analysis.
 
 ## Installation
@@ -19,18 +19,40 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
 
 ## Strucutre and Usage
 
-The `DeeDeeExperiment` extends `SummarizedExperiment` and contains additional attributes:
+The `DeeDeeExperiment` class extends the core Bioconductor `SummarizedExperiment` object,
+retaining its structure, methods, and compatibility with existing tools.
+In addition, it introduces new components designed to simplify and enhance downstream analysis.
 
-* `dea` : A slot for storing DE-related information (currently supported formats:
-results from `DESeq2`, `edgeR`, `limma`).
+Specifically, `DeeDeeExperiment` has two new slots:
 
-* `fea` : A slot for storing Functional Enrichment related information
+- `dea` : A slot that stores results from differential expression analysis (DEA),
+along with relevant metadata (currently supports results from `DESeq2`, `edgeR`, `limma`)
 
-TODO: later attach a schematic representation of the class
+* `fea` : A slot that stores results from functional enrichment analysis (FEA),
+along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
+`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
+
+![](./vignettes/DeeDeeExperiment_Anatomy.png)
+
 
 ## Example
 
-TODO
+``` r
+library("DeeDeeExperiment")
+library("macrophage")
+
+# load data
+data(gse, "macrophage")
+data("de_named_list", package = "DeeDeeExperiment")
+data("topGO_results_list", package = "DeeDeeExperiment")
+
+dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition)
+
+# create DeeDeeExperiment object
+dde <- DeeDeeExperiment(se = dds_macrophage,
+                        de_results = de_named_list,
+                        enrich_results = topGO_results)
+```
 
 ## Development
 

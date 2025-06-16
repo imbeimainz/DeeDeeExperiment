@@ -1,3 +1,30 @@
+# DeeDeeExperiment 0.5.0
+
+* Reducing the dependency stack to make the class/package as slim as it can be,
+with a focus on the full interoperability with SE (therefore now a full dependency)
+
+# DeeDeeExperiment 0.4.0
+
+* New methods to rename DEA and FEA elements in `dde` objects, get all FEAs for
+a specific DEA, assign DEA to FEA
+
+* Method dispatch is now only base on x being `DeeDeeExperiment`, other arguments
+are no longer part of the method signature
+
+* expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
+`enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers
+
+# DeeDeeExperiment 0.3.0
+
+## New features
+
+* Methods to retrieve and manage the `fea` slot content are established
+
+* supported FEAs: topGO (data.frame) & enrichResult objects
+
+* A summary method is included to provide a quick overview of stored DEA and
+FEA results
+
 # DeeDeeExperiment 0.2.0
 
 ## New features
@@ -14,4 +41,5 @@
 ## New features
 
 * The `DeeDeeExperiment` class is now being developed in its own standalone
-package, following its separation from the original `DeeDee_legacy` repository
+package, following its separation from the original `DeeDee_legacy` repository:
+https://github.com/imbeimainz/DeeDee_legacy

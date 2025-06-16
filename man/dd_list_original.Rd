@@ -4,6 +4,9 @@
 \name{dd_list_original}
 \alias{dd_list_original}
 \title{dd_list_original}
+\format{
+A list object
+}
 \value{
 A list of DE results
 }

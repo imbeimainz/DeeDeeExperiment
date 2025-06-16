@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
-Title: DeeDeeExperiment: An S4 Class for Managing Transcriptomic Analysis results
-Version: 0.2.0
+Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
+Version: 0.5.0
 Authors@R: 
     c(
         person(
@@ -18,26 +18,42 @@ Authors@R:
 Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiemnt
   class, designed to integrate and manage transciptomic analysis results. It introduces
   two dedicated slots to store Differential Expression (DE) analysis results and
-  Functional Enrichment analysis outcomes, providing a structured approach for
+  Functional Enrichment analysis results, providing a structured approach for
   downstream analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Depends:
+    R (>= 4.5.0),
+    SummarizedExperiment
 Imports:
-    SummarizedExperiment,
     methods,
     S4Vectors,
     utils,
     DESeq2,
     edgeR,
-    limma
+    limma,
+    cli
 Suggests: 
     macrophage,
     knitr,
     BiocStyle,
+    apeglm,
+    mosdef,
+    DT,
+    org.Hs.eg.db,
+    biomaRt,
+    topGO,
+    clusterProfiler,
+    GeneTonic,
+    ReactomePA,
+    pcaExplorer,
+    enrichplot,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
+URL: https://github.com/imbeimainz/DeeDeeExperiment
+BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
 biocViews: Software, Infrastructure, DataRepresentation, GeneExpression, Transcription,
   Transcriptomics, DifferentialExpression, Pathways, GO
 Config/testthat/edition: 3

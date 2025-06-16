@@ -4,6 +4,9 @@
 \name{de_limma}
 \alias{de_limma}
 \title{A sample \code{MArrayLM} object}
+\format{
+A \code{MArrayLM} object
+}
 \value{
 A sample \code{MArrayLM} object, generated with \code{limma}
 }

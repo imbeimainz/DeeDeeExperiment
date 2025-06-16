@@ -4,6 +4,9 @@
 \name{de_named_list}
 \alias{de_named_list}
 \title{de_named_list}
+\format{
+A list object
+}
 \value{
 A named list of DE results, in their original format
 }

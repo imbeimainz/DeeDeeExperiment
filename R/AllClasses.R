@@ -8,7 +8,7 @@
 #' @slot fea This slot is designed to hold Functional Enrichment related information.
 #'
 setClass("DeeDeeExperiment",
-         contains = "RangedSummarizedExperiment",
+         contains = "RangedSummarizedExperiment", # maybe consider inheriting from SCE
          slots = representation(
            dea = "list",
            fea = "list"

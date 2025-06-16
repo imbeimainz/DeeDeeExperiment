@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
+vignettes/macrophDeeDee\.Rmd$
+vignettes/myresuset_macs\.RData$
+^vignettes/DeeDeeExperiment_manual_cache$
