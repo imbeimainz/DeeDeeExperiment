@@ -55,6 +55,3 @@ setGeneric("link_dea_and_fea", function(x, ...) standardGeneric("link_dea_and_fe
 
 #' @export
 setGeneric("add_scenario_info", function(x, ...) standardGeneric("add_scenario_info"))
-
-
-

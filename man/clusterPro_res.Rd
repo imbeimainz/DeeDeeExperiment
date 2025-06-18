@@ -14,7 +14,8 @@ A list
 A list of FE results generated with \code{clusterProfiler::enrichGO()}
 }
 \details{
-A list of FE result for the macrophage data (salmonella vs naive and IFNg vs naive)
+A list of FE result for the macrophage data (salmonella vs naive
+and IFNg vs naive)
 }
 \seealso{
 Other enrich_resus: 

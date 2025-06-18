@@ -196,7 +196,8 @@ data("topGO_results_list", package = "DeeDeeExperiment")
 library("SummarizedExperiment")
 
 rd_macrophage <- DataFrame(
-  gene_id = rownames(de_named_list$ifng_vs_naive))
+  gene_id = rownames(de_named_list$ifng_vs_naive)
+)
 rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 se_macrophage_noassays <- SummarizedExperiment(
   assays = SimpleList(),
@@ -236,16 +237,19 @@ dea_names(dde)
 fea_names(dde)
 
 # print a summary of the available DEAs and FEAs
-summary(dde, FDR= 0.01)
+summary(dde, FDR = 0.01)
 
 # rename DEA
-dde_new <- dea_rename(dde_new, old_name = "salmonella_vs_naive",
-                      new_name = "Salmo_vs_Naive_renamed")
+dde_new <- dea_rename(dde_new,
+  old_name = "salmonella_vs_naive",
+  new_name = "Salmo_vs_Naive_renamed"
+)
 
 # assign DEA to FEA
 
 dde_new <- link_dea_and_fea(dde_new,
-                             dea_name = "ifngsalmo_vs_naive",
-                             fea_name = "ifngsalmo_vs_naive")
+  dea_name = "ifngsalmo_vs_naive",
+  fea_name = "ifngsalmo_vs_naive"
+)
 
 }

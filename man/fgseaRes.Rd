@@ -14,7 +14,8 @@ A data.table/data.frame
 A data frame of FE results generated with \code{fgsea::fgsea()}
 }
 \details{
-Tabular representation of FE result for the macrophage data (IFNg vs naive)
+Tabular representation of FE result for the macrophage data
+(IFNg vs naive)
 }
 \seealso{
 Other enrich_resus: 

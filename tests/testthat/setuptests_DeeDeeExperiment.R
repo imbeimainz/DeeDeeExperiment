@@ -5,7 +5,8 @@ suppressPackageStartupMessages(
 data("de_named_list", package = "DeeDeeExperiment")
 
 rd_macrophage <- DataFrame(
-  gene_id = rownames(de_named_list$ifng_vs_naive))
+  gene_id = rownames(de_named_list$ifng_vs_naive)
+)
 rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 se_macrophage_noassays <- SummarizedExperiment(
   assays = SimpleList(),
@@ -29,6 +30,3 @@ data("gost_res", package = "DeeDeeExperiment")
 data("fgseaRes", package = "DeeDeeExperiment")
 
 data("gsea_res", package = "DeeDeeExperiment")
-
-
-

@@ -20,12 +20,13 @@ validDeeDeeExperiment <- function(object) {
 
     required_rowdata <- unlist(
       lapply(
-        dea_names, function(arg)
+        dea_names, function(arg) {
           c(
             paste0(arg, "_log2FoldChange"),
             paste0(arg, "_pvalue"),
             paste0(arg, "_padj")
           )
+        }
       )
     )
     # this will catch almost every wrong thing
@@ -43,23 +44,22 @@ validDeeDeeExperiment <- function(object) {
     if (any(is.null(names(fea_info(object))))) {
       msg <- c(msg, "`fea` must be a named list")
     }
-
   }
 
   if (length(fea_info(object)) > 0) {
-
     for (entry in fea_info(object)) {
-
-      if (!is(entry$original_object,"data.frame") &&
-          !is(entry$original_object,"enrichResult") &&
-          !is(entry$original_object,"gseaResult")) {
-            msg <- c(msg, "FEA results should be either a data.frame,
+      if (!is(entry$original_object, "data.frame") &&
+        !is(entry$original_object, "enrichResult") &&
+        !is(entry$original_object, "gseaResult")) {
+        msg <- c(msg, "FEA results should be either a data.frame,
                 enrichResult, or a gseaResult object")
-          }
+      }
 
-      if (!(entry$fe_tool %in% c("topGO", "clusterProfiler", "GeneTonic", "DAVID",
-                                 "fgsea", "gsea", "enrichr", "gProfiler",
-                                 "Not Specified"))) {
+      if (!(entry$fe_tool %in% c(
+        "topGO", "clusterProfiler", "GeneTonic", "DAVID",
+        "fgsea", "gsea", "enrichr", "gProfiler",
+        "Not Specified"
+      ))) {
         msg <- c(msg, "Some FEA entries have invalid or unrecognized `fea_tool` values")
       }
     }
@@ -68,10 +68,10 @@ validDeeDeeExperiment <- function(object) {
 
   if (is.null(msg)) {
     TRUE
-  } else msg
-
+  } else {
+    msg
+  }
 }
 
 #' @importFrom S4Vectors setValidity2
 S4Vectors::setValidity2("DeeDeeExperiment", validDeeDeeExperiment)
-

@@ -22,9 +22,9 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
-              all(na.omit(res_de$pvalue > 0)))
+    all(na.omit(res_de$pvalue > 0)))
 
-  #matched_ids <- match(rownames(res_de), rownames(se))
+  # matched_ids <- match(rownames(res_de), rownames(se))
 
   matched_ids <- match(rownames(se), rownames(res_de)) # we align de res with se
   # only valid indices
@@ -33,15 +33,15 @@
 
   # Pre-fill rowData with NA
   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
+  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
   rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de$log2FoldChange[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_de$pvalue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_de$padj[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_de$pvalue[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_de$padj[matched_ids[valid_matches]]
 
 
   dea_contrast <- list(
@@ -80,7 +80,7 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_tbl$PValue <= 1)) &
-              all(na.omit(res_tbl$PValue > 0)))
+    all(na.omit(res_tbl$PValue > 0)))
 
   # identify the logFC cols
   logFC_cols <- grep("^logFC", colnames(res_tbl), value = TRUE)
@@ -100,14 +100,14 @@
   }
 
   # pre-fill rowData with NA the assign the corresponding values for matched indices for pval and padj
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
+  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_tbl$table$PValue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_tbl$table$FDR[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_tbl$table$PValue[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_tbl$table$FDR[matched_ids[valid_matches]]
 
   dea_contrast <- list(
     alpha = NA,
@@ -162,9 +162,9 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
-              all(na.omit(res_tbl$P.Value > 0)))
+    all(na.omit(res_tbl$P.Value > 0)))
 
-  #matched_ids <- match(rownames(res_tbl), rownames(se))
+  # matched_ids <- match(rownames(res_tbl), rownames(se))
 
   matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
   # only valid indices
@@ -173,15 +173,15 @@
 
   # Pre-fill rowData with NA
   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-  rowData(se)[[paste0(de_name, "_padj")]]           <- NA
+  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(se)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
   rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_tbl$logFC[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_tbl$P.Value[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_tbl$adj.P.Val[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_tbl$P.Value[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_tbl$adj.P.Val[matched_ids[valid_matches]]
 
   dea_contrast <- list(
     alpha = NA,
@@ -197,7 +197,6 @@
 
 
   # returns info (in the standardized manner)
-
 }
 
 # custom format can be a dataframe, can it be a list???
@@ -262,8 +261,8 @@
   ## if one single element is given, i.e not a list, it converts it into a list
   ## of length 1 and ensure it has a name
   if (is(x, "DGEExact") ||
-      is(x, "DGELRT") || is(x, "MArrayLM") ||
-      is(x, "DESeqResults")) {
+    is(x, "DGELRT") || is(x, "MArrayLM") ||
+    is(x, "DESeqResults")) {
     # convert into a named list
     x <- list(x)
     names(x) <- entry_name
@@ -302,14 +301,15 @@
   }
 
   # if results are not either a list or df or enrichResult or gseaResult obj throw an error
-  if ( !(is(x, "data.frame") || is(x,"enrichResult") || is.list(x) || is(x,"gseaResult"))) {
-
-    stop("Enrichment results must be a data frame,",
-         " an enrichResult object, a gseaResult object or a list of these elements!")
+  if (!(is(x, "data.frame") || is(x, "enrichResult") || is.list(x) || is(x, "gseaResult"))) {
+    stop(
+      "Enrichment results must be a data frame,",
+      " an enrichResult object, a gseaResult object or a list of these elements!"
+    )
   }
 
   # if results is not a list  (one df or enrichResult obj) put it into a named list
-  if (is(x, "data.frame") || is(x,"enrichResult") || is(x,"gseaResult")) {
+  if (is(x, "data.frame") || is(x, "enrichResult") || is(x, "gseaResult")) {
     x <- list(x)
     names(x) <- entry_name
   }
@@ -318,7 +318,7 @@
   # check if the elements of the list are either data.frame or enrichResult obj
   # gost() returns a large list, so we can accept list
   x <- lapply(x, function(arg) {
-    if (is(arg, "enrichResult") || is(arg, "data.frame" ) || is(arg, "gseaResult")) {
+    if (is(arg, "enrichResult") || is(arg, "data.frame") || is(arg, "gseaResult")) {
       arg
     } else {
       stop("Elements in the list must be a data.frame or enrichResult or gseaResult object!")
@@ -336,14 +336,20 @@
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
     clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
     GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes", "gs_de_count"),
-    DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
-              "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
+    DAVID = c(
+      "Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
+      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"
+    ),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
     gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
-    enrichr = c("Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
-                "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"),
-    gProfiler = c("source", "term_name", "term_id", "term_size", "query_size",
-                  "intersection_size", "effective_domain_size") # taking only the intersection of both r
+    enrichr = c(
+      "Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
+      "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"
+    ),
+    gProfiler = c(
+      "source", "term_name", "term_id", "term_size", "query_size",
+      "intersection_size", "effective_domain_size"
+    ) # taking only the intersection of both r
     # and txt file outputs
   )
 
@@ -352,7 +358,8 @@
     df <- x[[i]]
 
     if (is(df, "enrichResult") || is(df, "gseaResult")) {
-      cols <-  colnames(df@result) }
+      cols <- colnames(df@result)
+    }
 
     # else if (is(df, "list")) {
     #   cols <- colnames(df$result)
@@ -367,15 +374,14 @@
     }, logical(1))
 
     if (!any(matches)) {
-
       stop(
-        c("Element `",i,"` does not contain the required columns for any known enrichment type! \n",
+        c(
+          "Element `", i, "` does not contain the required columns for any known enrichment type! \n",
           "Please check that you re providing a valid enrichment result. \n",
           "Call `supported_fea_formats()` to see available formats"
         )
       )
     } ### long error msg?
-
   }
 
   return(x)
@@ -396,7 +402,6 @@
 #' @noRd
 .match_fe_to_de <- function(fea_name, dea_names,
                             pattern = "^(topGO_|clusterProfiler_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
-
   # if an attribute was assigned
 
   # associated_dea <- attr(fea_obj, "associated_dea")
@@ -418,23 +423,28 @@
 #' @param fe_res FE result table
 #' @noRd
 .detect_fea_tool <- function(fe_res) {
+  stopifnot(is(fe_res, "data.frame") || is(fe_res, "enrichResult") ||
+    is(fe_res, "gseaResult"))
 
-  stopifnot(is(fe_res,"data.frame") || is(fe_res,"enrichResult")
-            || is(fe_res,"gseaResult"))
-
-  #detect fea type from what columns are found in fea
+  # detect fea type from what columns are found in fea
   required_enrich_cols <- list(
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
     clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
     GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes"), # genetonic shaker output
-    DAVID = c("Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
-              "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"),
+    DAVID = c(
+      "Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
+      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"
+    ),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
     gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
-    enrichr = c("Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
-                "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"),
-    gProfiler = c("source", "term_name", "term_id", "term_size", "query_size",
-                  "intersection_size", "effective_domain_size") # taking only the intersection of both r
+    enrichr = c(
+      "Term", "Overlap", "P.value", "Adjusted.P.value", "Old.P.value",
+      "Old.Adjusted.P.value", "Odds.Ratio", "Combined.Score", "Genes"
+    ),
+    gProfiler = c(
+      "source", "term_name", "term_id", "term_size", "query_size",
+      "intersection_size", "effective_domain_size"
+    ) # taking only the intersection of both r
     # and txt file outputs
   )
 
@@ -463,9 +473,11 @@
 
   # just in case the user has a table with columns from 2 tools :v
   if (length(matched_tools) > 1) {
-    warning("Multiple FEA tool formats matched: ",
-            paste(matched_tools, collapse = ", "),
-            ". Returning all matches.")
+    warning(
+      "Multiple FEA tool formats matched: ",
+      paste(matched_tools, collapse = ", "),
+      ". Returning all matches."
+    )
   }
 
   return(matched_tools)
@@ -482,8 +494,7 @@
 #'
 #' @noRd
 .DeeDeefy_david <- function(david_output) {
-
-  if (!is(david_output,"data.frame")) {
+  if (!is(david_output, "data.frame")) {
     stop("DAVID results should be a data.frame!")
   }
 
@@ -533,7 +544,6 @@
 #'
 #' @noRd
 .DeeDeefy_enrichr <- function(enrichr_output) {
-
   exp_colnames <- c(
     "Term", "Overlap", "P.value", "Adjusted.P.value",
     "Old.P.value", "Old.Adjusted.P.value", "Odds.Ratio",
@@ -579,22 +589,21 @@
 #'
 #' @noRd
 .DeeDeefy_gprofiler <- function(gprofiler_output) {
+  exp_colnames_textual <- c(
+    "source", "term_name", "term_id", "adjusted_p_value",
+    "negative_log10_of_adjusted_p_value", "term_size",
+    "query_size", "intersection_size", "effective_domain_size",
+    "intersections"
+  )
 
-    exp_colnames_textual <- c(
-      "source", "term_name", "term_id", "adjusted_p_value",
-      "negative_log10_of_adjusted_p_value", "term_size",
-      "query_size", "intersection_size", "effective_domain_size",
-      "intersections"
-    )
+  exp_colnames_rcall <- c(
+    "query", "significant", "p_value", "term_size", "query_size",
+    "intersection_size", "precision", "recall",
+    "term_id", "source", "term_name", "effective_domain_size",
+    "source_order", "parents", "evidence_codes", "intersection"
+  )
 
-    exp_colnames_rcall <- c(
-      "query", "significant", "p_value", "term_size", "query_size",
-      "intersection_size", "precision", "recall",
-      "term_id", "source", "term_name", "effective_domain_size",
-      "source_order", "parents", "evidence_codes", "intersection"
-    )
-
-    if (all(exp_colnames_textual %in% colnames(gprofiler_output))) {
+  if (all(exp_colnames_textual %in% colnames(gprofiler_output))) {
     message("Found ", nrow(gprofiler_output), " gene sets in the file output from g:Profiler of which ", sum(gprofiler_output$adjusted_p_value <= 0.05), " are significant (p-value <= 0.05).")
     message("Converting for usage in GeneTonic...")
 
@@ -606,19 +615,20 @@
       gs_de_count = gprofiler_output$intersection_size,
       gs_bg_count = gprofiler_output$term_size,
       gs_adj_pvalue = gprofiler_output$adjusted_p_value,
-      stringsAsFactors = FALSE)
+      stringsAsFactors = FALSE
+    )
   }
 
-    # input will always be a data.frame anyway?
-    # if (is(gprofiler_output, "list")) {
-    #   stop(
-    #     "Expecting a data.frame object. Maybe you are providing the list",
-    #     " containing it? You could do so by selecting the appropriate element",
-    #     " of the list"
-    #   )
-    # }
+  # input will always be a data.frame anyway?
+  # if (is(gprofiler_output, "list")) {
+  #   stop(
+  #     "Expecting a data.frame object. Maybe you are providing the list",
+  #     " containing it? You could do so by selecting the appropriate element",
+  #     " of the list"
+  #   )
+  # }
 
-    else if (all(colnames(gprofiler_output) %in% exp_colnames_rcall)) {
+  else if (all(colnames(gprofiler_output) %in% exp_colnames_rcall)) {
     # using directly the output from the call from gprofiler2
     # if still a list, might need to select the appropriate element
 
@@ -636,12 +646,12 @@
       gs_ontology = gprofiler_output$source,
       stringsAsFactors = FALSE
     )
-    } else {
-      stop(
-            "I could not find some of the usual column names from the g:Profiler output.",
-            " A possible reason could be that you did not specify `evcodes = TRUE`?",
-            " This is required to fill in all the required fields of `res_enrich`"
-          )
+  } else {
+    stop(
+      "I could not find some of the usual column names from the g:Profiler output.",
+      " A possible reason could be that you did not specify `evcodes = TRUE`?",
+      " This is required to fill in all the required fields of `res_enrich`"
+    )
   }
 
   rownames(mydf) <- mydf$gs_id
@@ -709,9 +719,9 @@
 #'
 #' @noRd
 .DeeDeefy_topGOtableResult <- function(obj,
-                                   p_value_column = "p.value_elim") {
+                                       p_value_column = "p.value_elim") {
   if (!all(c("GO.ID", "Term", "Annotated", "Significant", "Expected", "p.value_classic") %in%
-           colnames(obj))) {
+    colnames(obj))) {
     stop("The provided object must be of in the format specified by the `pcaExplorer::topGOtable` function or the `mosdef::run_topGO` function")
   }
 
@@ -789,7 +799,7 @@
     gs_description = fullresults$Description,
     gs_pvalue = fullresults$pvalue,
     gs_genes = gsub("/", ",", fullresults$core_enrichment),
-    gs_de_count = lengths(strsplit(fullresults$core_enrichment,split = "/")),
+    gs_de_count = lengths(strsplit(fullresults$core_enrichment, split = "/")),
     gs_bg_count = fullresults$setSize,
     gs_ontology = obj@setType,
     gs_NES = fullresults$NES,
@@ -884,22 +894,25 @@
 #' supported_fea_formats()
 supported_fea_formats <- function() {
   data.frame(
-    Format = c("data.frame",
-               "enrichResult",
-               "gseaResult",
-               "fgseaResult",
-               "data.frame",
-               "data.frame",
-               "data.frame",
-               "data.frame"),
-    Package = c("topGO",
-                "clusterProfiler",
-                "clusterProfiler",
-                "fgsea",
-                "gprofiler2",
-                "enrichR",
-                "DAVID",
-                "GeneTonic")
+    Format = c(
+      "data.frame",
+      "enrichResult",
+      "gseaResult",
+      "fgseaResult",
+      "data.frame",
+      "data.frame",
+      "data.frame",
+      "data.frame"
+    ),
+    Package = c(
+      "topGO",
+      "clusterProfiler",
+      "clusterProfiler",
+      "fgsea",
+      "gprofiler2",
+      "enrichR",
+      "DAVID",
+      "GeneTonic"
+    )
   )
 }
-

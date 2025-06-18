@@ -11,9 +11,9 @@
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DESeqResults` object, generated with `DESeq2`
-#' 
+#'
 #' @format A `DESeqResults` object
-#' 
+#'
 #' @family DEresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -38,9 +38,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DESeqResults` object, generated with `DESeq2`
-#' 
+#'
 #' @format A `DESeqResults` object
-#' 
+#'
 #' @family DEresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -65,9 +65,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DESeqResults` object, generated with `DESeq2`
-#' 
+#'
 #' @format A `DESeqResults` object
-#' 
+#'
 #' @family DEresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -93,9 +93,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DESeqResults` object, generated with `DESeq2`
-#' 
+#'
 #' @format A `DESeqResults` object
-#' 
+#'
 #' @family DEresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -114,7 +114,7 @@ NULL
 #' A list of `deedee_prepare`d DE results.
 #'
 #' @return A list of DE results
-#' 
+#'
 #' @format A list object
 #'
 #' @details documented creation in ... script
@@ -130,7 +130,7 @@ NULL
 #' A named list of DE results, in their original format (from DESeq2, edgeR or limma)
 #'
 #' @return A named list of DE results, in their original format
-#' 
+#'
 #' @format A list object
 #'
 #' @details documented creation in the `create_dataset_example.R` script in the
@@ -155,7 +155,7 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `MArrayLM` object, generated with `limma`
-#' 
+#'
 #' @format A `MArrayLM` object
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -179,9 +179,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGELRT` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGELRT` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -206,9 +206,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGELRT` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGELRT` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -232,9 +232,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGELRT` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGELRT` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -258,9 +258,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGELRT` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGELRT` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -285,9 +285,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGEExact` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGEExact` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -311,9 +311,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGEExact` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGEExact` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -337,9 +337,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGEExact` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGEExact` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -363,9 +363,9 @@ NULL
 #' the DeeDeeExperiment package, the file is called `generate_data.R`.
 #'
 #' @return A sample `DGEExact` object, generated with `edgeR`
-#' 
+#'
 #' @format A `DGEExact` object
-#' 
+#'
 #' @family edgeRresus
 #'
 #' @references Alasoo, et al. "Shared genetic effects on chromatin and gene
@@ -384,7 +384,7 @@ NULL
 #' @details A list of FE results for the macrophage data
 #'
 #' @return A list
-#' 
+#'
 #' @format A list of data.frame objects
 #'
 #' @family enrich_resus
@@ -402,7 +402,7 @@ NULL
 #' @return A list
 #'
 #' @format A list of data.frame objects
-#' 
+#'
 #' @family enrich_resus
 #'
 #' @name enrichr_res
@@ -413,12 +413,13 @@ NULL
 #'
 #' A list of FE results generated with `clusterProfiler::enrichGO()`
 #'
-#' @details A list of FE result for the macrophage data (salmonella vs naive and IFNg vs naive)
+#' @details A list of FE result for the macrophage data (salmonella vs naive
+#' and IFNg vs naive)
 #'
 #' @return A list
-#' 
+#'
 #' @format A list of `enrichResult` objects
-#' 
+#'
 #' @family enrich_resus
 #'
 #' @name clusterPro_res
@@ -434,7 +435,7 @@ NULL
 #' @return A list
 #'
 #' @format A list, as returned by `gprofiler2`
-#' 
+#'
 #' @family enrich_resus
 #'
 #' @name gost_res
@@ -445,14 +446,15 @@ NULL
 #'
 #' A data frame of FE results generated with `fgsea::fgsea()`
 #'
-#' @details Tabular representation of FE result for the macrophage data (IFNg vs naive)
+#' @details Tabular representation of FE result for the macrophage data
+#' (IFNg vs naive)
 #'
 #' @return A data.table/data.frame
-#' 
+#'
 #' @format A data.table/data.frame object
 #'
 #' @family enrich_resus
-#' 
+#'
 #' @name fgseaRes
 #' @docType data
 NULL
@@ -464,9 +466,9 @@ NULL
 #' @details A set of FE results for the macrophage data (IFNg vs naive)
 #'
 #' @return A `gseaResult` object
-#' 
+#'
 #' @format A `gseaResult` object
-#' 
+#'
 #' @family enrich_resus
 #'
 #' @name gsea_res

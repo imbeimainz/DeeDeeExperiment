@@ -40,21 +40,22 @@ test_that("validity and so", {
 
 
   expect_error({
-    fea_info(dde4) <- list(list(de_name = "c1",
-                                fe_name = "c1",
-                                shaken_results = NULL,
-                                original_object = "meow",
-                                fe_tool = "topGO"))
-  }
-  )
+    fea_info(dde4) <- list(list(
+      de_name = "c1",
+      fe_name = "c1",
+      shaken_results = NULL,
+      original_object = "meow",
+      fe_tool = "topGO"
+    ))
+  })
 
   expect_error({
-    fea_info(dde4) <- list(list(de_name = "c1",
-                                fe_name = "c1",
-                                shaken_results = NULL,
-                                original_object = NULL,
-                                fe_tool = "chico"))
-  }
-  )
-
+    fea_info(dde4) <- list(list(
+      de_name = "c1",
+      fe_name = "c1",
+      shaken_results = NULL,
+      original_object = NULL,
+      fe_tool = "chico"
+    ))
+  })
 })
