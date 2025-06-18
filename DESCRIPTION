@@ -41,15 +41,10 @@ Suggests:
     BiocStyle,
     apeglm,
     mosdef,
-    DT,
     org.Hs.eg.db,
-    biomaRt,
     topGO,
     clusterProfiler,
-    GeneTonic,
-    ReactomePA,
-    pcaExplorer,
-    enrichplot,
+    DEFormats,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
