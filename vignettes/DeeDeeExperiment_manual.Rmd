@@ -250,7 +250,7 @@ For demonstration purposes, we convert the filtered `dds_macrophage` as input fo
 ```{r dds_to_dge}
 # create DGE list
 dge <- as.DGEList(dds_macrophage)
-#dge
+# dge
 ```
 
 ```{r normalize_1}
@@ -279,9 +279,10 @@ fit <- lmFit(v, design)
 colnames(design)
 # setup comparisons
 contrast_matrix <- makeContrasts(
-  IFNg_vs_Naive     = groupIFNg,
-  Salm_vs_Naive     = groupSL1344,
-  levels = design)
+  IFNg_vs_Naive = groupIFNg,
+  Salm_vs_Naive = groupSL1344,
+  levels = design
+)
 ```
 
 </details>
@@ -329,9 +330,10 @@ fit <- glmFit(dge, design)
 colnames(design)
 # setup comparisons
 contrast_matrix <- makeContrasts(
-  IFNg_vs_Naive    = groupIFNg,
-  Salm_vs_Naive    = groupSL1344,
-  levels = design)
+  IFNg_vs_Naive = groupIFNg,
+  Salm_vs_Naive = groupSL1344,
+  levels = design
+)
 ```
 
 </details>
@@ -365,7 +367,7 @@ dge_sub$samples$group <- group
 
 # recalculate normalization and dispersion
 dge_sub <- calcNormFactors(dge_sub)
-dge_sub <- estimateDisp(dge_sub,design = model.matrix(~group))
+dge_sub <- estimateDisp(dge_sub, design = model.matrix(~group))
 # exact test
 dge_exact_IFNg_vs_naive <- exactTest(dge_sub, pair = c("naive", "IFNg")) # DGEExact object
 
@@ -379,7 +381,7 @@ dge_sub$samples$group <- group
 
 # recalculate normalization and dispersion
 dge_sub <- calcNormFactors(dge_sub)
-dge_sub <- estimateDisp(dge_sub,design = model.matrix(~group))
+dge_sub <- estimateDisp(dge_sub, design = model.matrix(~group))
 # exact test
 dge_exact_Salm_vs_naive <- exactTest(dge_sub, pair = c("naive", "SL1344"))
 ```
@@ -389,7 +391,7 @@ dge_exact_Salm_vs_naive <- exactTest(dge_sub, pair = c("naive", "SL1344"))
 <summary>Click here to display `dge_exact_Salm_vs_naive`</summary>
 
 ```{r topTag_2}
-topTags(dge_exact_Salm_vs_naive, n = 10)  # show top 10 genes
+topTags(dge_exact_Salm_vs_naive, n = 10) # show top 10 genes
 ```
 
 </details>
@@ -610,7 +612,7 @@ dea(dde, format = "original") |> head()
 
 # access specific DEA by name, in original format
 dea(dde, dea_name = "lrt_IFNg_vs_naive", 
-                      format = "original") |> head()
+    format = "original") |> head()
 
 # access specific DEA by name (default: minimal format)
 dea(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
@@ -686,7 +688,7 @@ Since `DeeDeeExperiment` inherits from the `SummarizedExperiment` class, it can 
 With the `dde` object now containing all key elements of your analysis, from the counts to enrichment results, metadata, and scenario details, you can save it and plug it into these tools for interactive exploration and visualization.
 
 ```{r save, eval=FALSE}
-saveRDS(dde,"dde_macrophage.RDS")
+saveRDS(dde, "dde_macrophage.RDS")
 ```
 
 
