@@ -713,6 +713,14 @@ GeneTonic::GeneTonic(dds = dds_macrophage,
 
 # FAQs
 
+*Do I need to process/filter my DE results before adding them to a `dde` object?* 
+
+&rarr; `DeeDeeExperiment` is just a container, it does not alter your results. Any filtering or DEG selection should be done beforehand, giving you full control over how your analysis is conducted.
+
+*What happens if I forget to name my DE or FE result when adding it?*
+
+&rarr; If no name is provided, `DeeDeeExperiment` will attempt to assign a default one, which is the variable name in the current environment. However, it's strongly recommended to name each result clearly.
+
 # Session info {.unnumbered}
 
 ```{r sessioinfo}
