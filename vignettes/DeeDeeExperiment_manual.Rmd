@@ -686,7 +686,7 @@ Since `DeeDeeExperiment` inherits from the `SummarizedExperiment` class, it can 
 With the `dde` object now containing all key elements of your analysis, from the counts to enrichment results, metadata, and scenario details, you can save it and plug it into these tools for interactive exploration and visualization.
 
 ```{r save, eval=FALSE}
-save(dde,"dde_macrophage.RDS")
+saveRDS(dde,"dde_macrophage.RDS")
 ```
 
 
