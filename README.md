@@ -17,7 +17,7 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
                         build_vignettes = TRUE)
 ```
 
-## Strucutre and Usage
+## Structure and Usage
 
 The `DeeDeeExperiment` class extends the core Bioconductor `SummarizedExperiment` object,
 retaining its structure, methods, and compatibility with existing tools.
