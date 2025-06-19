@@ -15,8 +15,8 @@ Authors@R:
             email = "marinif@uni-mainz.de", comment = c(ORCID = "0000-0003-3252-7758")
         )
     )
-Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiemnt
-  class, designed to integrate and manage transciptomic analysis results. It introduces
+Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiment
+  class, designed to integrate and manage transcriptomic analysis results. It introduces
   two dedicated slots to store Differential Expression (DE) analysis results and
   Functional Enrichment analysis results, providing a structured approach for
   downstream analysis.
