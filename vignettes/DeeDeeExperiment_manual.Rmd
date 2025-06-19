@@ -261,7 +261,7 @@ de_limma <- fit2 # MArrayLM object
 We show here the top 10 DE genes, as detected in the contrast `IFNg_vs_Naive`
 
 ```{r topTable}
-topTable(de_limma, coef = "IFNg_vs_Naive", number = 10) # show top 10 genes
+topTable(de_limma, coef = "IFNg_vs_Naive", number = 10)[, 1:7] # show top 10 genes, first columns
 ```
 
 We now have a `MArrayLM` object: `de_limma`, ready to be integrated into a `DeeDeeExperiment` object.
@@ -305,7 +305,7 @@ dge_lrt_Salm_vs_naive <- glmLRT(fit, contrast = contrast_matrix[, "Salm_vs_Naive
 The top 10 DE genes computed within the edgeR framework can be shown as in this chunk:
 
 ```{r topTag1}
-topTags(dge_lrt_IFNg_vs_naive, n = 10)  # show top 10 genes
+topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7]  # show top 10 genes, first few columns
 ```
 
 For the sake of demonstrating that `DeeDeeExperiment` can handle the different objects from the `edgeR` framework, we also compute some results with the `exactTest()` approach.
@@ -345,7 +345,7 @@ dge_exact_Salm_vs_naive <- exactTest(dge_sub, pair = c("naive", "SL1344"))
 Again, the top 10 DE genes in the `dge_exact_Salm_vs_naive` object can be shown with
 
 ```{r topTag_2}
-topTags(dge_exact_Salm_vs_naive, n = 10) # show top 10 genes
+topTags(dge_exact_Salm_vs_naive, n = 10)[, 1:7]
 ```
 
 We now have two `DGELRT` & two `DGEExact` objects: `dge_lrt_IFNg_vs_naive`, `dge_lrt_Salm_vs_naive` & `dge_exact_IFNg_vs_naive`, `dge_exact_Salm_vs_naive` respectively, ready to be integrated into a `DeeDeeExperiment` object.
