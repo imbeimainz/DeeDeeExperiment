@@ -29,7 +29,7 @@ test_that("validity and so", {
 
   dde4 <- DeeDeeExperiment(
     se_macrophage_noassays,
-    enrich_results = topGO_results
+    enrich_results = topGO_results_list
   )
   dde4@fea <- list("foo", "bar")
   expect_error(validObject(dde4))

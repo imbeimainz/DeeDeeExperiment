@@ -20,7 +20,7 @@ test_that("linking dea and fea", {
 
   dde_overlap <- DeeDeeExperiment(se_macrophage_noassays,
                                   de_results = de_named_list,
-                                  enrich_results = topGO_results)
+                                  enrich_results = topGO_results_list)
 
   expect_error(link_dea_and_fea(dde_overlap,
                                 "new_name",
@@ -39,7 +39,7 @@ test_that("linking dea and fea", {
                                 dea_name = "salmonella_vs_naive",
                                 fea_name = 2))
 
-  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results$ifng_vs_naive))
+  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
   dde_overlap_add <- add_fea(dde_overlap_add,
                              fea = list(gPro_res = gost_res$result))
 

@@ -35,7 +35,7 @@ test_that("renaming", {
   expect_error(dea_rename(dde, old_name = 1,
                           new_name = "1"))
 
-  dde3 <- add_fea(dde_rename,fea = topGO_results)
+  dde3 <- add_fea(dde_rename,fea = topGO_results_list)
 
   expect_error(dea_rename(dde3, old_name = 1,
                           new_name = "1"))

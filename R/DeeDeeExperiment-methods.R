@@ -144,7 +144,7 @@
 #' dde_removed
 #'
 #' # add a new (set of) FE result(s)
-#' dde_new <- add_fea(dde, fea = topGO_results)
+#' dde_new <- add_fea(dde, fea = topGO_results_list)
 #'
 #' # removing FEAs
 #' dde_rem <- remove_fea(dde_new, "ifng_vs_naive")

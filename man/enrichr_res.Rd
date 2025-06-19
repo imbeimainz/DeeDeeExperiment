@@ -22,6 +22,6 @@ Other enrich_resus:
 \code{\link{fgseaRes}},
 \code{\link{gost_res}},
 \code{\link{gsea_res}},
-\code{\link{topGO_results}}
+\code{\link{topGO_results_list}}
 }
 \concept{enrich_resus}

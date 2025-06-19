@@ -7,7 +7,7 @@ test_that("summary", {
   expect_no_error(summary(dde_no_fea))
 
   dde_no_dea <- DeeDeeExperiment(se = se_macrophage_noassays,
-                                 enrich_results =  topGO_results)
+                                 enrich_results =  topGO_results_list)
   expect_no_error(summary(dde_no_dea))
 
   dde_empty <- DeeDeeExperiment(se = se_macrophage_noassays)

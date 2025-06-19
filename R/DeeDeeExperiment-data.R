@@ -377,7 +377,7 @@ NULL
 NULL
 
 
-#' `topGO_results`
+#' `topGO_results_list`
 #'
 #' A list of FE results generated with `mosdef::topGOtable()`
 #'
@@ -389,7 +389,7 @@ NULL
 #'
 #' @family enrich_resus
 #'
-#' @name topGO_results
+#' @name topGO_results_list
 #' @docType data
 NULL
 
