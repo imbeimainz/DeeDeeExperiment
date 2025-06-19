@@ -424,7 +424,7 @@ names(rowData(dde))
 
 The `dde` object now contains 5 DEAs in its `dea` slot. The `rowData` also includes a record of the `log2FoldChange`, `pvalue`, and `padj` values for each contrast.
 
-> It is possible to overwrite the results, when the argument `force` is set to `TRUE`
+It is possible to overwrite the results, when the argument `force` is set to `TRUE`
 
 ```{r add_dea_force}
 dde <- add_dea(dde, dea = list(same_contrast = dge_lrt_Salm_vs_naive))
