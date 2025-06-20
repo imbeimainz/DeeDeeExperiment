@@ -146,6 +146,8 @@ data(gse, package = "macrophage")
 
 If you already have your differential expression results and want to skip the DEA workflow examples, you can jump directly to the section [4 Creating DeeDeeExperiment the DeeDee way](#creating_deedeeexperiment_the_deedee_way) - otherwise, you can follow along in the subsequent sections where we will showcase how the typical objects from each DE framework will seamlessly fit into a `DeeDeeExperiment` object.
 
+The remainder of this vignette assumes some knowledge of Differential Expression Analysis workflows. If you want some excellent introductions to this topic, you can refer to [@Love2016] and [@Law2018] - Otherwise, you can check [@Ludt2022] for a comprehensive overview of these workflows, as well as the usage of tools such as `GeneTonic` or `pcaExproler` for interactive exploration.
+
 ## DEA: DESeq2 framework
 
 Below we will demonstrate an example on how to generate DE results with `DESeq2`

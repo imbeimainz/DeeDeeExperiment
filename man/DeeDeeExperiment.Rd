@@ -73,7 +73,8 @@ dde_onlyde <- DeeDeeExperiment(
 library("SummarizedExperiment")
 
 rd_macrophage <- DataFrame(
-  gene_id = rownames(de_named_list$ifng_vs_naive))
+  gene_id = rownames(de_named_list$ifng_vs_naive)
+)
 rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 se_macrophage_noassays <- SummarizedExperiment(
   assays = SimpleList(),
