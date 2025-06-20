@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
-Version: 0.5.0
+Version: 0.6.0
 Authors@R: 
     c(
         person(
@@ -15,8 +15,8 @@ Authors@R:
             email = "marinif@uni-mainz.de", comment = c(ORCID = "0000-0003-3252-7758")
         )
     )
-Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiemnt
-  class, designed to integrate and manage transciptomic analysis results. It introduces
+Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiment
+  class, designed to integrate and manage transcriptomic analysis results. It introduces
   two dedicated slots to store Differential Expression (DE) analysis results and
   Functional Enrichment analysis results, providing a structured approach for
   downstream analysis.
@@ -41,15 +41,10 @@ Suggests:
     BiocStyle,
     apeglm,
     mosdef,
-    DT,
     org.Hs.eg.db,
-    biomaRt,
     topGO,
     clusterProfiler,
-    GeneTonic,
-    ReactomePA,
-    pcaExplorer,
-    enrichplot,
+    DEFormats,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment

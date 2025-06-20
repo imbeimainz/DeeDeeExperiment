@@ -233,12 +233,12 @@ de_named_list <- list(
   salmo_both = Salm_both
 )
 
-topGO_results <- list()
+topGO_results_list <- list()
 
 for (name in names(de_named_list)) {
   de <- de_named_list[[name]]
 
-  topGO_results[[name]] <-
+  topGO_results_list[[name]] <-
     mosdef::run_topGO(de_container = dds_macrophage,
                       res_de = de,
                       FDR_threshold = FDR,
@@ -248,7 +248,7 @@ for (name in names(de_named_list)) {
 }
 
 #save
-save(topGO_results, file = "data/topGO_results_list.RData", compress = "xz")
+save(topGO_results_list, file = "data/topGO_results_list.RData", compress = "xz")
 
 # FE with clusterProfiler ----------------------------------------------------------------
 library("clusterProfiler")

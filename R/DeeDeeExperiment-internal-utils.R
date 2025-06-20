@@ -497,7 +497,7 @@
   }
 
   message("Found ", nrow(david_output), " gene sets in the file output from DAVID of which ", sum(david_output$PValue <= 0.05), " are significant (p-value <= 0.05).")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   mydf <- data.frame(
     gs_id = unlist(lapply(strsplit(david_output$Term, "~"), function(arg) arg[[1]])),
@@ -544,7 +544,7 @@
   }
 
   message("Found ", nrow(enrichr_output), " gene sets in the file output from Enrichr of which ", sum(enrichr_output$P.value <= 0.05), " are significant (p-value <= 0.05).")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   # TODO: split up id and term - or just keep em the same?!
   # this does work for go term as they encode it...
@@ -596,7 +596,7 @@
 
     if (all(exp_colnames_textual %in% colnames(gprofiler_output))) {
     message("Found ", nrow(gprofiler_output), " gene sets in the file output from g:Profiler of which ", sum(gprofiler_output$adjusted_p_value <= 0.05), " are significant (p-value <= 0.05).")
-    message("Converting for usage in GeneTonic...")
+    message("Converting for usage within the DeeDeeExperiment framework...")
 
     mydf <- data.frame(
       gs_id = gprofiler_output$term_id,
@@ -623,7 +623,7 @@
     # if still a list, might need to select the appropriate element
 
     message("Found ", nrow(gprofiler_output), " gene sets in the file output from g:Profiler of which ", sum(gprofiler_output$p_value <= 0.05), " are significant (p-value <= 0.05).")
-    message("Converting for usage in GeneTonic...")
+    message("Converting for usage within the DeeDeeExperiment framework...")
 
     mydf <- data.frame(
       gs_id = gprofiler_output$term_id,
@@ -672,7 +672,7 @@
   }
 
   message("Found ", nrow(obj@result), " gene sets in `enrichResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   fullresults <- obj@result
 
@@ -731,7 +731,7 @@
 
   # Thought: store somewhere the ontology if possible - in an extra column?
   message("Found ", nrow(obj), " gene sets in `topGOtableResult` object.")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   fullresults <- obj
 
@@ -780,7 +780,7 @@
   )
 
   message("Found ", nrow(obj@result), " gene sets in `gseaResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   fullresults <- obj@result
 
@@ -832,7 +832,7 @@
   }
 
   message("Found ", nrow(fgsea_output), " gene sets in the file output from fgsea of which ", sum(fgsea_output$padj <= 0.05), " are significant (p-value <= 0.05).")
-  message("Converting for usage in GeneTonic...")
+  message("Converting for usage within the DeeDeeExperiment framework...")
 
   message(
     "Using the content of the 'leadingEdge' column to generate the 'gs_genes' for GeneTonic...",

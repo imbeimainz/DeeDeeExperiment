@@ -17,7 +17,7 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
                         build_vignettes = TRUE)
 ```
 
-## Strucutre and Usage
+## Structure and Usage
 
 The `DeeDeeExperiment` class extends the core Bioconductor `SummarizedExperiment` object,
 retaining its structure, methods, and compatibility with existing tools.
@@ -51,7 +51,7 @@ dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition)
 # create DeeDeeExperiment object
 dde <- DeeDeeExperiment(se = dds_macrophage,
                         de_results = de_named_list,
-                        enrich_results = topGO_results)
+                        enrich_results = topGO_results_list)
 ```
 
 ## Development

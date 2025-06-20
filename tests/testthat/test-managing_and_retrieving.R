@@ -48,7 +48,7 @@ test_that("managing and retrieving", {
 
   dde_overlap <- DeeDeeExperiment(se_macrophage_noassays,
                                   de_results = de_named_list,
-                                  enrich_results = topGO_results)
+                                  enrich_results = topGO_results_list)
 
   expect_error(add_dea(dde_overlap,
                        dea = list(ifng_vs_naive = de_named_list$ifng_vs_naive)))
@@ -63,7 +63,7 @@ test_that("managing and retrieving", {
 
   expect_error(remove_dea(dde))
 
-  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results$ifng_vs_naive))
+  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
   dde_overlap_add <- add_fea(dde_overlap_add,
                              fea = list(gPro_res = gost_res$result))
 
@@ -77,8 +77,8 @@ test_that("managing and retrieving", {
 
   ## adding FEA ----------------------------------------------------------------
 
-  topGO_Salm_naive <- topGO_results$salmonella_vs_naive
-  topGO_IFNg_naive <- topGO_results$ifng_vs_naive
+  topGO_Salm_naive <- topGO_results_list$salmonella_vs_naive
+  topGO_IFNg_naive <- topGO_results_list$ifng_vs_naive
 
   dde2 <- add_fea(dde, fea = list(topGO_Salm_naive = topGO_Salm_naive,
                                   topGO_IFNg_naive = topGO_IFNg_naive),
@@ -116,18 +116,18 @@ test_that("managing and retrieving", {
                                  verbose = TRUE))
   dde_de_empty <- DeeDeeExperiment(se_macrophage_noassays)
 
-  expect_error(add_fea(dde_de_empty, fea = list(topGO_results$salmo_both)))
+  expect_error(add_fea(dde_de_empty, fea = list(topGO_results_list$salmo_both)))
 
   expect_error(add_fea(dde_overlap_add,
                        fea = list(gPro_res = gost_res)))
 
   expect_error(add_fea(dde_overlap_add,
-                       fea = topGO_results$ifng_vs_naive,
+                       fea = topGO_results_list$ifng_vs_naive,
                        de_name  = NA)
   )
 
   expect_error(add_fea(dde_overlap_add,
-                       fea = topGO_results$ifng_vs_naive,
+                       fea = topGO_results_list$ifng_vs_naive,
                        fea_tool = NA)
   )
 
@@ -138,25 +138,25 @@ test_that("managing and retrieving", {
   expect_s4_class(dde_with_info, "DeeDeeExperiment")
 
   expect_no_error(add_fea(dde_with_info,
-                          fea = topGO_results$ifng_vs_naive,
+                          fea = topGO_results_list$ifng_vs_naive,
                           de_name = "ifng_vs_naive",
                           verbose = TRUE))
 
   expect_warning(add_fea(dde_with_info,
-                         fea = topGO_results$ifng_vs_naive,
+                         fea = topGO_results_list$ifng_vs_naive,
                          de_name = "IFNg_vs_naive"))
 
   expect_message(add_fea(dde_with_info,
-                         fea = list(topGO_ifng_vs_naive = topGO_results$ifng_vs_naive),
+                         fea = list(topGO_ifng_vs_naive = topGO_results_list$ifng_vs_naive),
                          verbose = TRUE))
 
   expect_message(add_fea(dde_with_info,
-                         fea = list(ifng_vs_naive = topGO_results$ifng_vs_naive),
+                         fea = list(ifng_vs_naive = topGO_results_list$ifng_vs_naive),
                          verbose = TRUE,
                          force = TRUE))
 
   expect_error(add_fea(dde_with_info,
-                       fea = topGO_results$ifng_vs_naive,
+                       fea = topGO_results_list$ifng_vs_naive,
                        fea_tool = c("topGO","topGO")
   ))
 

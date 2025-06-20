@@ -116,11 +116,11 @@ test_that("creating", {
   expect_warning(DeeDeeExperiment(se = se_macrophage_noassays,
                                    de_results = dea2))
 
-  fea1 <- topGO_results
+  fea1 <- topGO_results_list
 
   expect_warning(DeeDeeExperiment(enrich_results = fea1))
 
-  contrast1 <- topGO_results$ifng_vs_naive
+  contrast1 <- topGO_results_list$ifng_vs_naive
 
   expect_warning(DeeDeeExperiment(de_results = de_named_list,
                                   enrich_results = contrast1))
@@ -131,8 +131,8 @@ test_that("creating", {
     de_results = list(ifng_vs_naive = de_named_list$ifng_vs_naive,
                       salmonella_vs_naive = de_named_list$salmonella_vs_naive),
     enrich_results = list(
-      topGO_ifng_vs_naive = topGO_results$ifng_vs_naive,
-      salmonella_vs_naive = topGO_results$salmonella_vs_naive))}
+      topGO_ifng_vs_naive = topGO_results_list$ifng_vs_naive,
+      salmonella_vs_naive = topGO_results_list$salmonella_vs_naive))}
     )
 
 
@@ -206,13 +206,13 @@ test_that("creating", {
 
   expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
                                   de_results = de_named_list,
-                                  enrich_results = topGO_results), )
+                                  enrich_results = topGO_results_list), )
 
   expect_message(DeeDeeExperiment(se = se_macrophage_noassays,
                                   de_results = de_named_list,
                                   enrich_results = list(
-                                    topGO_Salm_naive = topGO_results$salmonella_vs_naive,
-                                    topGO_IFNg_naive = topGO_results$ifng_vs_naive)))
+                                    topGO_Salm_naive = topGO_results_list$salmonella_vs_naive,
+                                    topGO_IFNg_naive = topGO_results_list$ifng_vs_naive)))
 
 
 
