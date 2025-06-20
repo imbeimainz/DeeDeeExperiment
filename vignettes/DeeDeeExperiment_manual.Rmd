@@ -91,11 +91,13 @@ In order to create a `DeeDeeExperiment` object, at least one of the following in
 
 ```{r create_dde, eval = FALSE}
 # do not run
-dde <- DeeDeeExperiment(se = se, # se is a SummarizedExperiment object
-                        # de_results is a named list of de results
-                        de_results = de_results,
-                        # enrich_res is a named list of enrichment results
-                        enrich_results = enrich_results)
+dde <- DeeDeeExperiment(
+  se = se, # se is a SummarizedExperiment object
+  # de_results is a named list of de results
+  de_results = de_results,
+  # enrich_res is a named list of enrichment results
+  enrich_results = enrich_results
+)
 ```
 
 # Getting started {#gettingstarted}
@@ -103,7 +105,7 @@ dde <- DeeDeeExperiment(se = se, # se is a SummarizedExperiment object
 To install this package, start R and enter:
 
 ```{r install, eval = FALSE}
-if (!requireNamespace("BiocManager", quietly = TRUE)){
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
 
@@ -184,23 +186,27 @@ Let's extract the DE results for each contrast. We will only use two contrasts
 FDR <- 0.05
 # IFNg_vs_naive
 IFNg_vs_naive <- results(dds_macrophage,
-                         name = "condition_IFNg_vs_naive",
-                         lfcThreshold = 1,
-                         alpha = FDR)
+  name = "condition_IFNg_vs_naive",
+  lfcThreshold = 1,
+  alpha = FDR
+)
 IFNg_vs_naive <- lfcShrink(dds_macrophage,
-                           coef = "condition_IFNg_vs_naive",
-                           res = IFNg_vs_naive,
-                           type = "apeglm") 
+  coef = "condition_IFNg_vs_naive",
+  res = IFNg_vs_naive,
+  type = "apeglm"
+)
 
 # Salm_vs_naive
 Salm_vs_naive <- results(dds_macrophage,
-                         name = "condition_SL1344_vs_naive",
-                         lfcThreshold = 1,
-                         alpha = FDR)
+  name = "condition_SL1344_vs_naive",
+  lfcThreshold = 1,
+  alpha = FDR
+)
 Salm_vs_naive <- lfcShrink(dds_macrophage,
-                           coef = "condition_SL1344_vs_naive",
-                           res = Salm_vs_naive,
-                           type = "apeglm") 
+  coef = "condition_SL1344_vs_naive",
+  res = Salm_vs_naive,
+  type = "apeglm"
+)
 
 head(IFNg_vs_naive)
 head(Salm_vs_naive)
@@ -305,7 +311,7 @@ dge_lrt_Salm_vs_naive <- glmLRT(fit, contrast = contrast_matrix[, "Salm_vs_Naive
 The top 10 DE genes computed within the edgeR framework can be shown as in this chunk:
 
 ```{r topTag1}
-topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7]  # show top 10 genes, first few columns
+topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7] # show top 10 genes, first few columns
 ```
 
 For the sake of demonstrating that `DeeDeeExperiment` can handle the different objects from the `edgeR` framework, we also compute some results with the `exactTest()` approach.
@@ -392,9 +398,13 @@ In the following example we construct the dde object using a `dds` object and **
 
 ```{r construct_dde}
 # initialize DeeDeeExperiment with dds object and DESeq results (as a named list)
-dde <- DeeDeeExperiment(se = dds_macrophage,
-                        de_results = list(IFNg_vs_naive = IFNg_vs_naive,
-                                          Salm_vs_naive = Salm_vs_naive))
+dde <- DeeDeeExperiment(
+  se = dds_macrophage,
+  de_results = list(
+    IFNg_vs_naive = IFNg_vs_naive,
+    Salm_vs_naive = Salm_vs_naive
+  )
+)
 
 dde
 ```
@@ -411,8 +421,10 @@ We can also add results as individual element of class `DESeqResults`, `MArrayLM
 
 ```{r add_dea}
 # add a named list of results from edgeR
-dde <- add_dea(dde, dea = list(dge_exact_IFNg_vs_naive = dge_exact_IFNg_vs_naive,
-                               dge_lrt_IFNg_vs_naive = dge_lrt_IFNg_vs_naive))
+dde <- add_dea(dde, dea = list(
+  dge_exact_IFNg_vs_naive = dge_exact_IFNg_vs_naive,
+  dge_lrt_IFNg_vs_naive = dge_lrt_IFNg_vs_naive
+))
 
 # add results from limma as a MArrayLM object
 dde <- add_dea(dde, dea = de_limma)
@@ -460,8 +472,9 @@ Once DE and FE results have been added, FEAs can be linked to specific DE contra
 
 ```{r link_fea}
 dde <- link_dea_and_fea(dde,
-                        dea_name = "Salm_vs_naive",
-                        fea_name = c("salmonella_vs_naive", "gost_res$result"))
+  dea_name = "Salm_vs_naive",
+  fea_name = c("salmonella_vs_naive", "gost_res$result")
+)
 ```
 
 This is then directly visible in the object summary, provided with the dedicated `summary()` method:
@@ -476,8 +489,9 @@ It is possible to add context to specific DEA results that are stored in a `dde`
 
 ```{r add_scenario_info}
 dde <- add_scenario_info(dde,
-                         dea_name = "IFNg_vs_naive",
-                         info = "This results contains the output of a Differential Expression Analysis performed on data from the `macrophage` package, more precisely contrasting the counts from naive macrophage to those associated with IFNg.")
+  dea_name = "IFNg_vs_naive",
+  info = "This results contains the output of a Differential Expression Analysis performed on data from the `macrophage` package, more precisely contrasting the counts from naive macrophage to those associated with IFNg."
+)
 ```
 
 ## Summary of a `dde` object
@@ -510,18 +524,21 @@ Specific results can be renamed after being added using the `dea_rename()` and `
 ```{r rename}
 # rename dea, one element
 dde <- dea_rename(dde,
-                  old_name = "de_limma",
-                  new_name = "ifng_vs_naive_&_salm_vs_naive")
+  old_name = "de_limma",
+  new_name = "ifng_vs_naive_&_salm_vs_naive"
+)
 
 # multiple entries at once
 dde <- dea_rename(dde,
-                  old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
-                  new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive"))
+  old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
+  new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive")
+)
 
 # rename fea
 dde <- fea_rename(dde,
-                  old_name = "gost_res$result",
-                  new_name = "salm_vs_naive")
+  old_name = "gost_res$result",
+  new_name = "salm_vs_naive"
+)
 ```
 
 ## Removing results in a `dde` object
@@ -530,9 +547,11 @@ The method `remove_dea()` and `remove_fea()` can be used to delete results from 
 
 ```{r remove}
 # removing dea
-dde <- remove_dea(dde, c("ifng_vs_naive_&_salm_vs_naive",
-                         "exact_IFNg_vs_naive",
-                         "dge_Salm_vs_naive"))
+dde <- remove_dea(dde, c(
+  "ifng_vs_naive_&_salm_vs_naive",
+  "exact_IFNg_vs_naive",
+  "dge_Salm_vs_naive"
+))
 
 # removing fea
 dde <- remove_fea(dde, c("salmonella_vs_naive"))
@@ -564,8 +583,10 @@ dea(dde) |> head()
 dea(dde, format = "original") |> head()
 
 # access specific DEA by name, in original format
-dea(dde, dea_name = "lrt_IFNg_vs_naive", 
-    format = "original") |> head()
+dea(dde,
+  dea_name = "lrt_IFNg_vs_naive",
+  format = "original"
+) |> head()
 
 # access specific DEA by name (default: minimal format)
 dea(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
@@ -668,11 +689,13 @@ res_de <- dea(my_dde, dea_name = "IFNg_vs_naive", format = "original")
 res_enrich <- fea(my_dde, fea_name = "ifng_vs_naive")
 annotation_object <- mosdef::get_annotation_orgdb(dds_macrophage, "org.Hs.eg.db", "ENSEMBL")
 
-GeneTonic::GeneTonic(dds = dds_macrophage,
-                     res_de = res_de,
-                     res_enrich = res_enrich,
-                     annotation_obj = annotation_object,
-                     project_id = "GeneTonic_with_DeeDee")
+GeneTonic::GeneTonic(
+  dds = dds_macrophage,
+  res_de = res_de,
+  res_enrich = res_enrich,
+  annotation_obj = annotation_object,
+  project_id = "GeneTonic_with_DeeDee"
+)
 ```
 
 Of course, these packages need to be installed as usual on the same machine via `BiocManager::install()`.

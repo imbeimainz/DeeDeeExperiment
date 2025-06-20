@@ -62,7 +62,8 @@
 #' library("SummarizedExperiment")
 #'
 #' rd_macrophage <- DataFrame(
-#'   gene_id = rownames(de_named_list$ifng_vs_naive))
+#'   gene_id = rownames(de_named_list$ifng_vs_naive)
+#' )
 #' rownames(rd_macrophage) <- rownames(de_named_list$ifng_vs_naive)
 #' se_macrophage_noassays <- SummarizedExperiment(
 #'   assays = SimpleList(),
@@ -101,25 +102,23 @@ DeeDeeExperiment <- function(se = NULL,
         stop("'se' must be a RangedSummarizedExperiment object")
       }
     }
-
-  }
-  else {
+  } else {
     # if nothing is passed, return error
     if (length(de_results) == 0 & length(enrich_results) == 0) {
       stop("You have to provide at least an se object or a de_results object!")
     }
     # if no se passed but de_results is not empty, create a mock from it
-    #message("creating a mock SE from the rows of the DE result objects")
+    # message("creating a mock SE from the rows of the DE result objects")
     cli::cli_alert_info("creating a mock SE from the rows of the DE result objects, if available")
     # mock up the se from the de_results
-    #first_de <- de_results[[1]]
+    # first_de <- de_results[[1]]
 
     # independently of the class, the feature names are in the
     # rownames slot, TODO: check
-    #ids <- rownames(first_de)
+    # ids <- rownames(first_de)
 
     ## check
-    #stopifnot(!any(sapply(de_results, function(x) is.null(rownames(x)))))
+    # stopifnot(!any(sapply(de_results, function(x) is.null(rownames(x)))))
 
 
     if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
@@ -139,7 +138,6 @@ DeeDeeExperiment <- function(se = NULL,
 
     # no clue why this is strictly needed, but still it seems it is, if mocking up
     se <- as(se_mock, "RangedSummarizedExperiment")
-
   }
 
 
@@ -150,11 +148,12 @@ DeeDeeExperiment <- function(se = NULL,
 
 
   if (is.null(de_results) &&
-      is.null(enrich_results)) {
+    is.null(enrich_results)) {
     object <- new("DeeDeeExperiment",
-                  se,
-                  dea = list(),
-                  fea = list())
+      se,
+      dea = list(),
+      fea = list()
+    )
 
     # stash the package version
     metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
@@ -172,7 +171,7 @@ DeeDeeExperiment <- function(se = NULL,
 
   # here is where I add the names in the rowData to make all info matched
   # checks on the names
-  #names(de_results)
+  # names(de_results)
   # if not there, "force add"
   # TODO
 
@@ -205,14 +204,12 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
-
-
     } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
       input_edgeR <- .importDE_edgeR(se_out, this_de, i)
       se_out <- input_edgeR$se
@@ -232,14 +229,12 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
-
-
     } else if (is(this_de, "MArrayLM")) {
       input_limma <- .importDE_limma(se_out, this_de, i)
       se_out <- input_limma$se
@@ -259,14 +254,12 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
           ". Consider synchronizing your rownames in both se and de_results elements."
         )
       }
-
-
     }
     # else if (is(this_de, "data.frame")) {
     #   input_custom <- .importDE_custom(se_out, this_de, i)
@@ -311,7 +304,7 @@ DeeDeeExperiment <- function(se = NULL,
         # hoping here that the user names their results in a meaningful way
         matched_name <- .match_fe_to_de(fe, names(de_results))
         if (!is.na(matched_name) &&
-            matched_name %in% names(de_results)) {
+          matched_name %in% names(de_results)) {
           de_res_name <- matched_name
           if (fe != matched_name) {
             # message("FEA '",
@@ -321,8 +314,7 @@ DeeDeeExperiment <- function(se = NULL,
             #         "'")
 
             cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
-
-          } else{
+          } else {
             # message("FEA '",
             #         fe,
             #         "' matched **directly** to DE contrast '", # in case of the same name
@@ -346,9 +338,11 @@ DeeDeeExperiment <- function(se = NULL,
         }
       } else {
         de_res_name <- NA_character_
-        warning("Could not match FEA '",
-                fe,
-                "' to a DE contrast because no DE results were provided.\n")
+        warning(
+          "Could not match FEA '",
+          fe,
+          "' to a DE contrast because no DE results were provided.\n"
+        )
       }
 
       fe_name <- fe # here goes the fea name
@@ -366,38 +360,26 @@ DeeDeeExperiment <- function(se = NULL,
       if (fe_tool == "topGO") {
         # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
         res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
-
       } else if (fe_tool == "clusterProfiler") {
         if (is(res_enrich, "enrichResult")) {
           res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
         }
-
       } else if (fe_tool == "GeneTonic") {
         res_enrich_shaken <- res_enrich
-
-      }
-      else if (fe_tool == "DAVID") {
+      } else if (fe_tool == "DAVID") {
         # we are not taking the output of the file!!  so we cannot
         # use genetonic shakers!!
         # create shakers for that
         res_enrich_shaken <- .DeeDeefy_david(res_enrich)
-      }
-
-      else if (fe_tool == "fgsea") {
+      } else if (fe_tool == "fgsea") {
         res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
-      }
-
-      else if (fe_tool == "gsea") {
+      } else if (fe_tool == "gsea") {
         if (is(res_enrich, "gseaResult")) {
           res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
         }
-      }
-
-      else if (fe_tool == "enrichr") {
-          res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
-      }
-
-      else if (fe_tool == "gProfiler") {
+      } else if (fe_tool == "enrichr") {
+        res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
+      } else if (fe_tool == "gProfiler") {
         res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
       }
 
@@ -414,9 +396,9 @@ DeeDeeExperiment <- function(se = NULL,
 
 
       fea_contrast <- list(
-        de_name = de_res_name,# links to de result
+        de_name = de_res_name, # links to de result
         fe_name = fe_name,
-        shaken_results = res_enrich_shaken , # return shaken results for later use in genetonic
+        shaken_results = res_enrich_shaken, # return shaken results for later use in genetonic
         original_object = res_enrich,
         fe_tool = fe_tool
       )
@@ -424,18 +406,16 @@ DeeDeeExperiment <- function(se = NULL,
 
       fea_contrasts[[fe]] <- fea_contrast
     }
-
   }
 
   object <- new("DeeDeeExperiment",
-                se_out,
-                dea = dea_contrasts,
-                fea = fea_contrasts)
+    se_out,
+    dea = dea_contrasts,
+    fea = fea_contrasts
+  )
 
   # stash the package version
   metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
 
   return(object)
-
-
 }
