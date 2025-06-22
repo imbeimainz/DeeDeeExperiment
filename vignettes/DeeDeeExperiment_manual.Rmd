@@ -33,6 +33,12 @@ editor_options:
 bibliography: DeeDeeExperiment_bibliography.bib
 ---
 
+<style type="text/css">
+.smaller {
+  font-size: 10px
+}
+</style>
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -716,8 +722,10 @@ Of course, these packages need to be installed as usual on the same machine via 
 
 &rarr; The quick-and-easy option would be to rename the output of the tabular format from this tool into the format expected by `DeeDeeExperiment` (which is the same adopted by `GeneTonic`). If you think a conversion function would be useful to yourself and many other users, feel free to submit a pull request within the `DeeDeeExperiment` Github repository (https://github.com/imbeimainz/DeeDeeExperiment/pulls)!
 
-# Session info {.unnumbered}
+# Session info {.unnumbered .smaller}
 
 ```{r sessioinfo}
 sessionInfo()
 ```
+
+# References {.unnumbered}
