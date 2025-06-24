@@ -414,7 +414,7 @@ setMethod("add_dea",
           metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
           metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
           original_object = this_de,
-          package = "DESeq2"
+          package = paste0("DESeq2, v ", packageVersion("DESeq2"))
         )
       } else if (is(this_de, "DGEExact") || is(this_de, "DGELRT")) {
         # check for rowname mismatches
@@ -479,7 +479,7 @@ setMethod("add_dea",
           metainfo_logFC = res_tbl$comparison,
           metainfo_pvalue = NA,
           original_object = this_de,
-          package = "edgeR"
+          package = paste0("edgeR, v ", packageVersion("edgeR"))
         )
       } else if (is(this_de, "MArrayLM")) {
         # check for rowname mismatches
@@ -546,7 +546,7 @@ setMethod("add_dea",
           metainfo_logFC = NA,
           metainfo_pvalue = NA,
           original_object = this_de,
-          package = "limma"
+          package = paste0("limma, v ", packageVersion("limma"))
         )
       } else {
         stop(
@@ -1174,7 +1174,8 @@ setMethod(
         shaken_results = res_enrich_shaken,
         # return shaken results for later use in GeneTonic
         original_object = res_enrich,
-        fe_tool = fe_tool
+        fe_tool = fe_tool,
+        fe_tool_version = if (fe_tool %in% loadedNamespaces()) packageVersion(fe_tool) else NA
       )
 
       fea_contrasts[[fe]] <- fea_contrast

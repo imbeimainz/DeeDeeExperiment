@@ -400,7 +400,8 @@ DeeDeeExperiment <- function(se = NULL,
         fe_name = fe_name,
         shaken_results = res_enrich_shaken, # return shaken results for later use in genetonic
         original_object = res_enrich,
-        fe_tool = fe_tool
+        fe_tool = fe_tool,
+        fe_tool_version = if (fe_tool %in% loadedNamespaces()) packageVersion(fe_tool) else NA
       )
 
 
