@@ -108,44 +108,23 @@ DeeDeeExperiment <- function(se = NULL,
       stop("You have to provide at least an se object or a de_results object!")
     }
     # if no se passed but de_results is not empty, create a mock from it
-    # message("creating a mock SE from the rows of the DE result objects")
     cli::cli_alert_info("creating a mock SE from the rows of the DE result objects, if available")
-    # mock up the se from the de_results
-    # first_de <- de_results[[1]]
-
-    # independently of the class, the feature names are in the
-    # rownames slot, TODO: check
-    # ids <- rownames(first_de)
-
-    ## check
-    # stopifnot(!any(sapply(de_results, function(x) is.null(rownames(x)))))
-
 
     if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
       stop("Some elements in the de_results list do not have rownames!")
     }
 
-
-    ## taking rather the union of all de_res elements
+    ## taking the union of all de_res elements
     ids <- unique(unlist(lapply(de_results, rownames)))
 
     rd_mock <- DataFrame(gene_id = ids, row.names = ids)
 
     # way1
     se_mock <- SummarizedExperiment(assays = SimpleList(), rowData = rd_mock)
-    # se_mock@NAMES <- NULL
-    # rownames(se_mock) <- ids
 
     # no clue why this is strictly needed, but still it seems it is, if mocking up
     se <- as(se_mock, "RangedSummarizedExperiment")
   }
-
-
-  # TODO: if no SE is really provided, instantiate some rownames, at least directly
-  # from the rownames of the result objects
-  # TODO: the row names are taken from the FIRST object in the de results then - or
-  # from the union of all of them?
-
 
   if (is.null(de_results) &&
     is.null(enrich_results)) {
@@ -161,23 +140,7 @@ DeeDeeExperiment <- function(se = NULL,
     return(object)
   }
 
-
-  # TODO: does not have to relate to an SE which has all the slots and all
-  # ...
-
-
-  # TODO: additional checks
   se_out <- se
-
-  # here is where I add the names in the rowData to make all info matched
-  # checks on the names
-  # names(de_results)
-  # if not there, "force add"
-  # TODO
-
-  dde_ids <- rownames(se_out)
-
-
 
   dea_contrasts <- list()
 
@@ -261,36 +224,12 @@ DeeDeeExperiment <- function(se = NULL,
         )
       }
     }
-    # else if (is(this_de, "data.frame")) {
-    #   input_custom <- .importDE_custom(se_out, this_de, i)
-    #   se_out <- input_custom$se
-    #   dea_contrasts[[i]] <- input_custom$dea_contrast
-    #
-    #   # check for rowname mismatches
-    #   rownames_x <- rownames(rowData(se_out))
-    #   rownames_y <- rownames(this_de)
-    #   mismatched_rows <- sum(!rownames_x %in% rownames_y)
-    #
-    #   affected_deas <- character()
-    #   if (mismatched_rows > 0) {
-    #     affected_deas <- c(affected_deas, i)
-    #   }
-    #
-    #   mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
-    #
-    #   if (mismatch_percent > 50) {
-    #     warning(
-    #       "A Total number of ", mismatched_rows," mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
-    #       i,
-    #       ". Consider synchronizing your rownames in both se and de_results elements."
-    #     )
-    #   }
-    # }
   }
 
   ## handle fea results
 
   fea_contrasts <- list()
+
   if (!is.null(enrich_results)) {
     # first check content
     enrich_name <- deparse(substitute(enrich_results)) # capture variable name as a char
@@ -307,11 +246,6 @@ DeeDeeExperiment <- function(se = NULL,
           matched_name %in% names(de_results)) {
           de_res_name <- matched_name
           if (fe != matched_name) {
-            # message("FEA '",
-            #         fe,
-            #         "' matched to DE contrast '", # in case of formatted name
-            #         matched_name,
-            #         "'")
 
             cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
           } else {
@@ -385,15 +319,9 @@ DeeDeeExperiment <- function(se = NULL,
 
 
       if (is.null(res_enrich_shaken)) {
-        # message(
-        #   "No shaking method available for this functional enrichment results.",
-        #   " Returning only the original object."
-        # )
-
         cli::cli_alert_info("No shaking method available for this functional enrichment results.
                             Returning only the original object.")
       }
-
 
       fea_contrast <- list(
         de_name = de_res_name, # links to de result
@@ -403,7 +331,6 @@ DeeDeeExperiment <- function(se = NULL,
         fe_tool = fe_tool,
         fe_tool_version = if (fe_tool %in% loadedNamespaces()) packageVersion(fe_tool) else NA
       )
-
 
       fea_contrasts[[fe]] <- fea_contrast
     }

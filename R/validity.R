@@ -6,10 +6,6 @@ validDeeDeeExperiment <- function(object) {
     msg <- c(msg, "`dea` must be a list")
   }
 
-  # if (length(dea_info(object)) == 0) {
-  # msg <- c(msg, "'dea' must be a non-empty list")
-  # }
-
   if (length(dea_info(object)) > 0) {
     if (any(is.null(names(dea_info(object))))) {
       msg <- c(msg, "`dea` must be a named list")

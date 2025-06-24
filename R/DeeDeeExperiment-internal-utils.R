@@ -24,8 +24,6 @@
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
     all(na.omit(res_de$pvalue > 0)))
 
-  # matched_ids <- match(rownames(res_de), rownames(se))
-
   matched_ids <- match(rownames(se), rownames(res_de)) # we align de res with se
   # only valid indices
   valid_matches <- !is.na(matched_ids)
@@ -50,7 +48,6 @@
     metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
     metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
     original_object = res_de,
-    # object_name = deparse(substitute(res_de)),
     package = paste0("DESeq2, v ", packageVersion("DESeq2"))
   )
 
@@ -115,7 +112,6 @@
     metainfo_logFC = res_tbl$comparison,
     metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
     original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
     package = paste0("edgeR, v ", packageVersion("edgeR"))
   )
 
@@ -164,12 +160,9 @@
   stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
     all(na.omit(res_tbl$P.Value > 0)))
 
-  # matched_ids <- match(rownames(res_tbl), rownames(se))
-
   matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
   # only valid indices
   valid_matches <- !is.na(matched_ids)
-
 
   # Pre-fill rowData with NA
   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
@@ -189,65 +182,12 @@
     metainfo_logFC = NA,
     metainfo_pvalue = NA,
     original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
     package = paste0("limma, v ", packageVersion("limma"))
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
-
-
-  # returns info (in the standardized manner)
 }
 
-# custom format can be a dataframe, can it be a list???
-
-# .importDE_custom <- function(se, res_de, de_name) {
-#   # checks object
-#   stopifnot(is(res_de, "data.frame"))
-#
-#   # expected columns, mainly from DESeq, edgeR and limma?
-#   expected_columns <- list(
-#     logFC = c("log2FoldChange", "logFC"),
-#     pvalue = c("pvalue", "PValue", "P.Value"),
-#     padj = c("padj", "FDR", "adj.P.Val")
-#   )
-#
-#   # find the matching column names in res_de
-#   matched_cols <- sapply(expected_columns, function(x) {
-#     match <- intersect(x, colnames(res_de))
-#     if (length(match) > 0) return(match[1])
-#     stop("Dataframe does not contain required columns: ", paste(x, collapse = ", "))
-#   })
-#
-#   valid_matches <- rownames(se) %in% rownames(res_de)
-#
-#   matched_ids <- match(rownames(se)[valid_matches], rownames(res_de))
-#
-#
-#   # Pre-fill rowData with NA
-#   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-#   rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-#   rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-#
-#   # assign only matched indices. keep NA for unmatched genes
-#   rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de[[matched_cols["log2FoldChange"]]][matched_ids]
-#   rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_de[[matched_cols["pvalue"]]][matched_ids]
-#   rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_de[[matched_cols["padj"]]][matched_ids]
-#
-#
-#   dea_contrast <- list(
-#     alpha = NA,
-#     lfcThreshold = NA,
-#     metainfo_logFC = NA,
-#     metainfo_pvalue = NA,
-#     original_object = res_de,
-#     # object_name = deparse(substitute(res_tbl)),
-#     package = "custom input"
-#   )
-#
-#   return(list(se = se, dea_contrast = dea_contrast))
-#
-# }
 
 
 #' Checking the validity of the imported DE results.
@@ -314,7 +254,6 @@
     names(x) <- entry_name
   }
 
-
   # check if the elements of the list are either data.frame or enrichResult obj
   # gost() returns a large list, so we can accept list
   x <- lapply(x, function(arg) {
@@ -361,10 +300,6 @@
       cols <- colnames(df@result)
     }
 
-    # else if (is(df, "list")) {
-    #   cols <- colnames(df$result)
-    # }
-
     else {
       cols <- colnames(df)
     }
@@ -402,19 +337,13 @@
 #' @noRd
 .match_fe_to_de <- function(fea_name, dea_names,
                             pattern = "^(topGO_|clusterProfiler_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
-  # if an attribute was assigned
-
-  # associated_dea <- attr(fea_obj, "associated_dea")
-  # if (!is.null(associated_dea) && associated_dea %in% dea_names) {
-  #   return(associated_dea)
-  # }
 
   # what else can we put in the pattern??
   cleaned_name <- sub(pattern, "", fea_name, ignore.case = TRUE)
   if (cleaned_name %in% dea_names) {
     return(cleaned_name)
   } else {
-    return(NA_character_) # Achtung this needs to be character
+    return(NA_character_) # this needs to be character
   }
 }
 
@@ -471,7 +400,7 @@
     return("Not Specified")
   }
 
-  # just in case the user has a table with columns from 2 tools :v
+  # just in case the user has a table with columns from 2 tools :v ?
   if (length(matched_tools) > 1) {
     warning(
       "Multiple FEA tool formats matched: ",

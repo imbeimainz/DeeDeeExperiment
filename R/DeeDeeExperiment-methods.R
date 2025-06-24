@@ -217,8 +217,6 @@ setMethod("dea_names",
 
 ## dea_rename ------------------------------------------------------------------
 
-### TODO: add a setter for dea_names, in case one wants to rename the de res in
-### dde? or a new method
 #' @rdname DeeDeeExperiment-methods
 #' @export
 setMethod("dea_rename",
@@ -270,7 +268,6 @@ setMethod("dea_rename",
       )
     }
 
-
     names(deas)[matching_index] <- new_name
     x@dea <- deas
 
@@ -311,7 +308,7 @@ setMethod("dea_rename",
     cli::cli_alert_success("Renamed DEA entries: {.val {old_name}} to {.val {new_name}}")
 
     validObject(x)
-    x
+    return(x)
   }
 )
 
@@ -325,11 +322,6 @@ setMethod("add_dea",
   definition = function(x,
                         dea,
                         force = FALSE) {
-    # dde must be a DeeDeeExp
-    # if (!is(x, "DeeDeeExperiment")) {
-    #   stop("x must be DeeDeeExperiment object!")
-    # }
-
     # dea must be named list
     if (is.null(names(dea))) {
       stop("All elements in dea list must have names!")
@@ -361,11 +353,8 @@ setMethod("add_dea",
 
     # check and preocess dea
     dea <- .check_de_results(dea, entry_name)
-    # names(dea)
-    # names(dea_info(x))
 
     dea_contrasts <- dea_info(x)
-    dde_ids <- rownames(x)
 
     # update rowData, naming them correctly
     for (i in names(dea)) {
@@ -389,17 +378,14 @@ setMethod("add_dea",
           )
         }
 
-
         matched_ids <- match(rownames(x), rownames(this_de)) # we align de res with se
         # only valid indices
         valid_matches <- !is.na(matched_ids)
-
 
         # Pre-fill rowData with NA
         rowData(x)[[paste0(i, "_log2FoldChange")]] <- NA
         rowData(x)[[paste0(i, "_pvalue")]] <- NA
         rowData(x)[[paste0(i, "_padj")]] <- NA
-
 
         # assign values only for matched indices, to have on both sides the
         # same length. we keep NA for unmatched genes
@@ -469,9 +455,6 @@ setMethod("add_dea",
         rowData(x)[[paste0(i, "_pvalue")]][valid_matches] <- res_tbl$table$PValue[matched_ids[valid_matches]]
         rowData(x)[[paste0(i, "_padj")]][valid_matches] <- res_tbl$table$FDR[matched_ids[valid_matches]]
 
-
-        # print(colnames(rowData(x)))
-
         # store metadata
         dea_contrasts[[i]] <- list(
           alpha = NA,
@@ -513,31 +496,16 @@ setMethod("add_dea",
         # only valid indices
         valid_matches <- !is.na(matched_ids)
 
-
         # Pre-fill rowData with NA
         rowData(x)[[paste0(i, "_log2FoldChange")]] <- NA
         rowData(x)[[paste0(i, "_pvalue")]] <- NA
         rowData(x)[[paste0(i, "_padj")]] <- NA
-
 
         # assign values only for matched indices, to have on both sides the
         # same length. we keep NA for unmatched genes
         rowData(x)[[paste0(i, "_log2FoldChange")]][valid_matches] <- res_tbl$logFC[matched_ids[valid_matches]]
         rowData(x)[[paste0(i, "_pvalue")]][valid_matches] <- res_tbl$P.Value[matched_ids[valid_matches]]
         rowData(x)[[paste0(i, "_padj")]][valid_matches] <- res_tbl$adj.P.Val[matched_ids[valid_matches]]
-
-
-        # matched_ids <- match(rownames(x), rownames(res_tbl))
-        #
-        # # if not tested, add NA - everywhere? -> pre-fill?
-        # rowData(x)[[paste0(i,"_log2FoldChange")]] <- NA
-        # rowData(x)[[paste0(i,"_pvalue")]]         <- NA
-        # rowData(x)[[paste0(i,"_padj")]]           <- NA
-        #
-        # # populate using limma columns
-        # rowData(x)[[paste0(i,"_log2FoldChange")]][!is.na(matched_ids)] <- res_tbl$logFC
-        # rowData(x)[[paste0(i,"_pvalue")]][!is.na(matched_ids)]         <- res_tbl$P.Value
-        # rowData(x)[[paste0(i,"_padj")]][!is.na(matched_ids)]           <- res_tbl$adj.P.Val
 
         # store metadata
         dea_contrasts[[i]] <- list(
@@ -568,12 +536,6 @@ setMethod("add_dea",
 )
 
 
-# TODO: might need one where I also simply add ONE single DE object, and that gets autoconverted to a named list (of length 1)
-## this one was half addressed, dede accepts 1 single DE object now, the corresponding name is still to be generated
-## also add_dea() need a way to handle adding again 1 entry
-
-
-
 ## remove_dea ------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
@@ -583,8 +545,7 @@ setMethod("remove_dea",
   definition = function(x,
                         dea_name,
                         remove_linked_fea = FALSE) {
-    # x must be a DeeDeeExp
-
+    # dea_name must be character
     if (!is.character(dea_name) || length(dea_name) == 0) {
       stop("'dea_name' must be a non empty character vector!")
     }
@@ -602,14 +563,13 @@ setMethod("remove_dea",
       )
     }
 
-
     for (i in deas_to_remove) {
       cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue", "_padj")))
       rowData(x) <- rowData(x)[, !(colnames(rowData(x)) %in% cols_to_remove)]
       # update the de slot
       dea_info(x)[[i]] <- NULL
 
-      if (remove_linked_fea) { ## fea is not removed!!!!!
+      if (remove_linked_fea) { ## fea is not removed by default, unless = TRUE
         feas <- fea_info(x)
         removed_fea <- character()
         for (fea_name in names(feas)) {
@@ -621,22 +581,13 @@ setMethod("remove_dea",
           }
         }
         if (length(removed_fea) > 0) {
-          # message("The following linked FEA entries were removed: ",
-          #         paste(removed_fea, collapse = ", "))
-
           cli::cli_alert_success("The following linked FEA entries were removed: {.val {paste(removed_fea, collapse = ', ')}} ")
         }
       }
-
-
       # unlink
       fea_info(x)[[i]][["de_name"]] <- NULL
     }
     removed_fea <- character()
-
-
-
-
 
     # here check some validity?
     validObject(x)
@@ -645,7 +596,6 @@ setMethod("remove_dea",
     return(x)
   }
 )
-
 
 
 ## dea -------------------------------------------------------------------------
@@ -659,6 +609,7 @@ setMethod("dea",
                         format = "minimal",
                         extra_rd = NULL,
                         verbose = FALSE) {
+    # checks
     if (!is.null(extra_rd) && !is.character(extra_rd)) {
       stop("'extra_rd' must be a character vector!")
     }
@@ -698,7 +649,6 @@ setMethod("dea",
       )
     }
 
-    #
     if (format == "minimal") {
       rd_info <- paste0(
         dea_name,
@@ -718,7 +668,6 @@ setMethod("dea",
         )
       }
 
-
       if (verbose && length(setdiff(extra_info, extra_cols)) > 0) {
         warning(
           "Some 'extra_rd' are not available in rowData: ",
@@ -726,20 +675,10 @@ setMethod("dea",
         )
       }
 
-      # print(rd_info)
-
-      # if (! all(rd_info %in% colnames(rowData(x)))) {
-      #   stop("Columns not found")
-      # }
-
       # check for missing columns, for a more precise feedback on the error
       missing_cols <- rd_info[!rd_info %in% colnames(rowData(x))]
-      # print(missing_cols)
-
 
       # maybe check for rowname mismatches potential gene version issue?
-      # maybe not interesting to print back all missmatches in casee all rownames
-      # dont match
       rownames_x <- rownames(rowData(x))
       rownames_y <- rownames(dea_info(x)[[dea_name]][["original_object"]])
       mismatched_rows <- sum(!rownames_x %in% rownames_y)
@@ -764,8 +703,6 @@ setMethod("dea",
           paste(missing_cols, collapse = ", ")
         )
       }
-
-
 
       out <- rowData(x)[, all_cols]
     } else if (format == "original") {
@@ -800,31 +737,16 @@ setMethod("get_dea_list",
     affected_deas <- character()
 
     for (i in dea_names) {
-      # dea_list[[i]] <- as.data.frame(dea(x, i, verbose))
       dea_list[[i]] <- as.data.frame(
         dea(x, dea_name = i, format = format, verbose = verbose)
       )
 
       if (format == "minimal") {
-        # remove the first two columns
-        # dea_list[[i]] <- dea_list[[i]][, -c(1,2)]
         colnames(dea_list[[i]]) <- c("log2FoldChange", "pvalue", "padj")
-
-        # maybe check for rowname mismatches potential gene version issue?
-        # maybe not interesting to print back all missmatches in casee all rownames
-        # dont match
-        # rownames_x <- rownames(rowData(x))
-        # rownames_y <- rownames(deas[[i]][["original_object"]])
-        #
-        # mismatched_rows <- sum(!rownames_x %in% rownames_y)
-        #
-        # if (mismatched_rows > 0) {
-        #   affected_deas <- c(affected_deas, i)
-        # }
       }
     }
 
-    # not needed to check mismatch since the warnings will be triggered from dea
+    # no need to check mismatch since the warnings will be triggered from dea
 
     return(dea_list)
   }
@@ -874,7 +796,8 @@ setMethod("add_scenario_info",
 
     # update object
     validObject(x)
-    x
+
+    return(x)
   }
 )
 
@@ -973,14 +896,14 @@ setMethod("fea_rename",
       )
     }
 
-
     names(feas)[matching_index] <- new_name
     x@fea <- feas
 
     cli::cli_alert_success("Renamed FEA entries: {.val {old_name}} to {.val {new_name}}")
 
     validObject(x)
-    x
+
+    return(x)
   }
 )
 
@@ -998,10 +921,6 @@ setMethod(
                         fea_tool = "auto",
                         force = FALSE,
                         verbose = FALSE) {
-    # x must be a DeeDeeExperiment
-    # if (!is(x, "DeeDeeExperiment")) {
-    #   stop("x must be DeeDeeExperiment object!")
-    # }
 
     if (!is.character(de_name) || length(de_name) != 1) {
       stop("'de_name' must be a single character string or NA_character_")
@@ -1030,12 +949,6 @@ setMethod(
     # check and preocess fea
     fea_list <- .check_enrich_results(fea, entry_name)
 
-    # fea must be named list
-    # it s gonna fail anyway in the line before
-    # if (is.null(names(fea_list))) {
-    #   stop("All elements in 'fea' list must have names!")
-    # }
-
     # check that names are all unique
     if (anyDuplicated(names(fea))) {
       stop("Names in dea must be unique!")
@@ -1057,7 +970,6 @@ setMethod(
       )
     }
 
-
     # get existing results in the fea slot
     fea_contrasts <- fea_info(x)
 
@@ -1076,14 +988,11 @@ setMethod(
           if (!is.na(matched_name) && matched_name %in% names(dea_info(x))) {
             de_res_name <- matched_name
             if (fe != matched_name) {
-              ### if the name is exactly the same do we need a msg or it s obvious???
-              # message("FEA '", fe, "' matched to DE contrast '", matched_name,"'")
               if (verbose) {
                 cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
               }
             } else {
               # in case of the same name
-              # message("FEA '", fe, "' matched **directly** to DE contrast '", matched_name,"'")
               if (verbose) {
                 cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
               }
@@ -1158,11 +1067,6 @@ setMethod(
       }
 
       if (is.null(res_enrich_shaken)) {
-        # message(
-        #   "No shaking method available for this functional enrichment results.",
-        #   " Returning only the original object."
-        # )
-
         cli::cli_alert_info("No shaking method available for this functional enrichment results.
                             Returning only the original object.")
       }
@@ -1190,7 +1094,6 @@ setMethod(
 )
 
 
-
 ## remove_fea ------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
@@ -1198,10 +1101,6 @@ setMethod(
 setMethod("remove_fea",
   signature = c("DeeDeeExperiment"),
   definition = function(x, fea_name) {
-    # x must be a DeeDeeExp
-    # if(!is(x,"DeeDeeExperiment")) {
-    #   stop("x must be a DeeDeeExperiment object!")
-    # }
 
     if (!is.character(fea_name) || length(fea_name) == 0) {
       stop("'fea_name' must be a non empty character vector!")
@@ -1247,18 +1146,6 @@ setMethod("fea",
                         fea_name = NULL,
                         format = "minimal",
                         verbose = FALSE) {
-    # get returns shaken table by default for a specific contrast
-    # for now the only case where we won't have shaken results if the user
-    # introduces fea that is not generate with {topGO,clusterProfiler,...}
-    # we can handle the other types later
-
-    # or should we give the user the freedom to choose which table to fetch??? using another arg
-
-    # check
-    # x must be a DeeDeeExperiment
-    # if (!is(x, "DeeDeeExperiment")) {
-    #   stop("x must be DeeDeeExperiment object!")
-    # }
 
     if (!(format %in% c("minimal", "original"))) {
       stop(
@@ -1293,7 +1180,6 @@ setMethod("fea",
       )
     }
 
-
     if (format == "minimal") {
       fea <- fea_info(x)[[fea_name]][["shaken_results"]]
 
@@ -1313,7 +1199,6 @@ setMethod("fea",
     return(fea)
   }
 )
-
 
 
 ## get_fea_list ----------------------------------------------------------------
@@ -1352,7 +1237,6 @@ setMethod("get_fea_list",
       # if dea_name is not indicated, return all feas
       # otherwise return only the specific feas associated with that dea_name
 
-
       if (is.null(dea_name) || (!is.na(de_name) && de_name == dea_name)) {
         if (format == "minimal") {
           fe_res <- fea_info(x)[[i]][["shaken_results"]]
@@ -1389,7 +1273,6 @@ setMethod("get_fea_list",
 )
 
 
-
 ## link_dea_and_fea -----------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
@@ -1408,7 +1291,6 @@ setMethod("link_dea_and_fea",
     if (!is.character(fea_name) || length(fea_name) == 0) {
       stop("'fea_name' must be a non empty character vector!")
     }
-
 
     dea_names <- dea_names(x)
     fea_names <- fea_names(x)
@@ -1441,15 +1323,13 @@ setMethod("link_dea_and_fea",
       }
 
       # assign
-      # message("Assigning DEA '", dea_name, "' to FEA '", fea, "'")
-
       cli::cli_alert_success("Assigning DEA: {.val {dea_name}} to FEA {.val {fea}}")
 
       fea_info(x)[[fea]][["de_name"]] <- dea_name
     }
 
     validObject(x)
-    x
+    return(x)
   }
 )
 
@@ -1503,12 +1383,6 @@ setMethod("show",
 summary.DeeDeeExperiment <- function(object,
                                      FDR = 0.05,
                                      show_scenario_info = FALSE, ...) {
-  # using ellipsis because we can't change the summary method
-  # args <- list(...)
-  # FDR <- if (!is.null(args$FDR))
-  # args$FDR
-  # else 0.05
-  # show_scenario_info <- isTRUE(args$show_scenario_info)
   # dea summary
   dea <- dea_info(object)
 
@@ -1547,7 +1421,6 @@ summary.DeeDeeExperiment <- function(object,
     cat("No DEA results stored.\n\n")
   }
   # fea summary
-
 
   fea <- fea_info(object)
   if (length(fea) > 0) {
