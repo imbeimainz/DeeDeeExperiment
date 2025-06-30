@@ -6,15 +6,16 @@
 \alias{DeeDeeExperiment-pkg}
 \title{DeeDeeExperiment}
 \description{
-\code{DeeDeeExperiment} is a an S4 class that allows integrating and managing transcriptomic
-analysis results.
+\code{DeeDeeExperiment} is a an S4 class that allows integrating and managing
+transcriptomic analysis results.
 }
 \details{
-\code{DeeDeeExpeirment} is an S4 class extending the \code{SummarizedExperiment} framework to
-facilitate the integration and management of transcriptomic analysis results.
-It introduces two dedicated slots to store Differential Expression (DE) analysis
-results and Functional Enrichment analysis outcomes, providing a structured approach
-for downstream analysis.
+\code{DeeDeeExpeirment} is an S4 class extending the \code{SummarizedExperiment}
+framework to facilitate the integration and management of transcriptomic
+analysis results.
+It introduces two dedicated slots to store Differential Expression (DE)
+analysis results and Functional Enrichment analysis outcomes, providing a
+structured approach for downstream analysis.
 }
 \seealso{
 Useful links:

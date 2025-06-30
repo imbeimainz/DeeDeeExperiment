@@ -12,21 +12,23 @@ DeeDeeExperiment(se = NULL, de_results = NULL, enrich_results = NULL)
 \item{se}{A \code{SummarizedExperiment} object, that will be used as a scaffold to
 store the DE related information.}
 
-\item{de_results}{A named list of DE results, in any of the formats supported by
-the package (currently: results from \code{DESeq2}, \code{edgeR}, \code{limma}).}
+\item{de_results}{A named list of DE results, in any of the formats supported
+by the package (currently: results from \code{DESeq2}, \code{edgeR}, \code{limma}).}
 
-\item{enrich_results}{A named list of functional enrichment results. Each element can be
-either a data.frame (currently supports results from \code{topGO}, \code{enrichR}, \code{gProfiler},
-\code{fgsea}, \code{gsea}, \code{DAVID}, and output of \code{GeneTonic} shakers), or an \code{enrichResult}/\code{gseaResult}
-objects (currently supports \code{clusterProfiler})}
+\item{enrich_results}{A named list of functional enrichment results. Each
+element can be either a data.frame (currently supports results from \code{topGO},
+\code{enrichR}, \code{gProfiler}, \code{fgsea}, \code{gsea}, \code{DAVID}, and output of \code{GeneTonic}
+shakers), or an \code{enrichResult}/\code{gseaResult} objects (currently supports
+\code{clusterProfiler})}
 }
 \value{
 A \code{DeeDeeExperiment} object.
 }
 \description{
-The \code{DeeDeeExperiment} class is integrate and manage transcriptomic analysis results.
-It inherits from the SummarizedExperiment class, and additionally stores
-DE-related/functional enrichment information via dedicated slots and \code{colData}.
+The \code{DeeDeeExperiment} class is integrate and manage transcriptomic analysis
+results. It inherits from the SummarizedExperiment class, and additionally
+stores DE-related/functional enrichment information via dedicated slots and
+\code{colData}.
 }
 \details{
 The \code{se} parameter can be optionally left unspecified. If this is the case,
@@ -37,16 +39,17 @@ specified by the provided components of the object supplied via the
 The conversion of the components of the \code{de_results} list will be handled via
 conversion functions to uniform the names and set of information which will
 be stored in the returned \code{DeeDeeExperiment} object.
-The names of the list will be used to define the \code{contrasts} for the different
-DE analyses included, which will determine the way to access the information
-stored in the \code{dea} slot of the \code{DeeDeeExperiment} object.
+The names of the list will be used to define the \code{contrasts} for the
+different DE analyses included, which will determine the way to access the
+information stored in the \code{dea} slot of the \code{DeeDeeExperiment} object.
 
 The content of the \code{enrich_results} provided by the user will be validated to
-ensure that it is properly formatted and correctly named. The FE tool can be automatically
-detected, and based on that, the appropriate shaking method is used to return a standardized
-format of the FEA results.
-The names of the list will be used to attempt to associate each enrichment result
-with a corresponding DE contrast stored in the \code{DeeDeeExperiment} object.
+ensure that it is properly formatted and correctly named. The FE tool can be
+automatically detected, and based on that, the appropriate shaking method is
+used to return a standardized format of the FEA results.
+The names of the list will be used to attempt to associate each enrichment
+result with a corresponding DE contrast stored in the \code{DeeDeeExperiment}
+object.
 
 Since a \code{DeeDeeExperiment} is also a \code{SummarizedExperiment} object, it can be
 seamlessly provided downstream for visualization and in-depth exploration to
@@ -59,7 +62,8 @@ packages such as \code{iSEE} or similar.
 internally being created upon importing from the list of DE results objects,
 provided when instantiating the \link{DeeDeeExperiment}.}
 
-\item{\code{fea}}{This slot is designed to hold Functional Enrichment related information.}
+\item{\code{fea}}{This slot is designed to hold Functional Enrichment related
+information.}
 }}
 
 \examples{

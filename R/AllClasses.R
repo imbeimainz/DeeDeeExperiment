@@ -5,12 +5,14 @@
 #' @slot dea This slot is designed to hold the DE-related information. This is
 #' internally being created upon importing from the list of DE results objects,
 #' provided when instantiating the [DeeDeeExperiment].
-#' @slot fea This slot is designed to hold Functional Enrichment related information.
+#' @slot fea This slot is designed to hold Functional Enrichment related
+#' information.
 #'
 setClass("DeeDeeExperiment",
-  contains = "RangedSummarizedExperiment", # maybe consider inheriting from SCE
-  slots = representation(
-    dea = "list",
-    fea = "list"
-  )
+         # maybe consider inheriting from SCE
+         contains = "RangedSummarizedExperiment",
+         slots = representation(
+           dea = "list",
+           fea = "list"
+         )
 )

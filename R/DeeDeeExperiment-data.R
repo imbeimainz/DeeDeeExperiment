@@ -127,7 +127,8 @@ NULL
 
 #' de_named_list
 #'
-#' A named list of DE results, in their original format (from DESeq2, edgeR or limma)
+#' A named list of DE results, in their original format (from DESeq2, edgeR or
+#' limma)
 #'
 #' @return A named list of DE results, in their original format
 #'
@@ -413,7 +414,8 @@ NULL
 #'
 #' A list of FE results generated with `clusterProfiler::enrichGO()`
 #'
-#' @details A list of FE result for the macrophage data (salmonella vs naive and IFNg vs naive)
+#' @details A list of FE result for the macrophage data (salmonella vs naive and
+#' IFNg vs naive)
 #'
 #' @return A list
 #'
@@ -445,7 +447,8 @@ NULL
 #'
 #' A data frame of FE results generated with `fgsea::fgsea()`
 #'
-#' @details Tabular representation of FE result for the macrophage data (IFNg vs naive)
+#' @details Tabular representation of FE result for the macrophage data
+#' (IFNg vs naive)
 #'
 #' @return A data.table/data.frame
 #'

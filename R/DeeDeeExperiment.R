@@ -7,18 +7,20 @@
 #' DeeDeeExperiment-class
 #'
 #' @description
-#' The `DeeDeeExperiment` class is integrate and manage transcriptomic analysis results.
-#' It inherits from the SummarizedExperiment class, and additionally stores
-#' DE-related/functional enrichment information via dedicated slots and `colData`.
+#' The `DeeDeeExperiment` class is integrate and manage transcriptomic analysis
+#' results. It inherits from the SummarizedExperiment class, and additionally
+#' stores DE-related/functional enrichment information via dedicated slots and
+#' `colData`.
 #'
 #' @param se A `SummarizedExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
-#' @param de_results A named list of DE results, in any of the formats supported by
-#' the package (currently: results from `DESeq2`, `edgeR`, `limma`).
-#' @param enrich_results A named list of functional enrichment results. Each element can be
-#' either a data.frame (currently supports results from `topGO`, `enrichR`, `gProfiler`,
-#' `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers), or an `enrichResult`/`gseaResult`
-#' objects (currently supports `clusterProfiler`)
+#' @param de_results A named list of DE results, in any of the formats supported
+#' by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
+#' @param enrich_results A named list of functional enrichment results. Each
+#' element can be either a data.frame (currently supports results from `topGO`,
+#' `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic`
+#' shakers), or an `enrichResult`/`gseaResult` objects (currently supports
+#' `clusterProfiler`)
 #'
 #' @details
 #' The `se` parameter can be optionally left unspecified. If this is the case,
@@ -29,16 +31,17 @@
 #' The conversion of the components of the `de_results` list will be handled via
 #' conversion functions to uniform the names and set of information which will
 #' be stored in the returned `DeeDeeExperiment` object.
-#' The names of the list will be used to define the `contrasts` for the different
-#' DE analyses included, which will determine the way to access the information
-#' stored in the `dea` slot of the `DeeDeeExperiment` object.
+#' The names of the list will be used to define the `contrasts` for the
+#' different DE analyses included, which will determine the way to access the
+#' information stored in the `dea` slot of the `DeeDeeExperiment` object.
 #'
 #' The content of the `enrich_results` provided by the user will be validated to
-#' ensure that it is properly formatted and correctly named. The FE tool can be automatically
-#' detected, and based on that, the appropriate shaking method is used to return a standardized
-#' format of the FEA results.
-#' The names of the list will be used to attempt to associate each enrichment result
-#' with a corresponding DE contrast stored in the `DeeDeeExperiment` object.
+#' ensure that it is properly formatted and correctly named. The FE tool can be
+#' automatically detected, and based on that, the appropriate shaking method is
+#' used to return a standardized format of the FEA results.
+#' The names of the list will be used to attempt to associate each enrichment
+#' result with a corresponding DE contrast stored in the `DeeDeeExperiment`
+#' object.
 #'
 #' Since a `DeeDeeExperiment` is also a `SummarizedExperiment` object, it can be
 #' seamlessly provided downstream for visualization and in-depth exploration to
@@ -96,7 +99,7 @@ DeeDeeExperiment <- function(se = NULL,
   if (!is.null(se)) {
     if (!is(se, "RangedSummarizedExperiment")) {
       # check if it is SE and convert it into a RangedSE
-      if (is(se, "SummarizedExperiment")) { ### think again, should we use rather the SCE class?
+      if (is(se, "SummarizedExperiment")) {
         se <- as(se, "RangedSummarizedExperiment")
       } else {
         stop("'se' must be a RangedSummarizedExperiment object")
@@ -108,7 +111,9 @@ DeeDeeExperiment <- function(se = NULL,
       stop("You have to provide at least an se object or a de_results object!")
     }
     # if no se passed but de_results is not empty, create a mock from it
-    cli::cli_alert_info("creating a mock SE from the rows of the DE result objects, if available")
+    cli::cli_alert_info(
+      "creating a mock SE from the rows of the DE result objects, if available"
+    )
 
     if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
       stop("Some elements in the de_results list do not have rownames!")
@@ -122,16 +127,15 @@ DeeDeeExperiment <- function(se = NULL,
     # way1
     se_mock <- SummarizedExperiment(assays = SimpleList(), rowData = rd_mock)
 
-    # no clue why this is strictly needed, but still it seems it is, if mocking up
     se <- as(se_mock, "RangedSummarizedExperiment")
   }
 
   if (is.null(de_results) &&
-    is.null(enrich_results)) {
+      is.null(enrich_results)) {
     object <- new("DeeDeeExperiment",
-      se,
-      dea = list(),
-      fea = list()
+                  se,
+                  dea = list(),
+                  fea = list()
     )
 
     # stash the package version
@@ -167,10 +171,13 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows,
+          " mismatched rows detected between `rownames(rowData(se))` and  ",
+          "rownames for the following dea element: ",
           i,
-          "Unmatched genes will have NA values in rowData. ",
-          ". Consider synchronizing your rownames in both se and de_results elements."
+          " Unmatched genes will have NA values in rowData. ",
+          ". Consider synchronizing your rownames in both se and",
+          " de_results elements."
         )
       }
     } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
@@ -192,10 +199,13 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows,
+          " mismatched rows detected between `rownames(rowData(se))`",
+          " and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
-          ". Consider synchronizing your rownames in both se and de_results elements."
+          "Consider synchronizing your rownames in both se and",
+          " de_results elements."
         )
       }
     } else if (is(this_de, "MArrayLM")) {
@@ -217,10 +227,13 @@ DeeDeeExperiment <- function(se = NULL,
 
       if (mismatch_percent > 50) {
         warning(
-          "A Total number of ", mismatched_rows, " mistached rows detected between `rownames(rowData(se))` and rownames for the following dea element: ",
+          "A Total number of ", mismatched_rows,
+          " mismatched rows detected between `rownames(rowData(se))`",
+          " and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
-          ". Consider synchronizing your rownames in both se and de_results elements."
+          "Consider synchronizing your rownames in both se and",
+          " de_results elements."
         )
       }
     }
@@ -232,7 +245,8 @@ DeeDeeExperiment <- function(se = NULL,
 
   if (!is.null(enrich_results)) {
     # first check content
-    enrich_name <- deparse(substitute(enrich_results)) # capture variable name as a char
+    # capture variable name as a char
+    enrich_name <- deparse(substitute(enrich_results))
     enrich_results <- .check_enrich_results(enrich_results, enrich_name)
 
     # get de_name? try and link fea to dea by name
@@ -243,18 +257,17 @@ DeeDeeExperiment <- function(se = NULL,
         # hoping here that the user names their results in a meaningful way
         matched_name <- .match_fe_to_de(fe, names(de_results))
         if (!is.na(matched_name) &&
-          matched_name %in% names(de_results)) {
+            matched_name %in% names(de_results)) {
           de_res_name <- matched_name
           if (fe != matched_name) {
 
-            cli::cli_alert_info("FEA {.val {fe}} matched to DE contrast {.val {matched_name}}")
+            cli::cli_alert_info(
+              "FEA {.val {fe}} matched to DE contrast {.val {matched_name}}"
+            )
           } else {
-            # message("FEA '",
-            #         fe,
-            #         "' matched **directly** to DE contrast '", # in case of the same name
-            #         matched_name, "'")
-
-            cli::cli_alert_info("FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}")
+            cli::cli_alert_info(
+              "FEA {.val {fe}} matched directly to DE contrast {.val {matched_name}}"
+            )
           }
         } else {
           de_res_name <- NA_character_
@@ -265,8 +278,10 @@ DeeDeeExperiment <- function(se = NULL,
             "Available DE results: ",
             paste(names(de_results), collapse = ", "),
             "\n",
-            "Consider naming your enrich_results starting with one of the following prefixes:",
-            " 'topGO_', 'clusterProfiler_','GeneTonic_', 'DAVID_','gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
+            "Consider naming your enrich_results starting with one of the",
+            " following prefixes:",
+            " 'topGO_', 'clusterProfiler_','GeneTonic_', 'DAVID_',",
+            "'gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
             "followed by the contrast name"
           )
         }
@@ -285,14 +300,11 @@ DeeDeeExperiment <- function(se = NULL,
       fe_tool <- .detect_fea_tool(res_enrich)
 
 
-      # based on the fe_tool , we'll handle the shaking separately, so we always return res_enrich_shaken
-      # unless that's an unknown tool used?
-      # we can take any already shaken version
-
       res_enrich_shaken <- NULL # default
 
       if (fe_tool == "topGO") {
-        # to be able to generate gtl objects we shouldn't convert enrich res into data.frame!!
+        # to be able to generate gtl objects we shouldn't convert enrich res
+        # into data.frame!!
         res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
       } else if (fe_tool == "clusterProfiler") {
         if (is(res_enrich, "enrichResult")) {
@@ -319,17 +331,20 @@ DeeDeeExperiment <- function(se = NULL,
 
 
       if (is.null(res_enrich_shaken)) {
-        cli::cli_alert_info("No shaking method available for this functional enrichment results.
-                            Returning only the original object.")
+        cli::cli_alert_info(
+          "No shaking method available for this functional enrichment results.
+                            Returning only the original object."
+        )
       }
 
       fea_contrast <- list(
         de_name = de_res_name, # links to de result
         fe_name = fe_name,
-        shaken_results = res_enrich_shaken, # return shaken results for later use in genetonic
+        shaken_results = res_enrich_shaken, # return shaken results
         original_object = res_enrich,
         fe_tool = fe_tool,
-        fe_tool_version = if (fe_tool %in% loadedNamespaces()) packageVersion(fe_tool) else NA
+        fe_tool_version = if (
+          fe_tool %in% loadedNamespaces()) packageVersion(fe_tool) else NA
       )
 
       fea_contrasts[[fe]] <- fea_contrast
@@ -337,9 +352,9 @@ DeeDeeExperiment <- function(se = NULL,
   }
 
   object <- new("DeeDeeExperiment",
-    se_out,
-    dea = dea_contrasts,
-    fea = fea_contrasts
+                se_out,
+                dea = dea_contrasts,
+                fea = fea_contrasts
   )
 
   # stash the package version

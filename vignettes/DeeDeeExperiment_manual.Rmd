@@ -54,46 +54,77 @@ knitr::opts_chunk$set(
 
 ## Why do we need a new class?
 
-Differential expression analysis (DEA) and functional enrichment analysis (FEA) are core steps in transcriptomic workflows, helping researchers detect and interpret biological differences between conditions. However, as the number of conditions (defined by complex experimental designs) and analysis tools increases, managing the outputs of these analyses across multiple contrasts becomes increasingly overwhelming. This challenge is further amplified in single-cell RNA-seq, where pseudo-bulk analyses generate numerous results tables across cell types and contrasts, making it challenging to organize, explore, and reproduce findings, even for experienced users.
+Differential expression analysis (DEA) and functional enrichment analysis (FEA)
+are core steps in transcriptomic workflows, helping researchers detect and
+interpret biological differences between conditions. However, as the number of
+conditions (defined by complex experimental designs) and analysis tools
+increases, managing the outputs of these analyses across multiple contrasts
+becomes increasingly overwhelming. This challenge is further amplified in
+single-cell RNA-seq, where pseudo-bulk analyses generate numerous results tables
+across cell types and contrasts, making it challenging to organize, explore, and
+reproduce findings, even for experienced users.
 
-To address these issues, we introduce the `r BiocStyle::Biocpkg("DeeDeeExperiment")` class, an S4 object that extends the widely adopted `SummarizedExperiment` class in Bioconductor.
+To address these issues, we introduce the `r BiocStyle::Biocpkg("DeeDeeExperiment")`
+class, an S4 object that extends the widely adopted `SummarizedExperiment` class
+in Bioconductor.
 
-`DeeDeeExperiment` provides a structured and consistent framework for integrating DEA and FEA results alongside core expression data and metadata. By centralizing these results in a single container, `DeeDeeExperiment` enables users to retrieve, explore, and manage their analysis results more efficiently across multiple contrasts.
+`DeeDeeExperiment` provides a structured and consistent framework for integrating
+DEA and FEA results alongside core expression data and metadata. By centralizing
+these results in a single container, `DeeDeeExperiment` enables users to retrieve,
+explore, and manage their analysis results more efficiently across multiple contrasts.
 
-This vignette introduces the class structure, demonstrates how to create and work with `DeeDeeExperiment` objects, and walks through a typical RNA-seq workflow using the class.
+This vignette introduces the class structure, demonstrates how to create and work
+with `DeeDeeExperiment` objects, and walks through a typical RNA-seq workflow
+using the class.
 
 ## Anatomy of DeeDeeExperiment
 
-The `DeeDeeExperiment` class inherits from the core Bioconductor `SummarizedExperiment` object. This means it inherits all the slots, methods, and compatibility with tools built for `SummarizedExperiment`, while introducing additional components to streamline downstream analysis.
+The `DeeDeeExperiment` class inherits from the core Bioconductor `SummarizedExperiment`
+object. This means it inherits all the slots, methods, and compatibility with
+tools built for `SummarizedExperiment`, while introducing additional components
+to streamline downstream analysis.
 
 ![](DeeDeeExperiment_Anatomy.png){width=100%}
 
 Specifically, `DeeDeeExperiment` has two new slots:
 
-- `dea` : a list that stores results from differential expression analysis (DEA), along with relevant metadata. This includes:
+- `dea` : a list that stores results from differential expression analysis (DEA),
+along with relevant metadata. This includes:
 
-  - The used False Discovery Rate (FDR) and log2 fold change (LFC) thresholds (if specified).
+  - The used False Discovery Rate (FDR) and log2 fold change (LFC) thresholds
+  (if specified).
   - Meta info related to both the LFC and p-value.
-  - The package used to generate the DE results (e.g. `r BiocStyle::Biocpkg("DEseq2")`, `r BiocStyle::Biocpkg("edgeR")` or `r BiocStyle::Biocpkg("limma")`).
+  - The package used to generate the DE results (e.g. `r BiocStyle::Biocpkg("DEseq2")`,
+  `r BiocStyle::Biocpkg("edgeR")` or `r BiocStyle::Biocpkg("limma")`).
   - A copy of the original DE result object.
 
-The main columns to use in DEA in addition to the feature identifier (`log2FoldChange`, `pvalue`, and `padj`) are also stored in the `rowData` of the `DeeDeeExperiment` object.
+The main columns to use in DEA in addition to the feature identifier
+(`log2FoldChange`, `pvalue`, and `padj`) are also stored in the `rowData` of the
+`DeeDeeExperiment` object.
 
-- `fea` : a list that stores results from functional enrichment analysis (FEA), along with relevant metadata. This includes:
+- `fea` : a list that stores results from functional enrichment analysis (FEA),
+along with relevant metadata. This includes:
 
   -   The name of the associated DEA contrast.
   -   The FEA name.
-  -   A `GeneTonicList`-compatible set of `shaken_results` (ready to be used in `r BiocStyle::Biocpkg("GeneTonic")`).
-  -   The enrichment tool used to generate the results (e.g. `topGO`, `clusterProfiler...`).
+  -   A `GeneTonicList`-compatible set of `shaken_results` (ready to be used in
+  `r BiocStyle::Biocpkg("GeneTonic")`).
+  -   The enrichment tool used to generate the results (e.g. `topGO`,
+  `clusterProfiler...`).
   -   A copy of the original enrichment result object.
 
 ## Creating a `DeeDeeExperiment` object
 
-In order to create a `DeeDeeExperiment` object, at least one of the following inputs are required:
+In order to create a `DeeDeeExperiment` object, at least one of the following
+inputs are required:
 
-- `se`: A `SummarizedExperiment` object, that will be used as a scaffold to store the DE related information.
-- `de_results`: A named list of DE results, in any of the formats supported by the package (currently results from `DESeq2`, `edgeR`, or `limma`).
-- `enrich_results`: A named list of FE results, as `data.frame` generated by one of the following packages (currently `topGO`, `clusterProfiler`, `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
+- `se`: A `SummarizedExperiment` object, that will be used as a scaffold to
+store the DE related information.
+- `de_results`: A named list of DE results, in any of the formats supported by
+the package (currently results from `DESeq2`, `edgeR`, or `limma`).
+- `enrich_results`: A named list of FE results, as `data.frame` generated by one
+of the following packages (currently `topGO`, `clusterProfiler`, `enrichR`,
+`gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
 
 ```{r create_dde, eval = FALSE}
 # do not run
@@ -118,7 +149,8 @@ if (!requireNamespace("BiocManager", quietly = TRUE)) {
 BiocManager::install("DeeDeeExperiment")
 ```
 
-Once installed, the package can be loaded and attached to your current workspace as follows:
+Once installed, the package can be loaded and attached to your current workspace
+as follows:
 
 ```{r loadlib}
 library("DeeDeeExperiment")
@@ -126,11 +158,20 @@ library("DeeDeeExperiment")
 
 # `DeeDeeExperiment` on the `macrophage` dataset
 
-In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDeeExperiment")` on a publicly available dataset from Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate a role for enhancer priming in immune response", published in Nature Genetics, January 2018 [@Alasoo2018] [doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
+In the remainder of this vignette, we will illustrate the main features of `r BiocStyle::Biocpkg("DeeDeeExperiment")` on a publicly available dataset from
+Alasoo, et al. "Shared genetic effects on chromatin and gene expression indicate
+a role for enhancer priming in immune response", published in Nature Genetics,
+January 2018 
+[@Alasoo2018] [doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
 
-The data is made available via the `r BiocStyle::Biocpkg("macrophage")` Bioconductor package, which contains the files output from the Salmon quantification (version 0.12.0, with GENCODE v29 reference), as well as the values summarized at the gene level, which we will use to exemplify.
+The data is made available via the `r BiocStyle::Biocpkg("macrophage")`
+Bioconductor package, which contains the files output from the Salmon
+quantification (version 0.12.0, with GENCODE v29 reference), as well as the
+values summarized at the gene level, which we will use to exemplify.
 
-In the `macrophage` experimental setting, the samples are available from 6 different donors, in 4 different conditions (naive, treated with Interferon gamma, with SL1344, or with a combination of Interferon gamma and SL1344).
+In the `macrophage` experimental setting, the samples are available from 6
+different donors, in 4 different conditions (naive, treated with Interferon
+gamma, with SL1344, or with a combination of Interferon gamma and SL1344).
 
 Let's start by loading all the necessary packages:
 
@@ -143,16 +184,27 @@ library("edgeR")
 library("DEFormats")
 ```
 
-We will demonstrate how `DeeDeeExperiment` fits into a regular bulk RNA-seq data analysis workflow. For this we will start by processing the data and setting up the design for the Differential Expression Analysis (DEA).
+We will demonstrate how `DeeDeeExperiment` fits into a regular bulk RNA-seq data
+analysis workflow. For this we will start by processing the data and setting up
+the design for the Differential Expression Analysis (DEA).
 
 ```{r load_data}
 # load data
 data(gse, package = "macrophage")
 ```
 
-If you already have your differential expression results and want to skip the DEA workflow examples, you can jump directly to the section [4 Creating DeeDeeExperiment the DeeDee way](#creating_deedeeexperiment_the_deedee_way) - otherwise, you can follow along in the subsequent sections where we will showcase how the typical objects from each DE framework will seamlessly fit into a `DeeDeeExperiment` object.
+If you already have your differential expression results and want to skip the
+DEA workflow examples, you can jump directly to the section 
+[4 Creating DeeDeeExperiment the DeeDee way](#creating_deedeeexperiment_the_deedee_way) 
+- otherwise, you can follow along in the subsequent sections where we will
+showcase how the typical objects from each DE framework will seamlessly fit into
+a `DeeDeeExperiment` object.
 
-The remainder of this vignette assumes some knowledge of Differential Expression Analysis workflows. If you want some excellent introductions to this topic, you can refer to [@Love2016] and [@Law2018] - Otherwise, you can check [@Ludt2022] for a comprehensive overview of these workflows, as well as the usage of tools such as `GeneTonic` or `pcaExproler` for interactive exploration.
+The remainder of this vignette assumes some knowledge of Differential Expression
+Analysis workflows. If you want some excellent introductions to this topic, you
+can refer to [@Love2016] and [@Law2018] - Otherwise, you can check [@Ludt2022]
+for a comprehensive overview of these workflows, as well as the usage of tools
+such as `GeneTonic` or `pcaExproler` for interactive exploration.
 
 ## DEA: DESeq2 framework
 
@@ -167,7 +219,8 @@ keep <- rowSums(counts(dds_macrophage) >= 10) >= 6
 dds_macrophage <- dds_macrophage[keep, ]
 ```
 
-For the sake of demonstration, we will further subset the dataset for faster processing
+For the sake of demonstration, we will further subset the dataset for faster
+processing
 
 ```{r dds_subset}
 # set seed for reproducibility
@@ -178,7 +231,8 @@ selected_genes <- sample(rownames(dds_macrophage), 1000)
 dds_macrophage <- dds_macrophage[selected_genes, ]
 ```
 
-We then run the main `DESeq()` function and check the `resultsNames` being generated
+We then run the main `DESeq()` function and check the `resultsNames` being
+generated
 
 ```{r dds_macrophage}
 dds_macrophage
@@ -194,46 +248,51 @@ Let's extract the DE results for each contrast. We will only use two contrasts
 FDR <- 0.05
 # IFNg_vs_naive
 IFNg_vs_naive <- results(dds_macrophage,
-  name = "condition_IFNg_vs_naive",
-  lfcThreshold = 1,
-  alpha = FDR
+                         name = "condition_IFNg_vs_naive",
+                         lfcThreshold = 1,
+                         alpha = FDR
 )
 IFNg_vs_naive <- lfcShrink(dds_macrophage,
-  coef = "condition_IFNg_vs_naive",
-  res = IFNg_vs_naive,
-  type = "apeglm"
+                           coef = "condition_IFNg_vs_naive",
+                           res = IFNg_vs_naive,
+                           type = "apeglm"
 )
 
 # Salm_vs_naive
 Salm_vs_naive <- results(dds_macrophage,
-  name = "condition_SL1344_vs_naive",
-  lfcThreshold = 1,
-  alpha = FDR
+                         name = "condition_SL1344_vs_naive",
+                         lfcThreshold = 1,
+                         alpha = FDR
 )
 Salm_vs_naive <- lfcShrink(dds_macrophage,
-  coef = "condition_SL1344_vs_naive",
-  res = Salm_vs_naive,
-  type = "apeglm"
+                           coef = "condition_SL1344_vs_naive",
+                           res = Salm_vs_naive,
+                           type = "apeglm"
 )
 
 head(IFNg_vs_naive)
 head(Salm_vs_naive)
 ```
 
-We now have two `DESeqResults` objects: `IFNg_vs_naive` and `Salm_vs_naive`, ready to be integrated into a `DeeDeeExperiment` object.
+We now have two `DESeqResults` objects: `IFNg_vs_naive` and `Salm_vs_naive`,
+ready to be integrated into a `DeeDeeExperiment` object.
 
 ## DEA: limma framework
 
-Not working with `DESeq2`? No problem. `DeeDeeExperiment` is method-agnostic and easily integrates results from other frameworks like `limma`. In this section, we will walk through a typical `limma` workflow to generate DE results.
+Not working with `DESeq2`? No problem. `DeeDeeExperiment` is method-agnostic and
+easily integrates results from other frameworks like `limma`. In this section,
+we will walk through a typical `limma` workflow to generate DE results.
 
-For demonstration purposes, we convert the filtered `dds_macrophage` as input for `limma`, using the  `as.DGEList()` function from the `DEFormats` package.
+For demonstration purposes, we convert the filtered `dds_macrophage` as input
+for `limma`, using the  `as.DGEList()` function from the `DEFormats` package.
 
 ```{r dds_to_dge}
 # create DGE list
 dge <- DEFormats::as.DGEList(dds_macrophage)
 ```
 
-We then normalize and voom-transform the expression values, before running the `lmFit()` function:
+We then normalize and voom-transform the expression values, before running the
+`lmFit()` function:
 
 ```{r limmarun}
 # normalize the counts
@@ -261,7 +320,8 @@ contrast_matrix <- makeContrasts(
 )
 ```
 
-We then extract the results by applying the `contrasts.fit` function, followed by the empirical Bayes moderation as it follows:
+We then extract the results by applying the `contrasts.fit` function, followed
+by the empirical Bayes moderation as it follows:
 
 ```{r ebayes}
 # apply contrast
@@ -275,16 +335,20 @@ de_limma <- fit2 # MArrayLM object
 We show here the top 10 DE genes, as detected in the contrast `IFNg_vs_Naive`
 
 ```{r topTable}
-topTable(de_limma, coef = "IFNg_vs_Naive", number = 10)[, 1:7] # show top 10 genes, first columns
+# show top 10 genes, first columns
+topTable(de_limma, coef = "IFNg_vs_Naive", number = 10)[, 1:7] 
 ```
 
-We now have a `MArrayLM` object: `de_limma`, ready to be integrated into a `DeeDeeExperiment` object.
+We now have a `MArrayLM` object: `de_limma`, ready to be integrated into a
+`DeeDeeExperiment` object.
 
 ## DEA: edgeR framework
 
-Below we will walk you through a typical `edgeR` pipeline to produce DE results ready for integration in `DeeDeeExperiment`.
+Below we will walk you through a typical `edgeR` pipeline to produce DE results
+ready for integration in `DeeDeeExperiment`.
 
-We reuse the normalized `DGEList` and design matrix from the previous `limma` workflow (again, created via `DEFormats::as.DGEList()`):
+We reuse the normalized `DGEList` and design matrix from the previous `limma`
+workflow (again, created via `DEFormats::as.DGEList()`):
 
 ```{r glmfit}
 dge <- DEFormats::as.DGEList(dds_macrophage)
@@ -312,17 +376,23 @@ contrast_matrix <- makeContrasts(
 
 ```{r dge_lrt}
 # DGELRT objects
-dge_lrt_IFNg_vs_naive <- glmLRT(fit, contrast = contrast_matrix[, "IFNg_vs_Naive"])
-dge_lrt_Salm_vs_naive <- glmLRT(fit, contrast = contrast_matrix[, "Salm_vs_Naive"])
+dge_lrt_IFNg_vs_naive <- glmLRT(fit,
+                                contrast = contrast_matrix[, "IFNg_vs_Naive"])
+dge_lrt_Salm_vs_naive <- glmLRT(fit,
+                                contrast = contrast_matrix[, "Salm_vs_Naive"])
 ```
 
-The top 10 DE genes computed within the edgeR framework can be shown as in this chunk:
+The top 10 DE genes computed within the edgeR framework can be shown as in this
+chunk:
 
 ```{r topTag1}
-topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7] # show top 10 genes, first few columns
+# show top 10 genes, first few columns
+topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7] 
 ```
 
-For the sake of demonstrating that `DeeDeeExperiment` can handle the different objects from the `edgeR` framework, we also compute some results with the `exactTest()` approach.
+For the sake of demonstrating that `DeeDeeExperiment` can handle the different
+objects from the `edgeR` framework, we also compute some results with the
+`exactTest()` approach.
 
 ```{r dge_exact}
 # perform exact test
@@ -339,7 +409,8 @@ dge_sub$samples$group <- group
 dge_sub <- calcNormFactors(dge_sub)
 dge_sub <- estimateDisp(dge_sub, design = model.matrix(~group))
 # exact test
-dge_exact_IFNg_vs_naive <- exactTest(dge_sub, pair = c("naive", "IFNg")) # DGEExact object
+# DGEExact object
+dge_exact_IFNg_vs_naive <- exactTest(dge_sub, pair = c("naive", "IFNg")) 
 
 
 # SL1344 vs naive
@@ -356,15 +427,20 @@ dge_sub <- estimateDisp(dge_sub, design = model.matrix(~group))
 dge_exact_Salm_vs_naive <- exactTest(dge_sub, pair = c("naive", "SL1344"))
 ```
 
-Again, the top 10 DE genes in the `dge_exact_Salm_vs_naive` object can be shown with
+Again, the top 10 DE genes in the `dge_exact_Salm_vs_naive` object can be shown
+with
 
 ```{r topTag_2}
 topTags(dge_exact_Salm_vs_naive, n = 10)[, 1:7]
 ```
 
-We now have two `DGELRT` & two `DGEExact` objects: `dge_lrt_IFNg_vs_naive`, `dge_lrt_Salm_vs_naive` & `dge_exact_IFNg_vs_naive`, `dge_exact_Salm_vs_naive` respectively, ready to be integrated into a `DeeDeeExperiment` object.
+We now have two `DGELRT` & two `DGEExact` objects: `dge_lrt_IFNg_vs_naive`,
+`dge_lrt_Salm_vs_naive` & `dge_exact_IFNg_vs_naive`, `dge_exact_Salm_vs_naive`
+respectively, ready to be integrated into a `DeeDeeExperiment` object.
 
-For demonstration purposes, we will use precomputed FEA results generated with `run_topGO()` (a practical wrapper provided by the `mosdef` package), and with the `gost()` function from `gprofiler2` package.
+For demonstration purposes, we will use precomputed FEA results generated with
+`run_topGO()` (a practical wrapper provided by the `mosdef` package), and with
+the `gost()` function from `gprofiler2` package.
 
 ```{r load_FEAs}
 # load Functional Enrichment Analysis results examples
@@ -390,19 +466,24 @@ head(gost_res$result)
 head(clusterPro_res$ifng_vs_naive)
 ```
 
-To check which formats of Functional Enrichment Analysis (FEA) results are supported natively within `DeeDeeExperiment`, simply run the following command:
+To check which formats of Functional Enrichment Analysis (FEA) results are
+supported natively within `DeeDeeExperiment`, simply run the following command:
 
 ```{r fea_formats}
 DeeDeeExperiment::supported_fea_formats()
 ```
 
-By now, we collected DEA results from three different frameworks and generated multiple FEA results. Each result has its own structure, columns, metadata, ...
+By now, we collected DEA results from three different frameworks and generated
+multiple FEA results. Each result has its own structure, columns, metadata, ...
 
-Managing and exploring this growing stack of outputs can quickly become overwhelming. So let’s now see how `DeeDeeExperiment` brings all these pieces together.
+Managing and exploring this growing stack of outputs can quickly become
+overwhelming. So let’s now see how `DeeDeeExperiment` brings all these pieces
+together.
 
 # Creating `DeeDeeExperiment` the DeeDee way {#creating_deedeeexperiment_the_deedee_way}
 
-In the following example we construct the dde object using a `dds` object and **named list** of DE results
+In the following example we construct the dde object using a `dds` object and
+**named list** of DE results
 
 ```{r construct_dde}
 # initialize DeeDeeExperiment with dds object and DESeq results (as a named list)
@@ -417,15 +498,18 @@ dde <- DeeDeeExperiment(
 dde
 ```
 
-You can see from the summary overview that the information on the two `dea` has been added to the original object.
+You can see from the summary overview that the information on the two `dea` has
+been added to the original object.
 
 ## Adding results to a `dde` object
 
 ### Adding DEA results
 
-Additional DE results can be added using the `add_dea()` method. These results are stored in both the `dea` slot and in the `rowData`.
+Additional DE results can be added using the `add_dea()` method. These results
+are stored in both the `dea` slot and in the `rowData`.
 
-We can also add results as individual element of class `DESeqResults`, `MArrayLM`, `DGEExact` or `DGELRT`.
+We can also add results as individual element of class `DESeqResults`,
+`MArrayLM`, `DGEExact` or `DGELRT`.
 
 ```{r add_dea}
 # add a named list of results from edgeR
@@ -442,28 +526,39 @@ dde
 names(rowData(dde))
 ```
 
-The `dde` object now contains 5 DEAs in its `dea` slot. The `rowData` also includes a record of the `log2FoldChange`, `pvalue`, and `padj` values for each contrast.
+The `dde` object now contains 5 DEAs in its `dea` slot. The `rowData` also
+includes a record of the `log2FoldChange`, `pvalue`, and `padj` values for each
+contrast.
 
-It is possible to overwrite the results, when the argument `force` is set to `TRUE`
+It is possible to overwrite the results, when the argument `force` is set to
+`TRUE`
 
 ```{r add_dea_force}
 dde <- add_dea(dde, dea = list(same_contrast = dge_lrt_Salm_vs_naive))
 
-# overwrite results with the same name - e.g. if the content of the same object has changed
-dde <- add_dea(dde, dea = list(same_contrast = dge_exact_Salm_vs_naive), force = TRUE)
+# overwrite results with the same name
+# e.g. if the content of the same object has changed
+dde <- add_dea(dde,
+               dea = list(same_contrast = dge_exact_Salm_vs_naive),
+               force = TRUE)
 
 dde
 ```
 
 ### Adding FEA results
 
-FEA results can be added to a `dde` object using the `add_fea()` method. These results are stored in the `fea` slot.
+FEA results can be added to a `dde` object using the `add_fea()` method. These
+results are stored in the `fea` slot.
 
-If the `fea_tool` argument was not specified, the internal function used to generate the standardized format of FEA result is automatically detected - this should work in most cases, but it can be beneficial to explicitly specify the `fea_tool` used, also for simple bookkeeping reasons.
+If the `fea_tool` argument was not specified, the internal function used to
+generate the standardized format of FEA result is automatically detected - this
+should work in most cases, but it can be beneficial to explicitly specify the
+`fea_tool` used, also for simple bookkeeping reasons.
 
 ```{r add_fea}
 # add FEA results as a named list
-dde <- add_fea(dde, fea = list(IFNg_vs_naive = topGO_results_list$ifng_vs_naive))
+dde <- add_fea(dde,
+               fea = list(IFNg_vs_naive = topGO_results_list$ifng_vs_naive))
 
 # add FEA results as a single object
 dde <- add_fea(dde, fea = gost_res$result)
@@ -476,16 +571,19 @@ dde
 
 ## Linking DE and FE Analysis in a `dde` object
 
-Once DE and FE results have been added, FEAs can be linked to specific DE contrasts using the `link_dea_and_fea()` method. This maintains a clear association between the analyses and helps document it within the `dde` object.
+Once DE and FE results have been added, FEAs can be linked to specific DE
+contrasts using the `link_dea_and_fea()` method. This maintains a clear
+association between the analyses and helps document it within the `dde` object.
 
 ```{r link_fea}
 dde <- link_dea_and_fea(dde,
-  dea_name = "Salm_vs_naive",
-  fea_name = c("salmonella_vs_naive", "gost_res$result")
+                        dea_name = "Salm_vs_naive",
+                        fea_name = c("salmonella_vs_naive", "gost_res$result")
 )
 ```
 
-This is then directly visible in the object summary, provided with the dedicated `summary()` method:
+This is then directly visible in the object summary, provided with the dedicated
+`summary()` method:
 
 ```{r summary-linked}
 summary(dde)
@@ -493,32 +591,40 @@ summary(dde)
 
 ## Adding contextual information
 
-It is possible to add context to specific DEA results that are stored in a `dde` object using the `add_scenario_info()` method. This information can help document the experimental setup, clarify comparisons, or maybe provided as additional element to a large language model that can benefit of the extra bits to assist in the interpretation.
+It is possible to add context to specific DEA results that are stored in a `dde`
+object using the `add_scenario_info()` method. This information can help
+document the experimental setup, clarify comparisons, or maybe provided as
+additional element to a large language model that can benefit of the extra bits
+to assist in the interpretation.
 
 ```{r add_scenario_info}
 dde <- add_scenario_info(dde,
-  dea_name = "IFNg_vs_naive",
-  info = "This results contains the output of a Differential Expression Analysis performed on data from the `macrophage` package, more precisely contrasting the counts from naive macrophage to those associated with IFNg."
+                         dea_name = "IFNg_vs_naive",
+                         info = "This results contains the output of a Differential Expression Analysis performed on data from the `macrophage` package, more precisely contrasting the counts from naive macrophage to those associated with IFNg."
 )
 ```
 
 ## Summary of a `dde` object
 
-All results stored in a `dde` object can be easily inspected with the `summary()` method
+All results stored in a `dde` object can be easily inspected with the `summary()`
+method
 
 ```{r summary_mini}
 # minimal summary
 summary(dde)
 ```
 
-It is possible to customize the output of `summary()` using optional arguments. For example, the `FDR` threshold can be adjusted to display the number of up- and downregulated genes for each comparison.
+It is possible to customize the output of `summary()` using optional arguments.
+For example, the `FDR` threshold can be adjusted to display the number of up-
+and downregulated genes for each comparison.
 
 ```{r summary_fdr}
 # specify FDR threshold for subsetting DE genes based on adjusted p-values
 summary(dde, FDR = 0.01)
 ```
 
-It is also possible to include any scenario information associated with each DEA by setting `show_scenario_info = TRUE`
+It is also possible to include any scenario information associated with each
+DEA by setting `show_scenario_info = TRUE`
 
 ```{r summary_show_scenario}
 # show contextual information, if available
@@ -527,31 +633,34 @@ summary(dde, show_scenario_info = TRUE)
 
 ## Renaming results in a `dde` object
 
-Specific results can be renamed after being added using the `dea_rename()` and `fea_rename()` methods. The corresponding column names in the `rowData` will be updated accordingly.
+Specific results can be renamed after being added using the `dea_rename()` and
+`fea_rename()` methods. The corresponding column names in the `rowData` will be
+updated accordingly.
 
 ```{r rename}
 # rename dea, one element
 dde <- dea_rename(dde,
-  old_name = "de_limma",
-  new_name = "ifng_vs_naive_&_salm_vs_naive"
+                  old_name = "de_limma",
+                  new_name = "ifng_vs_naive_&_salm_vs_naive"
 )
 
 # multiple entries at once
 dde <- dea_rename(dde,
-  old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
-  new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive")
+                  old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
+                  new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive")
 )
 
 # rename fea
 dde <- fea_rename(dde,
-  old_name = "gost_res$result",
-  new_name = "salm_vs_naive"
+                  old_name = "gost_res$result",
+                  new_name = "salm_vs_naive"
 )
 ```
 
 ## Removing results in a `dde` object
 
-The method `remove_dea()` and `remove_fea()` can be used to delete results from a `dde` object.
+The method `remove_dea()` and `remove_fea()` can be used to delete results from
+a `dde` object.
 
 ```{r remove}
 # removing dea
@@ -569,9 +678,11 @@ dde
 
 ## Accessing results stored in a `dde` object
 
-Several accessor methods are available to retrieve DEA and FEA results stored within a `dde` object.
+Several accessor methods are available to retrieve DEA and FEA results stored
+within a `dde` object.
 
-`dea_names()` and `fea_names()` are the methods to quickly retrieve the names of available DEAs and FEAs
+`dea_names()` and `fea_names()` are the methods to quickly retrieve the names
+of available DEAs and FEAs
 
 ```{r names}
 # get DEA names
@@ -581,7 +692,9 @@ dea_names(dde)
 fea_names(dde)
 ```
 
-It is possible to directly access specific DEA results either in their original format or in minimal format. Use `format = "original"` to retrieve results in the same class as originally provided (e.g., `DESeqResults`, `MArrayLM`...).
+It is possible to directly access specific DEA results either in their original
+format or in minimal format. Use `format = "original"` to retrieve results in
+the same class as originally provided (e.g., `DESeqResults`, `MArrayLM`...).
 
 ```{r get_dea_res}
 # access the 1st DEA if dea_name is not specified (default: minimal format)
@@ -592,8 +705,8 @@ dea(dde, format = "original") |> head()
 
 # access specific DEA by name, in original format
 dea(dde,
-  dea_name = "lrt_IFNg_vs_naive",
-  format = "original"
+    dea_name = "lrt_IFNg_vs_naive",
+    format = "original"
 ) |> head()
 
 # access specific DEA by name (default: minimal format)
@@ -607,21 +720,25 @@ dea(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
 lapply(get_dea_list(dde), head)
 ```
 
-The next command can be quite verbose in its output, but it gives full access to the original objects provided when creating and updating the `dde` container.
+The next command can be quite verbose in its output, but it gives full access to
+the original objects provided when creating and updating the `dde` container.
 
 ```{r get_dea_list-original, eval = FALSE}
 # get dea results as a list, in original format
 lapply(get_dea_list(dde, format = "original"), head)
 ```
 
-`dea_info()` returns the whole content of the `dea` slot, including the DEA tables and their associated metadata - the following chunk is left unevaluated for clarity as its output can be very verbose.
+`dea_info()` returns the whole content of the `dea` slot, including the DEA
+tables and their associated metadata - the following chunk is left unevaluated
+for clarity as its output can be very verbose.
 
 ```{r dea_info, eval = FALSE}
 # extra info
 dea_info(dde)
 ```
 
-It is easy, still, to retrieve some specific set of information, such as the `package` used for a specific `dea_name`:
+It is easy, still, to retrieve some specific set of information, such as the
+`package` used for a specific `dea_name`:
 
 ```{r dea_info_specific}
 # retrieve specific information like the package name used for specific dea
@@ -629,7 +746,8 @@ dea_name <- "Salm_vs_naive"
 dea_info(dde)[[dea_name]][["package"]]
 ```
 
-`fea()` directly accesses specific FEA results either in their original format or in minimal format
+`fea()` directly accesses specific FEA results either in their original format
+or in minimal format
 
 ```{r get_fea_res}
 # access the 1st FEA, (default: minimal format)
@@ -645,7 +763,9 @@ fea(dde, fea_name = "ifng_vs_naive") |> head()
 fea(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
 ```
 
-Similarly to `get_dea_list()`, `get_fea_list()` returns all FEAs stored in a `dde` object. Optionally, if `dea_name` is set, it returns all FEAs linked to a specific DEA. This is illustrated in the following chunk
+Similarly to `get_dea_list()`, `get_fea_list()` returns all FEAs stored in a
+`dde` object. Optionally, if `dea_name` is set, it returns all FEAs linked to a
+specific DEA. This is illustrated in the following chunk
 
 ```{r get_fea_list}
 # get fea results as a list (default: minimal format)
@@ -656,14 +776,17 @@ lapply(get_fea_list(dde), head)
 lapply(get_fea_list(dde, dea_name = "IFNg_vs_naive", format = "original"), head)
 ```
 
-`fea_info()` returns the whole content of the `fea` slot, including the FEA tables and their associated metadata. Again, the following chunk is left unevaluated for clarity as its output can be very verbose:
+`fea_info()` returns the whole content of the `fea` slot, including the FEA
+tables and their associated metadata. Again, the following chunk is left
+unevaluated for clarity as its output can be very verbose:
 
 ```{r fea_info, eval = FALSE}
 # extra info
 fea_info(dde)
 ```
 
-Yet, specific set of information, such as the `fe_tool` used for a specific `fea_name` (here, "ifng_vs_naive") can be easily retrieved with:
+Yet, specific set of information, such as the `fe_tool` used for a specific
+`fea_name` (here, "ifng_vs_naive") can be easily retrieved with:
 
 ```{r fea_info_specific}
 # the tool used to perform the FEA
@@ -672,9 +795,13 @@ fea_info(dde)[["ifng_vs_naive"]][["fe_tool"]]
 
 # Downstream operations with `DeeDeeExperiment` objects
 
-Since `DeeDeeExperiment` inherits from the `SummarizedExperiment` class, it can be seamlessly used with other Bioconductor tools such as `iSEE` or `GeneTonic`, or many more.
+Since `DeeDeeExperiment` inherits from the `SummarizedExperiment` class, it can
+be seamlessly used with other Bioconductor tools such as `iSEE` or `GeneTonic`,
+or many more.
 
-With the `dde` object now containing all key elements of your analysis, from the counts to enrichment results, metadata, and scenario details, you can save it and plug it into these tools for interactive exploration and visualization.
+With the `dde` object now containing all key elements of your analysis, from the
+counts to enrichment results, metadata, and scenario details, you can save it
+and plug it into these tools for interactive exploration and visualization.
 
 ```{r save, eval = FALSE}
 saveRDS(dde, "dde_macrophage.RDS")
@@ -687,7 +814,8 @@ library("iSEE")
 iSEE::iSEE(dde)
 ```
 
-Similarly, to see more on `dde` within `GeneTonic`, you can run the following chunk:
+Similarly, to see more on `dde` within `GeneTonic`, you can run the following
+chunk:
 
 ```{r runGeneTonic, eval = FALSE}
 library("GeneTonic")
@@ -695,7 +823,9 @@ my_dde <- dde
 
 res_de <- dea(my_dde, dea_name = "IFNg_vs_naive", format = "original")
 res_enrich <- fea(my_dde, fea_name = "ifng_vs_naive")
-annotation_object <- mosdef::get_annotation_orgdb(dds_macrophage, "org.Hs.eg.db", "ENSEMBL")
+annotation_object <- mosdef::get_annotation_orgdb(dds_macrophage,
+                                                  "org.Hs.eg.db",
+                                                  "ENSEMBL")
 
 GeneTonic::GeneTonic(
   dds = dds_macrophage,
@@ -706,21 +836,30 @@ GeneTonic::GeneTonic(
 )
 ```
 
-Of course, these packages need to be installed as usual on the same machine via `BiocManager::install()`.
+Of course, these packages need to be installed as usual on the same machine via
+`BiocManager::install()`.
 
 # FAQs
 
 *Do I need to process/filter my DE results before adding them to a `dde` object?* 
 
-&rarr; `DeeDeeExperiment` is just a container, it does not alter your results. Any filtering or DEG selection should be done beforehand, giving you full control over how your analysis is conducted.
+&rarr; `DeeDeeExperiment` is just a container, it does not alter your results.
+Any filtering or DEG selection should be done beforehand, giving you full
+control over how your analysis is conducted.
 
 *What happens if I forget to name my DE or FE result when adding it?*
 
-&rarr; If no name is provided, `DeeDeeExperiment` will attempt to assign a default one, which is the variable name in the current environment. However, it's strongly recommended to name each result clearly.
+&rarr; If no name is provided, `DeeDeeExperiment` will attempt to assign a
+default one, which is the variable name in the current environment. However,
+it's strongly recommended to name each result clearly.
 
 *I am using a different enrichment analysis tool, and this is currently not supported by DeeDeeExperiment, what can I do?*
 
-&rarr; The quick-and-easy option would be to rename the output of the tabular format from this tool into the format expected by `DeeDeeExperiment` (which is the same adopted by `GeneTonic`). If you think a conversion function would be useful to yourself and many other users, feel free to submit a pull request within the `DeeDeeExperiment` Github repository (https://github.com/imbeimainz/DeeDeeExperiment/pulls)!
+&rarr; The quick-and-easy option would be to rename the output of the tabular
+format from this tool into the format expected by `DeeDeeExperiment` (which is
+the same adopted by `GeneTonic`). If you think a conversion function would be
+useful to yourself and many other users, feel free to submit a pull request
+within the `DeeDeeExperiment` Github repository (https://github.com/imbeimainz/DeeDeeExperiment/pulls)!
 
 # Session info {.unnumbered .smaller}
 

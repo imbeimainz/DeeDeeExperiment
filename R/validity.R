@@ -45,8 +45,8 @@ validDeeDeeExperiment <- function(object) {
   if (length(fea_info(object)) > 0) {
     for (entry in fea_info(object)) {
       if (!is(entry$original_object, "data.frame") &&
-        !is(entry$original_object, "enrichResult") &&
-        !is(entry$original_object, "gseaResult")) {
+          !is(entry$original_object, "enrichResult") &&
+          !is(entry$original_object, "gseaResult")) {
         msg <- c(msg, "FEA results should be either a data.frame,
                 enrichResult, or a gseaResult object")
       }
@@ -56,7 +56,9 @@ validDeeDeeExperiment <- function(object) {
         "fgsea", "gsea", "enrichr", "gProfiler",
         "Not Specified"
       ))) {
-        msg <- c(msg, "Some FEA entries have invalid or unrecognized `fea_tool` values")
+        msg <- c(
+          msg,
+          "Some FEA entries have invalid or unrecognized `fea_tool` values")
       }
     }
   }
