@@ -15,6 +15,7 @@
 <url><loc>/reference/IFNg_naive.html</loc></url>
 <url><loc>/reference/Salm_both.html</loc></url>
 <url><loc>/reference/Salm_naive.html</loc></url>
+<url><loc>/reference/clusterPro_res.html</loc></url>
 <url><loc>/reference/dd_list_original.html</loc></url>
 <url><loc>/reference/de_limma.html</loc></url>
 <url><loc>/reference/de_named_list.html</loc></url>
@@ -22,7 +23,16 @@
 <url><loc>/reference/dge_exact_IFNg_naive.html</loc></url>
 <url><loc>/reference/dge_exact_Salm_both.html</loc></url>
 <url><loc>/reference/dge_exact_Salm_naive.html</loc></url>
-<url><loc>/reference/dge_lrt.html</loc></url>
+<url><loc>/reference/dge_lrt_IFNg_both.html</loc></url>
+<url><loc>/reference/dge_lrt_IFNg_naive.html</loc></url>
+<url><loc>/reference/dge_lrt_Salm_both.html</loc></url>
+<url><loc>/reference/dge_lrt_Salm_naive.html</loc></url>
+<url><loc>/reference/enrichr_res.html</loc></url>
+<url><loc>/reference/fgseaRes.html</loc></url>
+<url><loc>/reference/gost_res.html</loc></url>
+<url><loc>/reference/gsea_res.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/supported_fea_formats.html</loc></url>
+<url><loc>/reference/topGO_results_list.html</loc></url>
 </urlset>
 
