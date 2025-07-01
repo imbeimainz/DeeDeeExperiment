@@ -250,9 +250,9 @@
   # check that:
   # you provided a name for your results
 
-  if (is.null(entry_name)) {
-    stop("You must provide a name for your enrichment results!")
-  }
+  # if (is.null(entry_name)) {
+  #   stop("You must provide a name for your enrichment results!")
+  # }
 
   # if results are not either a list or df or enrichResult or gseaResult obj
   # throw an error
