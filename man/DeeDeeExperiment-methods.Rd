@@ -52,7 +52,14 @@
 
 \S4method{remove_dea}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
 
-\S4method{dea}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", extra_rd = NULL, verbose = FALSE)
+\S4method{dea}{DeeDeeExperiment}(
+  x,
+  dea_name = NULL,
+  format = "minimal",
+  extra_rd = NULL,
+  type = "DFrame",
+  verbose = FALSE
+)
 
 \S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = FALSE)
 
@@ -118,6 +125,9 @@ return the full result object. It defaults to "minimal"}
 
 \item{extra_rd}{A character vector of additional columns from rowData(x)
 to include. It defaults to c("gene_id", "SYMBOL").}
+
+\item{type}{A character string referring to the type of object returned by
+\code{dea()}. It defaults to \code{DFrame}, but can also take the value of \code{data.frame}}
 
 \item{verbose}{Logical, whether or not to display warnings. If TRUE,
 warnings/messages will be displayed. If FALSE, the function runs silently}

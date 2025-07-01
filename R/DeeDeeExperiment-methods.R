@@ -38,6 +38,8 @@
 #' warnings/messages will be displayed. If FALSE, the function runs silently
 #' @param extra_rd A character vector of additional columns from rowData(x)
 #' to include. It defaults to c("gene_id", "SYMBOL").
+#' @param type A character string referring to the type of object returned by
+#' `dea()`. It defaults to `DFrame`, but can also take the value of `data.frame`
 #' @param old_name A character vector of existing DEA names to be renamed in a
 #' `DeeDeeExperiment` object
 #' @param new_name A character vector with new names to assign to existing DEA
@@ -657,6 +659,7 @@ setMethod("dea",
                                 dea_name = NULL,
                                 format = "minimal",
                                 extra_rd = NULL,
+                                type = "DFrame",
                                 verbose = FALSE) {
             # checks
             if (!is.null(extra_rd) && !is.character(extra_rd)) {
@@ -696,6 +699,14 @@ setMethod("dea",
                 "Could not find '", dea_name, "' among DEA results.\n",
                 "Available results: ", paste(dea_names, collapse = ",")
               )
+            }
+
+            if (!is.character(type) || length(type) != 1) {
+              "'type' must be a single character string!"
+            }
+
+            if (!type %in% c("DFrame", "data.frame")) {
+              stop("'type' must be 'DFrame' or 'data.frame'!")
             }
 
             if (format == "minimal") {
@@ -759,6 +770,9 @@ setMethod("dea",
               }
 
               out <- rowData(x)[, all_cols]
+              if (type == "data.frame") {
+                out <- as.data.frame(out)
+              }
             } else if (format == "original") {
               out <- dea_info(x)[[dea_name]][["original_object"]]
             }
