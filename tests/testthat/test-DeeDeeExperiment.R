@@ -1,6 +1,7 @@
 test_that("creating", {
   ## create dde objects --------------------------------------------------------
-  expect_error(DeeDeeExperiment())
+  #expect_error(DeeDeeExperiment())
+  expect_s4_class(DeeDeeExperiment(),"DeeDeeExperiment")
 
   dde <- DeeDeeExperiment(
     se_macrophage_noassays,
