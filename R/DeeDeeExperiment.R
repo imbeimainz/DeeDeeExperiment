@@ -106,14 +106,19 @@ DeeDeeExperiment <- function(se = NULL,
       }
     }
   } else {
-    # if nothing is passed, return error
-    if (length(de_results) == 0 & length(enrich_results) == 0) {
-      stop("You have to provide at least an se object or a de_results object!")
+    #if nothing is passed, return error
+    # if (length(de_results) == 0 & length(enrich_results) == 0) {
+    #   stop(
+    # "You have to provide at least an se object or a de_results/enrich_results object!")
+    # }
+
+
+    if (!is.null(de_results)) {
+      # if no se passed but de_results is not empty, create a mock from it
+      cli::cli_alert_info(
+        "creating a mock SE from the rows of the DE result objects, if available"
+      )
     }
-    # if no se passed but de_results is not empty, create a mock from it
-    cli::cli_alert_info(
-      "creating a mock SE from the rows of the DE result objects, if available"
-    )
 
     if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
       stop("Some elements in the de_results list do not have rownames!")
