@@ -1,25 +1,28 @@
 Package: DeeDeeExperiment
-Title: DeeDeeExperiment: An S4 Class for Managing and exploring omics Analysis results
-Version: 0.6.0
+Title: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results
+Version: 0.99.0
 Authors@R: 
     c(
         person(
             given = "Najla", family = "Abassi", role = c("aut", "cre"), 
-            email = "abassi.nejla96@gmail.com", comment = c(ORCID = "0000-0001-8357-0938")
+            email = "abassi.nejla96@gmail.com",
+            comment = c(ORCID = "0000-0001-8357-0938")
         ),
         person(given = "Lea", family = "Rothörl", role = c("aut"),
-           email = "lea.rothoerl@posteo.de", comment = c(ORCID = "0000-0003-2554-0583")
+           email = "lea.rothoerl@posteo.de",
+           comment = c(ORCID = "0000-0003-2554-0583")
         ),
         person(
             given = "Federico", family = "Marini", role = c("aut"), 
-            email = "marinif@uni-mainz.de", comment = c(ORCID = "0000-0003-3252-7758")
+            email = "marinif@uni-mainz.de",
+            comment = c(ORCID = "0000-0003-3252-7758")
         )
     )
 Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiment
-  class, designed to integrate and manage transcriptomic analysis results. It introduces
-  two dedicated slots to store Differential Expression (DE) analysis results and
-  Functional Enrichment analysis results, providing a structured approach for
-  downstream analysis.
+  class, designed to integrate and manage transcriptomic analysis results. It
+  introduces two dedicated slots to store Differential Expression (DE) analysis
+  results and Functional Enrichment analysis results, providing a structured
+  approach for downstream analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -49,6 +52,6 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
 BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
-biocViews: Software, Infrastructure, DataRepresentation, GeneExpression, Transcription,
-  Transcriptomics, DifferentialExpression, Pathways, GO
+biocViews: Software, Infrastructure, DataRepresentation, GeneExpression,
+  Transcription, Transcriptomics, DifferentialExpression, Pathways, GO
 Config/testthat/edition: 3

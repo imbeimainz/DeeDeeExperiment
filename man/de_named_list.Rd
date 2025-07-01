@@ -11,7 +11,8 @@ A list object
 A named list of DE results, in their original format
 }
 \description{
-A named list of DE results, in their original format (from DESeq2, edgeR or limma)
+A named list of DE results, in their original format (from DESeq2, edgeR or
+limma)
 }
 \details{
 documented creation in the \code{create_dataset_example.R} script in the

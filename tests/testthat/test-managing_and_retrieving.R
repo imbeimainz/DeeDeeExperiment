@@ -256,6 +256,14 @@ test_that("managing and retrieving", {
     verbose = TRUE
   ))
 
+  extract_dea <- dea(dde_overlap, dea_name = "ifng_vs_naive", type = "data.frame")
+
+  expect_s3_class(extract_dea, "data.frame")
+
+  extract_dea <- dea(dde_overlap, dea_name = "ifng_vs_naive")
+
+  expect_s4_class(extract_dea, "DFrame")
+
 
   ## retrieving FEA ------------------------------------------------------------
 

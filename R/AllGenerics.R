@@ -10,7 +10,7 @@ setGeneric("dea_info<-", function(x, value) standardGeneric("dea_info<-"))
 setGeneric("dea_names", function(x, ...) standardGeneric("dea_names"))
 
 #' @export
-setGeneric("dea_rename", function(x, ...) standardGeneric("dea_rename"))
+setGeneric("rename_dea", function(x, ...) standardGeneric("rename_dea"))
 
 #' @export
 setGeneric("add_dea", function(x, ...) standardGeneric("add_dea"))
@@ -36,7 +36,7 @@ setGeneric("fea_info<-", function(x, value) standardGeneric("fea_info<-"))
 setGeneric("fea_names", function(x, ...) standardGeneric("fea_names"))
 
 #' @export
-setGeneric("fea_rename", function(x, ...) standardGeneric("fea_rename"))
+setGeneric("rename_fea", function(x, ...) standardGeneric("rename_fea"))
 
 #' @export
 setGeneric("add_fea", function(x, ...) standardGeneric("add_fea"))
@@ -51,7 +51,9 @@ setGeneric("fea", function(x, ...) standardGeneric("fea"))
 setGeneric("get_fea_list", function(x, ...) standardGeneric("get_fea_list"))
 
 #' @export
-setGeneric("link_dea_and_fea", function(x, ...) standardGeneric("link_dea_and_fea"))
+setGeneric("link_dea_and_fea",
+           function(x, ...) standardGeneric("link_dea_and_fea"))
 
 #' @export
-setGeneric("add_scenario_info", function(x, ...) standardGeneric("add_scenario_info"))
+setGeneric("add_scenario_info",
+           function(x, ...) standardGeneric("add_scenario_info"))

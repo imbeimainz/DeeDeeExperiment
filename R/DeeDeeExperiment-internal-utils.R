@@ -1,10 +1,10 @@
 #' Import from `DESeq2` DE results
 #'
 #' @param se A `SummarizedExperiment` object
-#' @param res_de A set of DE results, provided as `DESeqResults` as in the `DESeq2`
-#' framework
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the `rowData` slot.
+#' @param res_de A set of DE results, provided as `DESeqResults` as in the
+#' `DESeq2` framework
+#' @param de_name A character value, describing the contrast of interest. Will
+#' be used to compose the column names in the `rowData` slot.
 #'
 #' @return A list, containing the updated `SummarizedExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
@@ -12,7 +12,6 @@
 #'
 #' @noRd
 .importDE_DESeq2 <- function(se, res_de, de_name) {
-  # checks TODO:
   # correct object format
   stopifnot(is(res_de, "DESeqResults"))
   # contain the right columns
@@ -22,9 +21,7 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
-    all(na.omit(res_de$pvalue > 0)))
-
-  # matched_ids <- match(rownames(res_de), rownames(se))
+              all(na.omit(res_de$pvalue > 0)))
 
   matched_ids <- match(rownames(se), rownames(res_de)) # we align de res with se
   # only valid indices
@@ -39,9 +36,12 @@
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de$log2FoldChange[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_de$pvalue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_de$padj[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+    res_de$log2FoldChange[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+    res_de$pvalue[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+    res_de$padj[matched_ids[valid_matches]]
 
 
   dea_contrast <- list(
@@ -50,8 +50,8 @@
     metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
     metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
     original_object = res_de,
-    # object_name = deparse(substitute(res_de)),
-    package = "DESeq2"
+    package = "DESeq2",
+    package_version = packageVersion("DESeq2")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
@@ -61,10 +61,10 @@
 #' Import from edgeR DE results
 #'
 #' @param se A SummarizedExperiment object
-#' @param res_de A set of DE results, provided by the `edgeR` framework (either a
-#' `DGEExact` or a `DGELRT` object).
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the rowData slot.
+#' @param res_de A set of DE results, provided by the `edgeR` framework (either
+#' a `DGEExact` or a `DGELRT` object).
+#' @param de_name A character value, describing the contrast of interest. Will
+#' be used to compose the column names in the rowData slot.
 #'
 #' @return A list, containing the updated SummarizedExperiment object, and the
 #' standardized information on the DE analysis, as these are to be used in the
@@ -80,34 +80,38 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_tbl$PValue <= 1)) &
-    all(na.omit(res_tbl$PValue > 0)))
+              all(na.omit(res_tbl$PValue > 0)))
 
   # identify the logFC cols
   logFC_cols <- grep("^logFC", colnames(res_tbl), value = TRUE)
 
 
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
-  # pre-fill rowData with NA the assign the corresponding values only for matched
-  # indices for logFC, accounting for the fact that the logFC column name in edgeR
-  # depends on whether we have 1 or multiple contrasts
+  # pre-fill rowData with NA the assign the corresponding values only for
+  # matched indices for logFC, accounting for the fact that the logFC column
+  # name in edgeR depends on whether we have 1 or multiple contrasts
   for (i in logFC_cols) {
     rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
     # assign correspionding values
-    rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_tbl$table[[i]][matched_ids[valid_matches]]
+    rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+      res_tbl$table[[i]][matched_ids[valid_matches]]
   }
 
-  # pre-fill rowData with NA the assign the corresponding values for matched indices for pval and padj
+  # pre-fill rowData with NA the assign the corresponding values for matched
+  # indices for pval and padj
   rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
   rowData(se)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_tbl$table$PValue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_tbl$table$FDR[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+    res_tbl$table$PValue[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+    res_tbl$table$FDR[matched_ids[valid_matches]]
 
   dea_contrast <- list(
     alpha = NA,
@@ -115,8 +119,8 @@
     metainfo_logFC = res_tbl$comparison,
     metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
     original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
-    package = "edgeR"
+    package = "edgeR",
+    package_version = packageVersion("edgeR")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
@@ -127,10 +131,10 @@
 #' Import from `limma` DE results
 #'
 #' @param se A `SummarizedExperiment` object
-#' @param res_de A set of DE results, provided in the `limma` framework (a `MArrayLM`
-#' object).
-#' @param de_name A character value, describing the contrast of interest. Will be
-#' used to compose the column names in the `rowData` slot.
+#' @param res_de A set of DE results, provided in the `limma` framework
+#' (a `MArrayLM` object).
+#' @param de_name A character value, describing the contrast of interest. Will
+#' be used to compose the column names in the `rowData` slot.
 #'
 #' @return A list, containing the updated `SummarizedExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
@@ -162,14 +166,11 @@
 
   # p value different from NA respect the 0-1 interval
   stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
-    all(na.omit(res_tbl$P.Value > 0)))
+              all(na.omit(res_tbl$P.Value > 0)))
 
-  # matched_ids <- match(rownames(res_tbl), rownames(se))
-
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
-
 
   # Pre-fill rowData with NA
   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
@@ -179,9 +180,12 @@
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_tbl$logFC[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <- res_tbl$P.Value[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <- res_tbl$adj.P.Val[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+    res_tbl$logFC[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+    res_tbl$P.Value[matched_ids[valid_matches]]
+  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+    res_tbl$adj.P.Val[matched_ids[valid_matches]]
 
   dea_contrast <- list(
     alpha = NA,
@@ -189,65 +193,13 @@
     metainfo_logFC = NA,
     metainfo_pvalue = NA,
     original_object = res_de,
-    # object_name = deparse(substitute(res_tbl)),
-    package = "limma"
+    package = "limma",
+    package_version = packageVersion("limma")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
-
-
-  # returns info (in the standardized manner)
 }
 
-# custom format can be a dataframe, can it be a list???
-
-# .importDE_custom <- function(se, res_de, de_name) {
-#   # checks object
-#   stopifnot(is(res_de, "data.frame"))
-#
-#   # expected columns, mainly from DESeq, edgeR and limma?
-#   expected_columns <- list(
-#     logFC = c("log2FoldChange", "logFC"),
-#     pvalue = c("pvalue", "PValue", "P.Value"),
-#     padj = c("padj", "FDR", "adj.P.Val")
-#   )
-#
-#   # find the matching column names in res_de
-#   matched_cols <- sapply(expected_columns, function(x) {
-#     match <- intersect(x, colnames(res_de))
-#     if (length(match) > 0) return(match[1])
-#     stop("Dataframe does not contain required columns: ", paste(x, collapse = ", "))
-#   })
-#
-#   valid_matches <- rownames(se) %in% rownames(res_de)
-#
-#   matched_ids <- match(rownames(se)[valid_matches], rownames(res_de))
-#
-#
-#   # Pre-fill rowData with NA
-#   rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-#   rowData(se)[[paste0(de_name, "_pvalue")]]         <- NA
-#   rowData(se)[[paste0(de_name, "_padj")]]           <- NA
-#
-#   # assign only matched indices. keep NA for unmatched genes
-#   rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <- res_de[[matched_cols["log2FoldChange"]]][matched_ids]
-#   rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches]         <- res_de[[matched_cols["pvalue"]]][matched_ids]
-#   rowData(se)[[paste0(de_name, "_padj")]][valid_matches]           <- res_de[[matched_cols["padj"]]][matched_ids]
-#
-#
-#   dea_contrast <- list(
-#     alpha = NA,
-#     lfcThreshold = NA,
-#     metainfo_logFC = NA,
-#     metainfo_pvalue = NA,
-#     original_object = res_de,
-#     # object_name = deparse(substitute(res_tbl)),
-#     package = "custom input"
-#   )
-#
-#   return(list(se = se, dea_contrast = dea_contrast))
-#
-# }
 
 
 #' Checking the validity of the imported DE results.
@@ -261,8 +213,8 @@
   ## if one single element is given, i.e not a list, it converts it into a list
   ## of length 1 and ensure it has a name
   if (is(x, "DGEExact") ||
-    is(x, "DGELRT") || is(x, "MArrayLM") ||
-    is(x, "DESeqResults")) {
+      is(x, "DGELRT") || is(x, "MArrayLM") ||
+      is(x, "DESeqResults")) {
     # convert into a named list
     x <- list(x)
     names(x) <- entry_name
@@ -275,7 +227,9 @@
   }))
 
   if (!all(ok_types)) {
-    stop("All elements in the list must be of type DESeqResults, DGEExact, DGELRT, or MArrayLM. Alternatively, it can be a data.frame with at least a logFC, p-value and p-adjusted value columns.")
+    stop("All elements in the list must be of type DESeqResults,",
+         " DGEExact, DGELRT, or MArrayLM. Alternatively, it can be a data.frame",
+         " with at least a logFC, p-value and p-adjusted value columns.")
   }
   if (is.null(names(x)) || any(names(x) == "")) {
     stop("All elements in the provided de_results list must be named!")
@@ -296,32 +250,36 @@
   # check that:
   # you provided a name for your results
 
-  if (is.null(entry_name)) {
-    stop("You must provide a name for your enrichment results!")
-  }
+  # if (is.null(entry_name)) {
+  #   stop("You must provide a name for your enrichment results!")
+  # }
 
-  # if results are not either a list or df or enrichResult or gseaResult obj throw an error
-  if (!(is(x, "data.frame") || is(x, "enrichResult") || is.list(x) || is(x, "gseaResult"))) {
+  # if results are not either a list or df or enrichResult or gseaResult obj
+  # throw an error
+  if (!(is(x, "data.frame") || is(x, "enrichResult") || is.list(x) ||
+        is(x, "gseaResult"))) {
     stop(
-      "Enrichment results must be a data frame,",
-      " an enrichResult object, a gseaResult object or a list of these elements!"
+      "Enrichment results must be a data frame, ",
+      "an enrichResult object, a gseaResult object or a list of these elements!"
     )
   }
 
-  # if results is not a list  (one df or enrichResult obj) put it into a named list
+  # if results is not a list  (one df or enrichResult obj) put it into a
+  # named list
   if (is(x, "data.frame") || is(x, "enrichResult") || is(x, "gseaResult")) {
     x <- list(x)
     names(x) <- entry_name
   }
 
-
   # check if the elements of the list are either data.frame or enrichResult obj
   # gost() returns a large list, so we can accept list
   x <- lapply(x, function(arg) {
-    if (is(arg, "enrichResult") || is(arg, "data.frame") || is(arg, "gseaResult")) {
+    if (is(arg, "enrichResult") || is(arg, "data.frame") ||
+        is(arg, "gseaResult")) {
       arg
     } else {
-      stop("Elements in the list must be a data.frame or enrichResult or gseaResult object!")
+      stop("Elements in the list must be a data.frame or enrichResult",
+           " or gseaResult object!")
     }
   })
 
@@ -335,11 +293,12 @@
   required_enrich_cols <- list(
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
     clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
-    GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes", "gs_de_count"),
+    GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes",
+                  "gs_de_count"),
     DAVID = c(
       "Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
-      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"
-    ),
+      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini",
+      "FDR"),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
     gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
     enrichr = c(
@@ -349,8 +308,7 @@
     gProfiler = c(
       "source", "term_name", "term_id", "term_size", "query_size",
       "intersection_size", "effective_domain_size"
-    ) # taking only the intersection of both r
-    # and txt file outputs
+    ) # taking only the intersection of both r and txt file outputs
   )
 
 
@@ -360,10 +318,6 @@
     if (is(df, "enrichResult") || is(df, "gseaResult")) {
       cols <- colnames(df@result)
     }
-
-    # else if (is(df, "list")) {
-    #   cols <- colnames(df$result)
-    # }
 
     else {
       cols <- colnames(df)
@@ -376,7 +330,8 @@
     if (!any(matches)) {
       stop(
         c(
-          "Element `", i, "` does not contain the required columns for any known enrichment type! \n",
+          "Element `", i,
+          "` does not contain the required columns for any known enrichment type! \n",
           "Please check that you re providing a valid enrichment result. \n",
           "Call `supported_fea_formats()` to see available formats"
         )
@@ -401,20 +356,14 @@
 #' if no match found
 #' @noRd
 .match_fe_to_de <- function(fea_name, dea_names,
-                            pattern = "^(topGO_|clusterProfiler_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
-  # if an attribute was assigned
+                            pattern =
+                              "^(topGO_|clusterProfiler_|GeneTonic_|DAVID_|gsea_|fgsea_|enrichr_|gPro_)") {
 
-  # associated_dea <- attr(fea_obj, "associated_dea")
-  # if (!is.null(associated_dea) && associated_dea %in% dea_names) {
-  #   return(associated_dea)
-  # }
-
-  # what else can we put in the pattern??
   cleaned_name <- sub(pattern, "", fea_name, ignore.case = TRUE)
   if (cleaned_name %in% dea_names) {
     return(cleaned_name)
   } else {
-    return(NA_character_) # Achtung this needs to be character
+    return(NA_character_) # this needs to be character
   }
 }
 
@@ -424,17 +373,17 @@
 #' @noRd
 .detect_fea_tool <- function(fe_res) {
   stopifnot(is(fe_res, "data.frame") || is(fe_res, "enrichResult") ||
-    is(fe_res, "gseaResult"))
+              is(fe_res, "gseaResult"))
 
   # detect fea type from what columns are found in fea
   required_enrich_cols <- list(
     topGO = c("GO.ID", "Term", "Significant", "p.value_elim", "genes"),
     clusterProfiler = c("ID", "Description", "pvalue", "geneID", "Count"),
-    GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes"), # genetonic shaker output
+    GeneTonic = c("gs_id", "gs_description", "gs_pvalue", "gs_genes"),
     DAVID = c(
       "Category", "Term", "Count", "X.", "PValue", "Genes", "List.Total",
-      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini", "FDR"
-    ),
+      "Pop.Hits", "Pop.Total", "Fold.Enrichment", "Bonferroni", "Benjamini",
+      "FDR"),
     fgsea = c("pathway", "pval", "padj", "ES", "NES", "size", "leadingEdge"),
     gsea = c("ID", "Description", "pvalue", "p.adjust", "core_enrichment"),
     enrichr = c(
@@ -471,7 +420,7 @@
     return("Not Specified")
   }
 
-  # just in case the user has a table with columns from 2 tools :v
+  # just in case the user has a table with columns from 2 tools :v ?
   if (length(matched_tools) > 1) {
     warning(
       "Multiple FEA tool formats matched: ",
@@ -486,9 +435,11 @@
 
 
 #' .DeeDeefy_david() , a slightly modified function based on the original shaker
-#' for DAVID in GeneTonic. It takes a data.frame instead of the path to the output
+#' for DAVID in GeneTonic. It takes a data.frame instead of the path to the
+#' output
 #'
-#' @param david_output a data.frame of functional enrichment results exported from DAVID
+#' @param david_output a data.frame of functional enrichment results exported
+#' from DAVID
 #'
 #' @returns a data.frame in GeneTonic shaker standard format
 #'
@@ -504,15 +455,22 @@
     "Bonferroni", "Benjamini", "FDR"
   )
   if (!all(exp_colnames %in% colnames(david_output))) {
-    stop("I could not find some of the usual column names from the DAVID output exported to file")
+    stop(
+      "I could not find some of the usual column names from the DAVID output",
+      " exported to file")
   }
 
-  message("Found ", nrow(david_output), " gene sets in the file output from DAVID of which ", sum(david_output$PValue <= 0.05), " are significant (p-value <= 0.05).")
+  message("Found ", nrow(david_output),
+          " gene sets in the file output from DAVID of which ",
+          sum(david_output$PValue <= 0.05),
+          " are significant (p-value <= 0.05).")
   message("Converting for usage within the DeeDeeExperiment framework...")
 
   mydf <- data.frame(
-    gs_id = unlist(lapply(strsplit(david_output$Term, "~"), function(arg) arg[[1]])),
-    gs_description = unlist(lapply(strsplit(david_output$Term, "~"), function(arg) arg[[2]])),
+    gs_id = unlist(lapply(strsplit(david_output$Term, "~"),
+                          function(arg) arg[[1]])),
+    gs_description = unlist(lapply(strsplit(david_output$Term, "~"),
+                                   function(arg) arg[[2]])),
     gs_pvalue = david_output$PValue,
     gs_genes = gsub(", ", ",", david_output$Genes),
     gs_de_count = david_output$Count,
@@ -533,12 +491,13 @@
 }
 
 
-#' .DeeDeefy_enrichr() , a slightly modified function based on the original shaker
-#' for enrichR in GeneTonic. It takes a data.frame instead of the path to the output
+#' .DeeDeefy_enrichr() , a slightly modified function based on the original
+#' shaker for enrichR in GeneTonic. It takes a data.frame instead of the path to
+#' the output
 #'
 #' @param enrichr_output a data.frame with the output of `enrichr`, related to a
-#' specific set of genesets. Usually it is one of the members of the list returned
-#' by the initial call to `enrichr`.
+#' specific set of genesets. Usually it is one of the members of the list
+#' returned by the initial call to `enrichr`.
 #'
 #' @returns a data.frame in GeneTonic shaker standard format
 #'
@@ -550,24 +509,29 @@
     "Combined.Score", "Genes"
   )
   if (!all(exp_colnames %in% colnames(enrichr_output))) {
-    stop("I could not find some of the usual column names from the Enrichr output")
+    stop(
+      "I could not find some of the usual column names from the Enrichr output"
+    )
   }
 
-  message("Found ", nrow(enrichr_output), " gene sets in the file output from Enrichr of which ", sum(enrichr_output$P.value <= 0.05), " are significant (p-value <= 0.05).")
+  message("Found ", nrow(enrichr_output),
+          " gene sets in the file output from Enrichr of which ",
+          sum(enrichr_output$P.value <= 0.05),
+          " are significant (p-value <= 0.05).")
   message("Converting for usage within the DeeDeeExperiment framework...")
 
-  # TODO: split up id and term - or just keep em the same?!
-  # this does work for go term as they encode it...
   mydf <- data.frame(
     gs_id = gsub("\\)", "", gsub("^.* \\(", "", enrichr_output$Term)),
     gs_description = gsub(" \\(GO.*$", "", enrichr_output$Term),
     gs_pvalue = enrichr_output$P.value,
     gs_genes = gsub(";", ",", enrichr_output$Genes),
     gs_de_count = as.numeric(
-      unlist(lapply(strsplit(enrichr_output$Overlap, "/"), function(arg) arg[[1]]))
+      unlist(lapply(strsplit(enrichr_output$Overlap, "/"),
+                    function(arg) arg[[1]]))
     ),
     gs_bg_count = as.numeric(
-      unlist(lapply(strsplit(enrichr_output$Overlap, "/"), function(arg) arg[[2]]))
+      unlist(lapply(strsplit(enrichr_output$Overlap, "/"),
+                    function(arg) arg[[2]]))
     ),
     gs_adj_pvalue = enrichr_output$Adjusted.P.value,
     stringsAsFactors = FALSE
@@ -578,12 +542,16 @@
   return(mydf)
 }
 
-#' .DeeDeefy_gprofiler() , a slightly modified function based on the original shaker
-#' for g:Profiler in GeneTonic. It takes a data.frame instead of the path to the output
+#' .DeeDeefy_gprofiler() , a slightly modified function based on the original
+#' shaker for g:Profiler in GeneTonic. It takes a data.frame instead of the
+#' path to the output
 #'
-#' @param gprofiler_output_df a data.frame of functional enrichment results exported from g:Profiler
-#' @param gprofiler_output a data.frame with the output of `gost()` in `gprofiler2`.
-#' Usually it is one of the members of the list returned by the initial call to `gost()`
+#' @param gprofiler_output_df a data.frame of functional enrichment results
+#' exported from g:Profiler
+#' @param gprofiler_output a data.frame with the output of `gost()` in
+#' `gprofiler2`.
+#' Usually it is one of the members of the list returned by the initial call
+#' to `gost()`
 #'
 #' @returns a data.frame in GeneTonic shaker standard format
 #'
@@ -604,7 +572,10 @@
   )
 
   if (all(exp_colnames_textual %in% colnames(gprofiler_output))) {
-    message("Found ", nrow(gprofiler_output), " gene sets in the file output from g:Profiler of which ", sum(gprofiler_output$adjusted_p_value <= 0.05), " are significant (p-value <= 0.05).")
+    message("Found ", nrow(gprofiler_output),
+            " gene sets in the file output from g:Profiler of which ",
+            sum(gprofiler_output$adjusted_p_value <= 0.05),
+            " are significant (p-value <= 0.05).")
     message("Converting for usage within the DeeDeeExperiment framework...")
 
     mydf <- data.frame(
@@ -619,20 +590,14 @@
     )
   }
 
-  # input will always be a data.frame anyway?
-  # if (is(gprofiler_output, "list")) {
-  #   stop(
-  #     "Expecting a data.frame object. Maybe you are providing the list",
-  #     " containing it? You could do so by selecting the appropriate element",
-  #     " of the list"
-  #   )
-  # }
-
   else if (all(colnames(gprofiler_output) %in% exp_colnames_rcall)) {
     # using directly the output from the call from gprofiler2
     # if still a list, might need to select the appropriate element
 
-    message("Found ", nrow(gprofiler_output), " gene sets in the file output from g:Profiler of which ", sum(gprofiler_output$p_value <= 0.05), " are significant (p-value <= 0.05).")
+    message("Found ", nrow(gprofiler_output),
+            " gene sets in the file output from g:Profiler of which ",
+            sum(gprofiler_output$p_value <= 0.05),
+            " are significant (p-value <= 0.05).")
     message("Converting for usage within the DeeDeeExperiment framework...")
 
     mydf <- data.frame(
@@ -681,7 +646,9 @@
     )
   }
 
-  message("Found ", nrow(obj@result), " gene sets in `enrichResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
+  message("Found ", nrow(obj@result),
+          " gene sets in `enrichResult` object, of which ",
+          nrow(as.data.frame(obj)), " are significant.")
   message("Converting for usage within the DeeDeeExperiment framework...")
 
   fullresults <- obj@result
@@ -692,7 +659,8 @@
     gs_pvalue = fullresults$pvalue,
     gs_genes = gsub("/", ",", fullresults$geneID),
     gs_de_count = fullresults$Count,
-    gs_bg_count = unlist(lapply(strsplit(fullresults$BgRatio, "/"), function(arg) arg[[1]])),
+    gs_bg_count = unlist(lapply(strsplit(fullresults$BgRatio, "/"),
+                                function(arg) arg[[1]])),
     gs_ontology = obj@ontology,
     GeneRatio = fullresults$GeneRatio,
     BgRatio = fullresults$BgRatio,
@@ -713,29 +681,37 @@
 #'
 #' @param obj An `topGOtableResult` object
 #' @param p_value_column Character, specifying which column the p value for
-#' enrichment has to be used. Example values are "p.value_elim" or "p.value_classic"
+#' enrichment has to be used. Example values are "p.value_elim" or
+#' "p.value_classic"
 #'
 #' @returns a data.frame in GeneTonic shaker standard format
 #'
 #' @noRd
 .DeeDeefy_topGOtableResult <- function(obj,
                                        p_value_column = "p.value_elim") {
-  if (!all(c("GO.ID", "Term", "Annotated", "Significant", "Expected", "p.value_classic") %in%
-    colnames(obj))) {
-    stop("The provided object must be of in the format specified by the `pcaExplorer::topGOtable` function or the `mosdef::run_topGO` function")
+  if (!all(
+    c("GO.ID", "Term", "Annotated", "Significant", "Expected",
+      "p.value_classic")
+    %in% colnames(obj))) {
+    stop(
+      "The provided object must be of in the format specified by the",
+      " `pcaExplorer::topGOtable` function or the `mosdef::run_topGO` function")
   }
 
   if (!p_value_column %in% colnames(obj)) {
     stop(
-      "You specified a column for the p-value which is not contained in the provided object. \n",
+      "You specified a column for the p-value which is not contained in the",
+      " provided object. \n",
       "Please check the colnames of your object in advance."
     )
   }
 
   if (!"genes" %in% colnames(obj)) {
     stop(
-      "The column `genes` is not present in the provided object and is required for properly running GeneTonic.",
-      "\nMaybe you did set `addGeneToTerms` to FALSE in the call to `pcaExplorer::topGOtable` or to `mosdef::run_topGO`?"
+      "The column `genes` is not present in the provided object and",
+      " is required for properly running GeneTonic.",
+      "\nMaybe you did set `addGeneToTerms` to FALSE in the call to",
+      " `pcaExplorer::topGOtable` or to `mosdef::run_topGO`?"
     )
   }
 
@@ -778,18 +754,22 @@
 
   if (is.null(obj@result$core_enrichment)) {
     stop(
-      "You are providing an object where the `core_enrichment` is not specified, ",
-      "this is required for running GeneTonic properly."
+      "You are providing an object where the `core_enrichment` is ",
+      "not specified, this is required for running GeneTonic properly."
     )
   }
 
   message(
-    "Using the content of the 'core_enrichment' column to generate the 'gs_genes' for GeneTonic...",
-    " If you have that information available directly, please adjust the content accordingly.",
+    "Using the content of the 'core_enrichment' column to generate the",
+    " 'gs_genes' for GeneTonic...",
+    " If you have that information available directly, please adjust the",
+    " content accordingly.",
     "\n\nUsing the set of the 'core_enrichment' size to compute the 'gs_de_count'"
   )
 
-  message("Found ", nrow(obj@result), " gene sets in `gseaResult` object, of which ", nrow(as.data.frame(obj)), " are significant.")
+  message("Found ", nrow(obj@result),
+          " gene sets in `gseaResult` object, of which ",
+          nrow(as.data.frame(obj)), " are significant.")
   message("Converting for usage within the DeeDeeExperiment framework...")
 
   fullresults <- obj@result
@@ -841,19 +821,23 @@
     stop("Expecting 'leadingEdge' column to be a list")
   }
 
-  message("Found ", nrow(fgsea_output), " gene sets in the file output from fgsea of which ", sum(fgsea_output$padj <= 0.05), " are significant (p-value <= 0.05).")
+  message("Found ", nrow(fgsea_output),
+          " gene sets in the file output from fgsea of which ",
+          sum(fgsea_output$padj <= 0.05), " are significant (p-value <= 0.05).")
   message("Converting for usage within the DeeDeeExperiment framework...")
 
   message(
-    "Using the content of the 'leadingEdge' column to generate the 'gs_genes' for GeneTonic...",
-    " If you have that information available directly, please adjust the content accordingly.",
+    "Using the content of the 'leadingEdge' column to generate the 'gs_genes'",
+    " for GeneTonic...",
+    " If you have that information available directly, please adjust the",
+    " content accordingly.",
     "\n\nUsing the set of the leadingEdge size to compute the 'gs_de_count'"
   )
 
   message(
     "\n\nfgsea is commonly returning no identifier for the gene sets used.",
-    " Please consider editing the 'gs_id' field manually according to the gene set you",
-    " provided"
+    " Please consider editing the 'gs_id' field manually according to the gene ",
+    " set you provided"
   )
 
   mydf <- data.frame(
