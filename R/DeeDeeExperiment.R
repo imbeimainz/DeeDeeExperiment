@@ -80,12 +80,6 @@
 DeeDeeExperiment <- function(se = NULL,
                              de_results = NULL,
                              enrich_results = NULL) {
-  # old <- S4Vectors:::disableValidity()
-  # if (!isTRUE(old)) {
-  #   S4Vectors:::disableValidity(TRUE)
-  #   on.exit(S4Vectors:::disableValidity(old))
-  # }
-
 
   # set up functional enrichment results list
   extracted_enrich_results <- list()
