@@ -3,7 +3,7 @@ test_that("renaming", {
 
   dde_de_empty <- DeeDeeExperiment(se_macrophage_noassays)
 
-  expect_error(dea_rename(dde_de_empty,
+  expect_error(rename_dea(dde_de_empty,
     old_name = "ifng_vs_naive", new_name = "IFNgvsNaive"
   ))
 
@@ -12,7 +12,7 @@ test_that("renaming", {
     de_results = de_named_list
   )
 
-  dde_rename <- dea_rename(dde,
+  dde_rename <- rename_dea(dde,
     old_name = "salmonella_vs_naive",
     new_name = "SalmvsNaive"
   )
@@ -24,50 +24,50 @@ test_that("renaming", {
     "SalmvsNaive", "salmo_both"
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = "salmonella_vs_naive",
     new_name = "ifng_vs_naive"
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = NULL,
     new_name = "ifng_vs_naive"
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = "salmonella_vs_naive",
     new_name = NULL
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = "contrast1",
     new_name = "ifng_vs_naive"
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = 1,
     new_name = "1"
   ))
 
   dde3 <- add_fea(dde_rename, fea = topGO_results_list)
 
-  expect_error(dea_rename(dde3,
+  expect_error(rename_dea(dde3,
     old_name = 1,
     new_name = "1"
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = "salmonella_vs_naive",
     new_name = c("ifng_vs_naive", "new_column")
   ))
 
-  expect_error(dea_rename(dde,
+  expect_error(rename_dea(dde,
     old_name = c("salmonella_vs_naive", "salmo_both"),
     new_name = c("salmonel_vs_naive", "salmonel_vs_naive")
   ))
 
 
-  dde3_rename <- dea_rename(dde3,
+  dde3_rename <- rename_dea(dde3,
     old_name = "ifngsalmo_vs_naive",
     new_name = "IFNg_SalmvsNaive"
   )
@@ -81,37 +81,37 @@ test_that("renaming", {
 
   ## renaming FEA --------------------------------------------------------------
 
-  expect_error(fea_rename(dde3,
+  expect_error(rename_fea(dde3,
     old_name = "contrast1",
     new_name = "topGO_IFNg_naive"
   ))
 
-  expect_error(fea_rename(dde,
+  expect_error(rename_fea(dde,
     old_name = "topGO_Salm_naive",
     new_name = c("salmonella_vs_naive", "new_column")
   ))
 
-  expect_error(fea_rename(dde_overlap,
+  expect_error(rename_fea(dde_overlap,
     old_name = c("ifng_vs_naive", "ifngsalmo_vs_naive"),
     new_name = "naive"
   ))
 
-  expect_error(fea_rename(dde_overlap,
+  expect_error(rename_fea(dde_overlap,
     old_name = c("ifng_vs_naive", "ifngsalmo_vs_naive"),
     new_name = c("naive", "naive")
   ))
 
-  expect_error(fea_rename(dde_overlap,
+  expect_error(rename_fea(dde_overlap,
     old_name = c("ifng_vs_naive"),
     new_name = c("ifngsalmo_vs_naive")
   ))
 
-  expect_error(fea_rename(dde3,
+  expect_error(rename_fea(dde3,
     old_name = NULL,
     new_name = "ifng_vs_naive"
   ))
 
-  expect_error(fea_rename(dde3,
+  expect_error(rename_fea(dde3,
     old_name = "salmonella_vs_naive",
     new_name = NULL
   ))
@@ -121,7 +121,7 @@ test_that("renaming", {
     "IFNg_SalmvsNaive"
   )
 
-  fea_rename <- fea_rename(dde3,
+  fea_rename <- rename_fea(dde3,
     old_name = "salmonella_vs_naive",
     new_name = "topGO_SalmonellavsNaive"
   )

@@ -5,7 +5,7 @@
 \alias{dea_info}
 \alias{dea_info<-}
 \alias{dea_names}
-\alias{dea_rename}
+\alias{rename_dea}
 \alias{add_dea}
 \alias{remove_dea}
 \alias{dea}
@@ -14,7 +14,7 @@
 \alias{fea_info}
 \alias{fea_info<-}
 \alias{fea_names}
-\alias{fea_rename}
+\alias{rename_fea}
 \alias{add_fea}
 \alias{remove_fea}
 \alias{fea}
@@ -23,7 +23,7 @@
 \alias{dea_info,DeeDeeExperiment-method}
 \alias{dea_info<-,DeeDeeExperiment-method}
 \alias{dea_names,DeeDeeExperiment-method}
-\alias{dea_rename,DeeDeeExperiment-method}
+\alias{rename_dea,DeeDeeExperiment-method}
 \alias{add_dea,DeeDeeExperiment-method}
 \alias{remove_dea,DeeDeeExperiment-method}
 \alias{dea,DeeDeeExperiment-method}
@@ -32,7 +32,7 @@
 \alias{fea_info,DeeDeeExperiment-method}
 \alias{fea_info<-,DeeDeeExperiment-method}
 \alias{fea_names,DeeDeeExperiment-method}
-\alias{fea_rename,DeeDeeExperiment-method}
+\alias{rename_fea,DeeDeeExperiment-method}
 \alias{add_fea,DeeDeeExperiment-method}
 \alias{remove_fea,DeeDeeExperiment-method}
 \alias{fea,DeeDeeExperiment-method}
@@ -46,7 +46,7 @@
 
 \S4method{dea_names}{DeeDeeExperiment}(x)
 
-\S4method{dea_rename}{DeeDeeExperiment}(x, old_name, new_name)
+\S4method{rename_dea}{DeeDeeExperiment}(x, old_name, new_name)
 
 \S4method{add_dea}{DeeDeeExperiment}(x, dea, force = FALSE)
 
@@ -64,7 +64,7 @@
 
 \S4method{fea_names}{DeeDeeExperiment}(x)
 
-\S4method{fea_rename}{DeeDeeExperiment}(x, old_name, new_name)
+\S4method{rename_fea}{DeeDeeExperiment}(x, old_name, new_name)
 
 \S4method{add_fea}{DeeDeeExperiment}(
   x,
@@ -161,7 +161,7 @@ DEAs
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{dea_names} returns the names of the available DE contrasts in
 \code{DeeDeeExperiment} objects.
-\item \code{dea_rename} is the method to rename one or multiple DEAs stored in a
+\item \code{rename_dea} is the method to rename one or multiple DEAs stored in a
 \code{DeeDeeExperiment} object.
 \item \code{add_dea} and \code{remove_dea} are used to respectively add or remove
 DE-results items. These methods also return \code{DeeDeeExperiment} objects, with
@@ -185,7 +185,7 @@ FEAs
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{fea_names} returns the names of the available enrichment results in
 \code{DeeDeeExperiment} objects.
-\item \code{fea_rename} is the method to rename one or multiple FEAs stored in a
+\item \code{rename_fea} is the method to rename one or multiple FEAs stored in a
 \code{DeeDeeExperiment} object.
 \item \code{add_fea} and \code{remove_fea} are used to respectively add or remove
 functional enrichment results items. These methods also return
@@ -254,7 +254,7 @@ fea_names(dde)
 summary(dde, FDR = 0.01)
 
 # rename DEA
-dde_new <- dea_rename(dde_new,
+dde_new <- rename_dea(dde_new,
   old_name = "salmonella_vs_naive",
   new_name = "Salmo_vs_Naive_renamed"
 )

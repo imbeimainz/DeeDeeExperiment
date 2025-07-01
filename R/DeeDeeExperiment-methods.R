@@ -6,7 +6,7 @@
 #' dea_info
 #' dea_info<-
 #' dea_names
-#' dea_rename
+#' rename_dea
 #' add_dea
 #' remove_dea
 #' dea
@@ -15,7 +15,7 @@
 #' fea_info
 #' fea_info<-
 #' fea_names
-#' fea_rename
+#' rename_fea
 #' add_fea
 #' remove_fea
 #' fea
@@ -82,7 +82,7 @@
 #' information as a whole. These methods return `DeeDeeExperiment` objects.
 #' * `dea_names` returns the names of the available DE contrasts in
 #' `DeeDeeExperiment` objects.
-#' * `dea_rename` is the method to rename one or multiple DEAs stored in a
+#' * `rename_dea` is the method to rename one or multiple DEAs stored in a
 #' `DeeDeeExperiment` object.
 #' * `add_dea` and `remove_dea` are used to respectively add or remove
 #' DE-results items. These methods also return `DeeDeeExperiment` objects, with
@@ -105,7 +105,7 @@
 #' information as a whole. These methods return `DeeDeeExperiment` objects.
 #' * `fea_names` returns the names of the available enrichment results in
 #' `DeeDeeExperiment` objects.
-#' * `fea_rename` is the method to rename one or multiple FEAs stored in a
+#' * `rename_fea` is the method to rename one or multiple FEAs stored in a
 #' `DeeDeeExperiment` object.
 #' * `add_fea` and `remove_fea` are used to respectively add or remove
 #' functional enrichment results items. These methods also return
@@ -174,7 +174,7 @@
 #' summary(dde, FDR = 0.01)
 #'
 #' # rename DEA
-#' dde_new <- dea_rename(dde_new,
+#' dde_new <- rename_dea(dde_new,
 #'   old_name = "salmonella_vs_naive",
 #'   new_name = "Salmo_vs_Naive_renamed"
 #' )
@@ -229,11 +229,11 @@ setMethod("dea_names",
           }
 )
 
-## dea_rename ------------------------------------------------------------------
+## rename_dea ------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("dea_rename",
+setMethod("rename_dea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 old_name,
@@ -898,11 +898,11 @@ setMethod("fea_names",
           }
 )
 
-## fea_rename ------------------------------------------------------------------
+## rename_fea ------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("fea_rename",
+setMethod("rename_fea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 old_name,

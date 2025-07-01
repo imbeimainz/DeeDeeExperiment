@@ -633,25 +633,25 @@ summary(dde, show_scenario_info = TRUE)
 
 ## Renaming results in a `dde` object
 
-Specific results can be renamed after being added using the `dea_rename()` and
-`fea_rename()` methods. The corresponding column names in the `rowData` will be
+Specific results can be renamed after being added using the `rename_dea()` and
+`rename_fea()` methods. The corresponding column names in the `rowData` will be
 updated accordingly.
 
 ```{r rename}
 # rename dea, one element
-dde <- dea_rename(dde,
+dde <- rename_dea(dde,
                   old_name = "de_limma",
                   new_name = "ifng_vs_naive_&_salm_vs_naive"
 )
 
 # multiple entries at once
-dde <- dea_rename(dde,
+dde <- rename_dea(dde,
                   old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
                   new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive")
 )
 
 # rename fea
-dde <- fea_rename(dde,
+dde <- rename_fea(dde,
                   old_name = "gost_res$result",
                   new_name = "salm_vs_naive"
 )
