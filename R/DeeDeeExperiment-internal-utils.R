@@ -50,7 +50,8 @@
     metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
     metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
     original_object = res_de,
-    package = paste0("DESeq2, v ", packageVersion("DESeq2"))
+    package = "DESeq2",
+    package_version = packageVersion("DESeq2")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
@@ -118,7 +119,8 @@
     metainfo_logFC = res_tbl$comparison,
     metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
     original_object = res_de,
-    package = paste0("edgeR, v ", packageVersion("edgeR"))
+    package = "edgeR",
+    package_version = packageVersion("edgeR")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))
@@ -191,7 +193,8 @@
     metainfo_logFC = NA,
     metainfo_pvalue = NA,
     original_object = res_de,
-    package = paste0("limma, v ", packageVersion("limma"))
+    package = "limma",
+    package_version = packageVersion("limma")
   )
 
   return(list(se = se, dea_contrast = dea_contrast))

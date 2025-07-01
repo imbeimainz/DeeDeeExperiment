@@ -423,7 +423,8 @@ setMethod("add_dea",
                   metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
                   metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
                   original_object = this_de,
-                  package = paste0("DESeq2, v ", packageVersion("DESeq2"))
+                  package = "DESeq2",
+                  package_version = packageVersion("DESeq2")
                 )
               } else if (is(this_de, "DGEExact") || is(this_de, "DGELRT")) {
                 # check for rowname mismatches
@@ -495,7 +496,8 @@ setMethod("add_dea",
                   metainfo_logFC = res_tbl$comparison,
                   metainfo_pvalue = NA,
                   original_object = this_de,
-                  package = paste0("edgeR, v ", packageVersion("edgeR"))
+                  package = "edgeR",
+                  package_version = packageVersion("edgeR")
                 )
               } else if (is(this_de, "MArrayLM")) {
                 # check for rowname mismatches
@@ -555,7 +557,8 @@ setMethod("add_dea",
                   metainfo_logFC = NA,
                   metainfo_pvalue = NA,
                   original_object = this_de,
-                  package = paste0("limma, v ", packageVersion("limma"))
+                  package = "limma",
+                  package_version = packageVersion("limma")
                 )
               } else {
                 stop(
