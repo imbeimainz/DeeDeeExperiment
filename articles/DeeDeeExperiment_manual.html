@@ -80,7 +80,7 @@ Marini</h4>
 Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:marinif@uni-mainz.de" class="email">marinif@uni-mainz.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">30 June 2025</h4>
+            <h4 data-toc-skip class="date">1 July 2025</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/vignettes/DeeDeeExperiment_manual.Rmd" class="external-link"><code>vignettes/DeeDeeExperiment_manual.Rmd</code></a></small>
       <div class="d-none name"><code>DeeDeeExperiment_manual.Rmd</code></div>
@@ -1071,24 +1071,24 @@ with each DEA by setting <code>show_scenario_info = TRUE</code></p>
 <h3 id="renaming-results-in-a-dde-object">Renaming results in a <code>dde</code> object<a class="anchor" aria-label="anchor" href="#renaming-results-in-a-dde-object"></a>
 </h3>
 <p>Specific results can be renamed after being added using the
-<code><a href="../reference/DeeDeeExperiment-methods.html">dea_rename()</a></code> and <code><a href="../reference/DeeDeeExperiment-methods.html">fea_rename()</a></code> methods. The
+<code><a href="../reference/DeeDeeExperiment-methods.html">rename_dea()</a></code> and <code><a href="../reference/DeeDeeExperiment-methods.html">rename_fea()</a></code> methods. The
 corresponding column names in the <code>rowData</code> will be updated
 accordingly.</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># rename dea, one element</span></span>
-<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">dea_rename</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">rename_dea</a></span><span class="op">(</span><span class="va">dde</span>,</span>
 <span>                  old_name <span class="op">=</span> <span class="st">"de_limma"</span>,</span>
 <span>                  new_name <span class="op">=</span> <span class="st">"ifng_vs_naive_&amp;_salm_vs_naive"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># multiple entries at once</span></span>
-<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">dea_rename</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">rename_dea</a></span><span class="op">(</span><span class="va">dde</span>,</span>
 <span>                  old_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dge_exact_IFNg_vs_naive"</span>, <span class="st">"dge_lrt_IFNg_vs_naive"</span><span class="op">)</span>,</span>
 <span>                  new_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"exact_IFNg_vs_naive"</span>, <span class="st">"lrt_IFNg_vs_naive"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># rename fea</span></span>
-<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">fea_rename</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">rename_fea</a></span><span class="op">(</span><span class="va">dde</span>,</span>
 <span>                  old_name <span class="op">=</span> <span class="st">"gost_res$result"</span>,</span>
 <span>                  new_name <span class="op">=</span> <span class="st">"salm_vs_naive"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -1668,7 +1668,7 @@ as the <code>package</code> used for a specific
 <code class="sourceCode R"><span><span class="co"># retrieve specific information like the package name used for specific dea</span></span>
 <span><span class="va">dea_name</span> <span class="op">&lt;-</span> <span class="st">"Salm_vs_naive"</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">dea_info</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="va">dea_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"package"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] "DESeq2, v 1.47.5"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "DESeq2"</span></span></code></pre></div>
 <p><code><a href="../reference/DeeDeeExperiment-methods.html">fea()</a></code> directly accesses specific FEA results either in
 their original format or in minimal format</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">

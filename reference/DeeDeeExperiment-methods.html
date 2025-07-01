@@ -60,7 +60,7 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">dea_names</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">dea_rename</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
+<span><span class="fu">rename_dea</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">add_dea</span><span class="op">(</span><span class="va">x</span>, <span class="va">dea</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -69,7 +69,14 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">remove_dea</span><span class="op">(</span><span class="va">x</span>, <span class="va">dea_name</span>, remove_linked_fea <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">dea</span><span class="op">(</span><span class="va">x</span>, dea_name <span class="op">=</span> <span class="cn">NULL</span>, format <span class="op">=</span> <span class="st">"minimal"</span>, extra_rd <span class="op">=</span> <span class="cn">NULL</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">dea</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  dea_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  format <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>  extra_rd <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"DFrame"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">get_dea_list</span><span class="op">(</span><span class="va">x</span>, format <span class="op">=</span> <span class="st">"minimal"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -87,7 +94,7 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">fea_names</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">fea_rename</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
+<span><span class="fu">rename_fea</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">add_fea</span><span class="op">(</span></span>
@@ -171,6 +178,11 @@ return the full result object. It defaults to "minimal"</p></dd>
 to include. It defaults to c("gene_id", "SYMBOL").</p></dd>
 
 
+<dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
+<dd><p>A character string referring to the type of object returned by
+<code>dea()</code>. It defaults to <code>DFrame</code>, but can also take the value of <code>data.frame</code></p></dd>
+
+
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
 <dd><p>Logical, whether or not to display warnings. If TRUE,
 warnings/messages will be displayed. If FALSE, the function runs silently</p></dd>
@@ -222,7 +234,7 @@ below.</p>
 information as a whole. These methods return <code>DeeDeeExperiment</code> objects.</p></li>
 <li><p><code>dea_names</code> returns the names of the available DE contrasts in
 <code>DeeDeeExperiment</code> objects.</p></li>
-<li><p><code>dea_rename</code> is the method to rename one or multiple DEAs stored in a
+<li><p><code>rename_dea</code> is the method to rename one or multiple DEAs stored in a
 <code>DeeDeeExperiment</code> object.</p></li>
 <li><p><code>add_dea</code> and <code>remove_dea</code> are used to respectively add or remove
 DE-results items. These methods also return <code>DeeDeeExperiment</code> objects, with
@@ -242,7 +254,7 @@ which is not a default element in <code>dea</code>.</p></li>
 information as a whole. These methods return <code>DeeDeeExperiment</code> objects.</p></li>
 <li><p><code>fea_names</code> returns the names of the available enrichment results in
 <code>DeeDeeExperiment</code> objects.</p></li>
-<li><p><code>fea_rename</code> is the method to rename one or multiple FEAs stored in a
+<li><p><code>rename_fea</code> is the method to rename one or multiple FEAs stored in a
 <code>DeeDeeExperiment</code> object.</p></li>
 <li><p><code>add_fea</code> and <code>remove_fea</code> are used to respectively add or remove
 functional enrichment results items. These methods also return
@@ -367,7 +379,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> No FEA results stored.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename DEA</span></span></span>
-<span class="r-in"><span><span class="va">dde_new</span> <span class="op">&lt;-</span> <span class="fu">dea_rename</span><span class="op">(</span><span class="va">dde_new</span>,</span></span>
+<span class="r-in"><span><span class="va">dde_new</span> <span class="op">&lt;-</span> <span class="fu">rename_dea</span><span class="op">(</span><span class="va">dde_new</span>,</span></span>
 <span class="r-in"><span>  old_name <span class="op">=</span> <span class="st">"salmonella_vs_naive"</span>,</span></span>
 <span class="r-in"><span>  new_name <span class="op">=</span> <span class="st">"Salmo_vs_Naive_renamed"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
