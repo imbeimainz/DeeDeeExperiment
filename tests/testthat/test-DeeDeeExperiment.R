@@ -25,7 +25,7 @@ test_that("creating", {
   )
 
   dde_nodd <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
   )
   expect_s4_class(dde_nodd, "DeeDeeExperiment")
 
@@ -61,7 +61,7 @@ test_that("creating", {
   salmo_both <- de_named_list$salmo_both
 
   dde_one <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = salmo_both
   )
 
@@ -122,13 +122,13 @@ test_that("creating", {
   expect_warning(dea(dde_list, dea_name = "dge_lrt", verbose = TRUE), regexp = NULL)
 
   expect_warning(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = dea1
   ))
 
   dea2 <- dge_exact_IFNg_both
   expect_warning(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = dea2
   ))
 
@@ -166,7 +166,7 @@ test_that("creating", {
   broken_limma$lods <- broken_limma$lods[, "Salm_both", drop = FALSE]
 
   expect_error(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = broken_limma
   ))
 
@@ -175,7 +175,7 @@ test_that("creating", {
   expect_error(DeeDeeExperiment(de_results = list(de_limma)))
 
   dde5 <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     enrich_results = list(enrichr_salmo_vs_naive = enrichr_res$Reactome_2016)
   )
 
@@ -185,19 +185,19 @@ test_that("creating", {
 
 
   expect_error(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list,
     enrich_results = list(clusterPro_res$ifng_vs_naive)
   ))
 
   expect_error(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list,
     enrich_results = gost_res
   ))
 
   new_dde <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list,
     enrich_results = list(
       clusterPro_res = clusterPro_res$salmonella_vs_naive,
@@ -251,13 +251,13 @@ test_that("creating", {
 
 
   expect_message(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list,
     enrich_results = topGO_results_list
   ), )
 
   expect_message(DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list,
     enrich_results = list(
       topGO_Salm_naive = topGO_results_list$salmonella_vs_naive,

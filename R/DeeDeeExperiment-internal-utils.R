@@ -1,12 +1,12 @@
 #' Import from `DESeq2` DE results
 #'
-#' @param se A `SummarizedExperiment` object
+#' @param se A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided as `DESeqResults` as in the
 #' `DESeq2` framework
 #' @param de_name A character value, describing the contrast of interest. Will
 #' be used to compose the column names in the `rowData` slot.
 #'
-#' @return A list, containing the updated `SummarizedExperiment` object, and the
+#' @return A list, containing the updated `SingleCellExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
 #' `DeeDee` framework.
 #'
@@ -60,13 +60,13 @@
 
 #' Import from edgeR DE results
 #'
-#' @param se A SummarizedExperiment object
+#' @param se A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided by the `edgeR` framework (either
 #' a `DGEExact` or a `DGELRT` object).
 #' @param de_name A character value, describing the contrast of interest. Will
 #' be used to compose the column names in the rowData slot.
 #'
-#' @return A list, containing the updated SummarizedExperiment object, and the
+#' @return A list, containing the updated `SingleCellExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
 #' DeeDee framework.
 #'
@@ -130,13 +130,13 @@
 
 #' Import from `limma` DE results
 #'
-#' @param se A `SummarizedExperiment` object
+#' @param se A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided in the `limma` framework
 #' (a `MArrayLM` object).
 #' @param de_name A character value, describing the contrast of interest. Will
 #' be used to compose the column names in the `rowData` slot.
 #'
-#' @return A list, containing the updated `SummarizedExperiment` object, and the
+#' @return A list, containing the updated `SingleCellExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
 #' `DeeDee` framework.
 #'

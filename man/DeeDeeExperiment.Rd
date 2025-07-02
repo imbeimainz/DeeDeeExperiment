@@ -6,10 +6,10 @@
 \alias{DeeDeeExperiment}
 \title{The DeeDeeExperiment class}
 \usage{
-DeeDeeExperiment(se = NULL, de_results = NULL, enrich_results = NULL)
+DeeDeeExperiment(sce = NULL, de_results = NULL, enrich_results = NULL)
 }
 \arguments{
-\item{se}{A \code{SummarizedExperiment} object, that will be used as a scaffold to
+\item{sce}{A \code{SingleCellExperiment} object, that will be used as a scaffold to
 store the DE related information.}
 
 \item{de_results}{A named list of DE results, in any of the formats supported
@@ -25,13 +25,13 @@ shakers), or an \code{enrichResult}/\code{gseaResult} objects (currently support
 A \code{DeeDeeExperiment} object.
 }
 \description{
-The \code{DeeDeeExperiment} class is integrate and manage transcriptomic analysis
-results. It inherits from the SummarizedExperiment class, and additionally
+The \code{DeeDeeExperiment} class is integrate and manage omics analysis
+results. It inherits from the \code{SingleCellExperiment} class, and additionally
 stores DE-related/functional enrichment information via dedicated slots and
 \code{colData}.
 }
 \details{
-The \code{se} parameter can be optionally left unspecified. If this is the case,
+The \code{sce} parameter can be optionally left unspecified. If this is the case,
 the resulting \code{DeeDeeExperiment} object will contain as features the ones
 specified by the provided components of the object supplied via the
 \code{de_results} parameter.

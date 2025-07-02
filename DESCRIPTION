@@ -18,19 +18,20 @@ Authors@R:
             comment = c(ORCID = "0000-0003-3252-7758")
         )
     )
-Description: DeeDeeExperiment is an S4 class extending the SummarizedExperiment
-  class, designed to integrate and manage transcriptomic analysis results. It
-  introduces two dedicated slots to store Differential Expression (DE) analysis
-  results and Functional Enrichment analysis results, providing a structured
-  approach for downstream analysis.
+Description: DeeDeeExperiment is an S4 class extending the SingleCellExperiment
+  class, designed to integrate and manage omics analysis results. It
+  introduces two dedicated slots to store Differential Expression Analysis (DEA)
+  results and Functional Enrichment Analysis (FEA) results, providing a
+  structured approach for downstream analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends:
     R (>= 4.5.0),
-    SummarizedExperiment
+    SingleCellExperiment
 Imports:
+    SummarizedExperiment,
     methods,
     S4Vectors,
     utils,

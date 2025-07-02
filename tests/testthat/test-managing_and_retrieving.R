@@ -103,7 +103,7 @@ test_that("managing and retrieving", {
   expect_s4_class(dde2, "DeeDeeExperiment")
   expect_equal(length(fea_info(dde2)), 2)
 
-  dde3 <- DeeDeeExperiment(se = se_macrophage_noassays)
+  dde3 <- DeeDeeExperiment(sce = se_macrophage_noassays)
   expect_warning(add_fea(dde3,
     fea = list(
       topGO_Salm_naive = topGO_Salm_naive,
@@ -312,8 +312,6 @@ test_that("managing and retrieving", {
   expect_error(add_scenario_info(dde_overlap,
     dea_name = 2
   ))
-
-
 
   expect_error(add_scenario_info(dde_with_info,
     dea_name = "ifng_vs_naive",
