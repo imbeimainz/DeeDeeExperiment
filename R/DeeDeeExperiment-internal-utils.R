@@ -363,7 +363,7 @@
   if (cleaned_name %in% dea_names) {
     return(cleaned_name)
   } else {
-    return(NA_character_) # this needs to be character
+    return(NA_character_)
   }
 }
 

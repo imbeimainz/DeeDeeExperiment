@@ -49,7 +49,7 @@ automatically detected, and based on that, the appropriate shaking method is
 used to return a standardized format of the FEA results.
 The names of the list will be used to attempt to associate each enrichment
 result with a corresponding DE contrast stored in the \code{DeeDeeExperiment}
-object.
+object, but it also can be defined by the user.
 
 Since a \code{DeeDeeExperiment} is also a \code{SummarizedExperiment} object, it can be
 seamlessly provided downstream for visualization and in-depth exploration to

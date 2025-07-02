@@ -41,7 +41,7 @@
 #' used to return a standardized format of the FEA results.
 #' The names of the list will be used to attempt to associate each enrichment
 #' result with a corresponding DE contrast stored in the `DeeDeeExperiment`
-#' object.
+#' object, but it also can be defined by the user.
 #'
 #' Since a `DeeDeeExperiment` is also a `SummarizedExperiment` object, it can be
 #' seamlessly provided downstream for visualization and in-depth exploration to
@@ -81,9 +81,6 @@ DeeDeeExperiment <- function(sce = NULL,
                              de_results = NULL,
                              enrich_results = NULL) {
 
-  # set up functional enrichment results list
-  extracted_enrich_results <- list()
-
   if (!is.null(de_results)) {
     # capture variable name as a character
     entry_name <- deparse(substitute(de_results))
@@ -117,12 +114,6 @@ DeeDeeExperiment <- function(sce = NULL,
       }
     }
   } else {
-    #if nothing is passed, return error
-    # if (length(de_results) == 0 & length(enrich_results) == 0) {
-    #   stop(
-    # "You have to provide at least an se object or a de_results/enrich_results object!")
-    # }
-
 
     if (!is.null(de_results)) {
       # if no sce passed but de_results is not empty, create a mock from it
@@ -354,9 +345,9 @@ DeeDeeExperiment <- function(sce = NULL,
       }
 
       fea_contrast <- list(
-        de_name = de_res_name, # links to de result
+        de_name = de_res_name,
         fe_name = fe_name,
-        shaken_results = res_enrich_shaken, # return shaken results
+        shaken_results = res_enrich_shaken,
         original_object = res_enrich,
         fe_tool = fe_tool,
         fe_tool_version = if (
