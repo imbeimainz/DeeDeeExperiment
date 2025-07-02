@@ -10,7 +10,7 @@
 #' The `DeeDeeExperiment` class is integrate and manage omics analysis
 #' results. It inherits from the `SingleCellExperiment` class, and additionally
 #' stores DE-related/functional enrichment information via dedicated slots and
-#' `colData`.
+#' `rowData`.
 #'
 #' @param sce A `SingleCellExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
