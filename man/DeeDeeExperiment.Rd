@@ -28,7 +28,7 @@ A \code{DeeDeeExperiment} object.
 The \code{DeeDeeExperiment} class is integrate and manage omics analysis
 results. It inherits from the \code{SingleCellExperiment} class, and additionally
 stores DE-related/functional enrichment information via dedicated slots and
-\code{colData}.
+\code{rowData}.
 }
 \details{
 The \code{sce} parameter can be optionally left unspecified. If this is the case,
