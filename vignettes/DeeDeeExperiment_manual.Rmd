@@ -84,7 +84,7 @@ object. This means it inherits all the slots, methods, and compatibility with
 tools built for `SingleCellExperiment`, while introducing additional components
 to streamline downstream analysis.
 
-![](DeeDeeExperiment_Anatomy.png){width=100%}
+![](DeeDeeExperiment_Anatomy_02.png){width=100%}
 
 Specifically, `DeeDeeExperiment` has two new slots:
 

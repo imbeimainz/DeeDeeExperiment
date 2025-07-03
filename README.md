@@ -32,7 +32,7 @@ along with relevant metadata (currently supports results from `DESeq2`, `edgeR`,
 along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
 
-![](./vignettes/DeeDeeExperiment_Anatomy.png)
+![](./vignettes/DeeDeeExperiment_Anatomy_02.png)
 
 
 ## Example
