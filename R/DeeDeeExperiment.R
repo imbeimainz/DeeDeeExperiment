@@ -162,7 +162,7 @@ DeeDeeExperiment <- function(sce = NULL,
     # do different things according to what these objects are
     if (is(this_de, "DESeqResults")) {
       input_deseq2 <- .importDE_DESeq2(sce_out, this_de, i)
-      sce_out <- input_deseq2$se
+      sce_out <- input_deseq2$sce
       dea_contrasts[[i]] <- input_deseq2$dea_contrast
 
       # check for rowname mismatches
@@ -190,7 +190,7 @@ DeeDeeExperiment <- function(sce = NULL,
       }
     } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
       input_edgeR <- .importDE_edgeR(sce_out, this_de, i)
-      sce_out <- input_edgeR$se
+      sce_out <- input_edgeR$sce
       dea_contrasts[[i]] <- input_edgeR$dea_contrast
 
       # check for rowname mismatches
@@ -218,7 +218,7 @@ DeeDeeExperiment <- function(sce = NULL,
       }
     } else if (is(this_de, "MArrayLM")) {
       input_limma <- .importDE_limma(sce_out, this_de, i)
-      sce_out <- input_limma$se
+      sce_out <- input_limma$sce
       dea_contrasts[[i]] <- input_limma$dea_contrast
 
       # check for rowname mismatches

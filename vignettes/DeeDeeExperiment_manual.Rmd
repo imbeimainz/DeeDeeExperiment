@@ -129,7 +129,7 @@ of the following packages (currently `topGO`, `clusterProfiler`, `enrichR`,
 ```{r create_dde, eval = FALSE}
 # do not run
 dde <- DeeDeeExperiment(
-  sce = se, # sce is a SingleCellExperiment object
+  sce = sce, # sce is a SingleCellExperiment object
   # de_results is a named list of de results
   de_results = de_results,
   # enrich_res is a named list of enrichment results

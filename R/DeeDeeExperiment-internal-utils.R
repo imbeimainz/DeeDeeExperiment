@@ -1,6 +1,6 @@
 #' Import from `DESeq2` DE results
 #'
-#' @param se A `SingleCellExperiment` object
+#' @param sce A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided as `DESeqResults` as in the
 #' `DESeq2` framework
 #' @param de_name A character value, describing the contrast of interest. Will
@@ -11,7 +11,7 @@
 #' `DeeDee` framework.
 #'
 #' @noRd
-.importDE_DESeq2 <- function(se, res_de, de_name) {
+.importDE_DESeq2 <- function(sce, res_de, de_name) {
   # correct object format
   stopifnot(is(res_de, "DESeqResults"))
   # contain the right columns
@@ -23,24 +23,24 @@
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
               all(na.omit(res_de$pvalue > 0)))
 
-  matched_ids <- match(rownames(se), rownames(res_de)) # we align de res with se
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
   # only valid indices
   valid_matches <- !is.na(matched_ids)
 
 
   # Pre-fill rowData with NA
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(se)[[paste0(de_name, "_padj")]] <- NA
+  rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
+  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
     res_de$log2FoldChange[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
     res_de$pvalue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
     res_de$padj[matched_ids[valid_matches]]
 
 
@@ -54,13 +54,13 @@
     package_version = packageVersion("DESeq2")
   )
 
-  return(list(se = se, dea_contrast = dea_contrast))
+  return(list(sce= sce, dea_contrast = dea_contrast))
 }
 
 
 #' Import from edgeR DE results
 #'
-#' @param se A `SingleCellExperiment` object
+#' @param sce A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided by the `edgeR` framework (either
 #' a `DGEExact` or a `DGELRT` object).
 #' @param de_name A character value, describing the contrast of interest. Will
@@ -71,7 +71,7 @@
 #' DeeDee framework.
 #'
 #' @noRd
-.importDE_edgeR <- function(se, res_de, de_name) {
+.importDE_edgeR <- function(sce, res_de, de_name) {
   # checks object
   stopifnot(is(res_de, "DGEExact") || is(res_de, "DGELRT"))
 
@@ -86,7 +86,7 @@
   logFC_cols <- grep("^logFC", colnames(res_tbl), value = TRUE)
 
 
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with
+  matched_ids <- match(rownames(sce), rownames(res_tbl)) # we align de res with
   # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
@@ -94,23 +94,23 @@
   # matched indices for logFC, accounting for the fact that the logFC column
   # name in edgeR depends on whether we have 1 or multiple contrasts
   for (i in logFC_cols) {
-    rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
+    rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
     # assign correspionding values
-    rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+    rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
       res_tbl$table[[i]][matched_ids[valid_matches]]
   }
 
   # pre-fill rowData with NA the assign the corresponding values for matched
   # indices for pval and padj
-  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(se)[[paste0(de_name, "_padj")]] <- NA
+  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
     res_tbl$table$PValue[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
     res_tbl$table$FDR[matched_ids[valid_matches]]
 
   dea_contrast <- list(
@@ -123,14 +123,14 @@
     package_version = packageVersion("edgeR")
   )
 
-  return(list(se = se, dea_contrast = dea_contrast))
+  return(list(sce = sce, dea_contrast = dea_contrast))
 }
 
 
 
 #' Import from `limma` DE results
 #'
-#' @param se A `SingleCellExperiment` object
+#' @param sce A `SingleCellExperiment` object
 #' @param res_de A set of DE results, provided in the `limma` framework
 #' (a `MArrayLM` object).
 #' @param de_name A character value, describing the contrast of interest. Will
@@ -141,7 +141,7 @@
 #' `DeeDee` framework.
 #'
 #' @noRd
-.importDE_limma <- function(se, res_de, de_name) {
+.importDE_limma <- function(sce, res_de, de_name) {
   # checks object
   stopifnot(is(res_de, "MArrayLM"))
 
@@ -168,23 +168,23 @@
   stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
               all(na.omit(res_tbl$P.Value > 0)))
 
-  matched_ids <- match(rownames(se), rownames(res_tbl)) # we align de res with
+  matched_ids <- match(rownames(sce), rownames(res_tbl)) # we align de res with
   # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
   # Pre-fill rowData with NA
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(se)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(se)[[paste0(de_name, "_padj")]] <- NA
+  rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
+  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
+  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
 
 
   # assign values only for matched indices, to have on both sides the
   # same length. we keep NA for unmatched genes
-  rowData(se)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
     res_tbl$logFC[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_pvalue")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
     res_tbl$P.Value[matched_ids[valid_matches]]
-  rowData(se)[[paste0(de_name, "_padj")]][valid_matches] <-
+  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
     res_tbl$adj.P.Val[matched_ids[valid_matches]]
 
   dea_contrast <- list(
@@ -197,7 +197,7 @@
     package_version = packageVersion("limma")
   )
 
-  return(list(se = se, dea_contrast = dea_contrast))
+  return(list(sce = sce, dea_contrast = dea_contrast))
 }
 
 
