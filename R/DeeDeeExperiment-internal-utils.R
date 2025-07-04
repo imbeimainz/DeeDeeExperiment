@@ -54,7 +54,7 @@
     package_version = packageVersion("DESeq2")
   )
 
-  return(list(sce= sce, dea_contrast = dea_contrast))
+  return(list(sce = sce, dea_contrast = dea_contrast))
 }
 
 
