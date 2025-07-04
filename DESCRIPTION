@@ -19,10 +19,10 @@ Authors@R:
         )
     )
 Description: DeeDeeExperiment is an S4 class extending the SingleCellExperiment
-  class, designed to integrate and manage omics analysis results. It
-  introduces two dedicated slots to store Differential Expression Analysis (DEA)
-  results and Functional Enrichment Analysis (FEA) results, providing a
-  structured approach for downstream analysis.
+    class, designed to integrate and manage omics analysis results. It
+    introduces two dedicated slots to store Differential Expression Analysis 
+    (DEA) results and Functional Enrichment Analysis (FEA) results, providing a
+    structured approach for downstream analysis.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -54,5 +54,5 @@ VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
 BugReports: https://github.com/imbeimainz/DeeDeeExperiment/issues
 biocViews: Software, Infrastructure, DataRepresentation, GeneExpression,
-  Transcription, Transcriptomics, DifferentialExpression, Pathways, GO
+    Transcription, Transcriptomics, DifferentialExpression, Pathways, GO
 Config/testthat/edition: 3
