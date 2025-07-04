@@ -7,12 +7,12 @@
 #' DeeDeeExperiment-class
 #'
 #' @description
-#' The `DeeDeeExperiment` class is integrate and manage transcriptomic analysis
-#' results. It inherits from the SummarizedExperiment class, and additionally
+#' The `DeeDeeExperiment` class is integrate and manage omics analysis
+#' results. It inherits from the `SingleCellExperiment` class, and additionally
 #' stores DE-related/functional enrichment information via dedicated slots and
-#' `colData`.
+#' `rowData`.
 #'
-#' @param se A `SummarizedExperiment` object, that will be used as a scaffold to
+#' @param sce A `SingleCellExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported
 #' by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
@@ -23,7 +23,7 @@
 #' `clusterProfiler`)
 #'
 #' @details
-#' The `se` parameter can be optionally left unspecified. If this is the case,
+#' The `sce` parameter can be optionally left unspecified. If this is the case,
 #' the resulting `DeeDeeExperiment` object will contain as features the ones
 #' specified by the provided components of the object supplied via the
 #' `de_results` parameter.
@@ -41,7 +41,7 @@
 #' used to return a standardized format of the FEA results.
 #' The names of the list will be used to attempt to associate each enrichment
 #' result with a corresponding DE contrast stored in the `DeeDeeExperiment`
-#' object.
+#' object, but it also can be defined by the user.
 #'
 #' Since a `DeeDeeExperiment` is also a `SummarizedExperiment` object, it can be
 #' seamlessly provided downstream for visualization and in-depth exploration to
@@ -77,12 +77,9 @@
 #'   se_macrophage_noassays,
 #'   de_results = de_named_list
 #' )
-DeeDeeExperiment <- function(se = NULL,
+DeeDeeExperiment <- function(sce = NULL,
                              de_results = NULL,
                              enrich_results = NULL) {
-
-  # set up functional enrichment results list
-  extracted_enrich_results <- list()
 
   if (!is.null(de_results)) {
     # capture variable name as a character
@@ -90,27 +87,38 @@ DeeDeeExperiment <- function(se = NULL,
     de_results <- .check_de_results(de_results, entry_name)
   }
 
-  if (!is.null(se)) {
-    if (!is(se, "RangedSummarizedExperiment")) {
-      # check if it is SE and convert it into a RangedSE
-      if (is(se, "SummarizedExperiment")) {
-        se <- as(se, "RangedSummarizedExperiment")
+  if (!is.null(sce)) {
+    if (!is(sce, "SingleCellExperiment")) {
+      if (is(sce, "SummarizedExperiment")) {
+        # check if it is SE and convert it into a RangedSE
+        sce <- as(sce, "RangedSummarizedExperiment")
+
+        # we'll build an sce from an se obj
+        available_assays <- names(assays(sce))
+        assay_list <- setNames(lapply(available_assays,
+                                      function(x) assay(sce, x)),
+                 available_assays)
+
+        se_to_sce <- SingleCellExperiment(
+          assays = assay_list,
+          colData = colData(sce),
+          rowData = rowData(sce),
+          metadata = metadata(sce)
+        )
+
+        sce <- se_to_sce
+
       } else {
-        stop("'se' must be a RangedSummarizedExperiment object")
+        stop
+        ("'sce' must be a `SingleCellExperiment` or a `SummarizedExperiment` object!")
       }
     }
   } else {
-    #if nothing is passed, return error
-    # if (length(de_results) == 0 & length(enrich_results) == 0) {
-    #   stop(
-    # "You have to provide at least an se object or a de_results/enrich_results object!")
-    # }
-
 
     if (!is.null(de_results)) {
-      # if no se passed but de_results is not empty, create a mock from it
+      # if no sce passed but de_results is not empty, create a mock from it
       cli::cli_alert_info(
-        "creating a mock SE from the rows of the DE result objects, if available"
+        "creating a mock SCE from the rows of the DE result objects, if available"
       )
     }
 
@@ -124,15 +132,16 @@ DeeDeeExperiment <- function(se = NULL,
     rd_mock <- DataFrame(gene_id = ids, row.names = ids)
 
     # way1
-    se_mock <- SummarizedExperiment(assays = SimpleList(), rowData = rd_mock)
+    # se_mock <- SummarizedExperiment(assays = SimpleList(), rowData = rd_mock)
+    # se <- as(se_mock, "RangedSummarizedExperiment")
 
-    se <- as(se_mock, "RangedSummarizedExperiment")
+    sce <- SingleCellExperiment(assays = SimpleList(), rowData = rd_mock)
   }
 
   if (is.null(de_results) &&
       is.null(enrich_results)) {
     object <- new("DeeDeeExperiment",
-                  se,
+                  sce,
                   dea = list(),
                   fea = list()
     )
@@ -143,7 +152,7 @@ DeeDeeExperiment <- function(se = NULL,
     return(object)
   }
 
-  se_out <- se
+  sce_out <- sce
 
   dea_contrasts <- list()
 
@@ -152,12 +161,12 @@ DeeDeeExperiment <- function(se = NULL,
 
     # do different things according to what these objects are
     if (is(this_de, "DESeqResults")) {
-      input_deseq2 <- .importDE_DESeq2(se_out, this_de, i)
-      se_out <- input_deseq2$se
+      input_deseq2 <- .importDE_DESeq2(sce_out, this_de, i)
+      sce_out <- input_deseq2$sce
       dea_contrasts[[i]] <- input_deseq2$dea_contrast
 
       # check for rowname mismatches
-      rownames_x <- rownames(rowData(se_out))
+      rownames_x <- rownames(rowData(sce_out))
       rownames_y <- rownames(this_de)
       mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
@@ -171,7 +180,7 @@ DeeDeeExperiment <- function(se = NULL,
       if (mismatch_percent > 50) {
         warning(
           "A Total number of ", mismatched_rows,
-          " mismatched rows detected between `rownames(rowData(se))` and  ",
+          " mismatched rows detected between `rownames(rowData(sce))` and  ",
           "rownames for the following dea element: ",
           i,
           " Unmatched genes will have NA values in rowData. ",
@@ -180,12 +189,12 @@ DeeDeeExperiment <- function(se = NULL,
         )
       }
     } else if (is(this_de, "DGEExact") | is(this_de, "DGELRT")) {
-      input_edgeR <- .importDE_edgeR(se_out, this_de, i)
-      se_out <- input_edgeR$se
+      input_edgeR <- .importDE_edgeR(sce_out, this_de, i)
+      sce_out <- input_edgeR$sce
       dea_contrasts[[i]] <- input_edgeR$dea_contrast
 
       # check for rowname mismatches
-      rownames_x <- rownames(rowData(se_out))
+      rownames_x <- rownames(rowData(sce_out))
       rownames_y <- rownames(this_de)
       mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
@@ -199,7 +208,7 @@ DeeDeeExperiment <- function(se = NULL,
       if (mismatch_percent > 50) {
         warning(
           "A Total number of ", mismatched_rows,
-          " mismatched rows detected between `rownames(rowData(se))`",
+          " mismatched rows detected between `rownames(rowData(sce))`",
           " and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
@@ -208,12 +217,12 @@ DeeDeeExperiment <- function(se = NULL,
         )
       }
     } else if (is(this_de, "MArrayLM")) {
-      input_limma <- .importDE_limma(se_out, this_de, i)
-      se_out <- input_limma$se
+      input_limma <- .importDE_limma(sce_out, this_de, i)
+      sce_out <- input_limma$sce
       dea_contrasts[[i]] <- input_limma$dea_contrast
 
       # check for rowname mismatches
-      rownames_x <- rownames(rowData(se_out))
+      rownames_x <- rownames(rowData(sce_out))
       rownames_y <- rownames(this_de)
       mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
@@ -227,7 +236,7 @@ DeeDeeExperiment <- function(se = NULL,
       if (mismatch_percent > 50) {
         warning(
           "A Total number of ", mismatched_rows,
-          " mismatched rows detected between `rownames(rowData(se))`",
+          " mismatched rows detected between `rownames(rowData(sce))`",
           " and rownames for the following dea element: ",
           i,
           "Unmatched genes will have NA values in rowData. ",
@@ -328,7 +337,6 @@ DeeDeeExperiment <- function(se = NULL,
         res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
       }
 
-
       if (is.null(res_enrich_shaken)) {
         cli::cli_alert_info(
           "No shaking method available for this functional enrichment results.
@@ -337,9 +345,9 @@ DeeDeeExperiment <- function(se = NULL,
       }
 
       fea_contrast <- list(
-        de_name = de_res_name, # links to de result
+        de_name = de_res_name,
         fe_name = fe_name,
-        shaken_results = res_enrich_shaken, # return shaken results
+        shaken_results = res_enrich_shaken,
         original_object = res_enrich,
         fe_tool = fe_tool,
         fe_tool_version = if (
@@ -351,7 +359,7 @@ DeeDeeExperiment <- function(se = NULL,
   }
 
   object <- new("DeeDeeExperiment",
-                se_out,
+                sce_out,
                 dea = dea_contrasts,
                 fea = fea_contrasts
   )

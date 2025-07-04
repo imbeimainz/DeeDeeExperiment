@@ -65,7 +65,7 @@ across cell types and contrasts, making it challenging to organize, explore, and
 reproduce findings, even for experienced users.
 
 To address these issues, we introduce the `r BiocStyle::Biocpkg("DeeDeeExperiment")`
-class, an S4 object that extends the widely adopted `SummarizedExperiment` class
+class, an S4 object that extends the widely adopted `SingleCellExperiment` class
 in Bioconductor.
 
 `DeeDeeExperiment` provides a structured and consistent framework for integrating
@@ -79,12 +79,12 @@ using the class.
 
 ## Anatomy of DeeDeeExperiment
 
-The `DeeDeeExperiment` class inherits from the core Bioconductor `SummarizedExperiment`
+The `DeeDeeExperiment` class inherits from the core Bioconductor `SingleCellExperiment`
 object. This means it inherits all the slots, methods, and compatibility with
-tools built for `SummarizedExperiment`, while introducing additional components
+tools built for `SingleCellExperiment`, while introducing additional components
 to streamline downstream analysis.
 
-![](DeeDeeExperiment_Anatomy.png){width=100%}
+![](DeeDeeExperiment_Anatomy_02.png){width=100%}
 
 Specifically, `DeeDeeExperiment` has two new slots:
 
@@ -118,7 +118,7 @@ along with relevant metadata. This includes:
 In order to create a `DeeDeeExperiment` object, at least one of the following
 inputs are required:
 
-- `se`: A `SummarizedExperiment` object, that will be used as a scaffold to
+- `sce`: A `SingleCellExperiment` object, that will be used as a scaffold to
 store the DE related information.
 - `de_results`: A named list of DE results, in any of the formats supported by
 the package (currently results from `DESeq2`, `edgeR`, or `limma`).
@@ -129,7 +129,7 @@ of the following packages (currently `topGO`, `clusterProfiler`, `enrichR`,
 ```{r create_dde, eval = FALSE}
 # do not run
 dde <- DeeDeeExperiment(
-  se = se, # se is a SummarizedExperiment object
+  sce = sce, # sce is a SingleCellExperiment object
   # de_results is a named list of de results
   de_results = de_results,
   # enrich_res is a named list of enrichment results
@@ -488,7 +488,7 @@ In the following example we construct the dde object using a `dds` object and
 ```{r construct_dde}
 # initialize DeeDeeExperiment with dds object and DESeq results (as a named list)
 dde <- DeeDeeExperiment(
-  se = dds_macrophage,
+  sce = dds_macrophage,
   de_results = list(
     IFNg_vs_naive = IFNg_vs_naive,
     Salm_vs_naive = Salm_vs_naive
@@ -795,7 +795,7 @@ fea_info(dde)[["ifng_vs_naive"]][["fe_tool"]]
 
 # Downstream operations with `DeeDeeExperiment` objects
 
-Since `DeeDeeExperiment` inherits from the `SummarizedExperiment` class, it can
+Since `DeeDeeExperiment` inherits from the `SingleCellExperiment` class, it can
 be seamlessly used with other Bioconductor tools such as `iSEE` or `GeneTonic`,
 or many more.
 

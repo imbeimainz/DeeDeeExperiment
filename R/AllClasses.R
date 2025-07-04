@@ -9,8 +9,7 @@
 #' information.
 #'
 setClass("DeeDeeExperiment",
-         # maybe consider inheriting from SCE
-         contains = "RangedSummarizedExperiment",
+         contains = "SingleCellExperiment",
          slots = representation(
            dea = "list",
            fea = "list"

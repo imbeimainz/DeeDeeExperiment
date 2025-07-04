@@ -2,18 +2,18 @@ test_that("summary", {
   ## summary -------------------------------------------------------------------
 
   dde_no_fea <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     de_results = de_named_list
   )
   expect_no_error(summary(dde_no_fea))
 
   dde_no_dea <- DeeDeeExperiment(
-    se = se_macrophage_noassays,
+    sce = se_macrophage_noassays,
     enrich_results = topGO_results_list
   )
   expect_no_error(summary(dde_no_dea))
 
-  dde_empty <- DeeDeeExperiment(se = se_macrophage_noassays)
+  dde_empty <- DeeDeeExperiment(sce = se_macrophage_noassays)
   expect_no_error(summary(dde_empty))
 
   dde_with_scenario <-

@@ -1,3 +1,8 @@
+# DeeDeeExperiment 0.99.1
+
+* `DeeDeeExperiment` now extends the `SingleCellExperiment` class, accommodating
+both bulk and single-cell analysis workflows
+
 # DeeDeeExperiment 0.99.0
 
 * Ready for Bioconductor submission!

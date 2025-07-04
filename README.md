@@ -1,7 +1,7 @@
 # DeeDeeExperiment
 
-`DeeDeeExperiment` is an S4 class extending the `SummarizedExperiment` framework to
-facilitate the integration and management of transcriptomic analysis results.
+`DeeDeeExperiment` is an S4 class extending the `SingleCellExperiment` framework to
+facilitate the integration and management of omics analysis results.
 It introduces two dedicated slots to store Differential Expression analysis (DEA)
 results and Functional Enrichment analysis (FEA) results, providing a structured approach
 for downstream analysis.
@@ -19,7 +19,7 @@ remotes::install_github("imbeimainz/DeeDeeExperiment",
 
 ## Structure and Usage
 
-The `DeeDeeExperiment` class extends the core Bioconductor `SummarizedExperiment` object,
+The `DeeDeeExperiment` class extends the core Bioconductor `SingleCellExperiment` object,
 retaining its structure, methods, and compatibility with existing tools.
 In addition, it introduces new components designed to simplify and enhance downstream analysis.
 
@@ -32,7 +32,7 @@ along with relevant metadata (currently supports results from `DESeq2`, `edgeR`,
 along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers)
 
-![](./vignettes/DeeDeeExperiment_Anatomy.png)
+![](./vignettes/DeeDeeExperiment_Anatomy_02.png)
 
 
 ## Example
@@ -49,7 +49,7 @@ data("topGO_results_list", package = "DeeDeeExperiment")
 dds_macrophage <- DESeq2::DESeqDataSet(gse, design = ~ line + condition)
 
 # create DeeDeeExperiment object
-dde <- DeeDeeExperiment(se = dds_macrophage,
+dde <- DeeDeeExperiment(sce = dds_macrophage,
                         de_results = de_named_list,
                         enrich_results = topGO_results_list)
 ```
