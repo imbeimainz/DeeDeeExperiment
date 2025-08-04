@@ -230,7 +230,6 @@ DeeDeeExperiment <- function(sce = NULL,
       if (mismatched_rows > 0) {
         affected_deas <- c(affected_deas, i)
       }
-
       mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
 
       if (mismatch_percent > 50) {
@@ -239,8 +238,35 @@ DeeDeeExperiment <- function(sce = NULL,
           " mismatched rows detected between `rownames(rowData(sce))`",
           " and rownames for the following dea element: ",
           i,
-          "Unmatched genes will have NA values in rowData. ",
-          "Consider synchronizing your rownames in both se and",
+          " Unmatched genes will have NA values in rowData. ",
+          " Consider synchronizing your rownames in both se and",
+          " de_results elements."
+        )
+      }
+    } else if (is(this_de, "data.frame")) {
+      input_df <- .importDE_df(sce_out, this_de, i)
+      sce_out <- input_df$sce
+      dea_contrasts[[i]] <- input_df$dea_contrast
+
+      # check for rowname mismatches
+      rownames_x <- rownames(rowData(sce_out))
+      rownames_y <- rownames(this_de)
+      mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+      affected_deas <- character()
+      if (mismatched_rows > 0) {
+        affected_deas <- c(affected_deas, i)
+      }
+      mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+      if (mismatch_percent > 50) {
+        warning(
+          "A Total number of ", mismatched_rows,
+          " mismatched rows detected between `rownames(rowData(sce))`",
+          " and rownames for the following dea element: ",
+          i,
+          " Unmatched genes will have NA values in rowData. ",
+          " Consider synchronizing your rownames in both se and",
           " de_results elements."
         )
       }

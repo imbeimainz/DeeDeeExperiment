@@ -562,11 +562,64 @@ setMethod("addDea",
                   package = "limma",
                   package_version = packageVersion("limma")
                 )
+              } else if (is(this_de, "data.frame")) {
+                # contain the right columns
+                stopifnot(all(c("log2FoldChange", "pvalue", "padj") %in%
+                                colnames(this_de)))
+                # check for rowname mismatches
+                rownames_x <- rownames(rowData(x))
+                rownames_y <- rownames(this_de)
+                mismatched_rows <- sum(!rownames_x %in% rownames_y)
+
+                mismatch_percent <- (mismatched_rows / length(rownames_x)) * 100
+
+                if (mismatch_percent > 50) {
+                  warning(
+                    "A Total number of ",
+                    mismatched_rows,
+                    " mismatched rows detected between `rownames(rowData(se))`",
+                    " and rownames for the following dea element: ",
+                    i,
+                    "Unmatched genes will have NA values in rowData. ",
+                    ". Consider synchronizing your rownames in both se and",
+                    " de_results elements."
+                  )
+                }
+
+                # p value different from NA respect the 0-1 interval
+                stopifnot(all(na.omit(this_de$pvalue <= 1)) &
+                            all(na.omit(this_de$pvalue > 0)))
+
+                # we align de res with se
+                matched_ids <- match(rownames(x), rownames(this_de))
+                # only valid indices
+                valid_matches <- !is.na(matched_ids)
+
+                x <- .fill_rowdata_with_dea(sce = x,
+                                            de_name = i,
+                                            de_res = this_de,
+                                            de_cols = c(logFC = "log2FoldChange",
+                                                        pval = "pvalue",
+                                                        padj = "padj"),
+                                            valid_matches = valid_matches,
+                                            matched_ids = matched_ids)
+
+                # store metadata
+                dea_contrasts[[i]] <- list(
+                  alpha = NA,
+                  lfcThreshold = NA,
+                  metainfo_logFC = NA,
+                  metainfo_pvalue = NA,
+                  original_object = this_de,
+                  package = NA,
+                  package_version = NA
+                )
               } else {
                 stop(
                   "The dea result class '", i,
                   "' is not recognized (supported classes: DESeqResults, ",
-                  "MArrayLM, DGEExact and DGELRT)"
+                  "MArrayLM, DGEExact and DGELRT), or data.frame ",
+                  "with at least a 'log2FoldChange', 'pvalue' and 'padj' columns"
                 )
               }
             }

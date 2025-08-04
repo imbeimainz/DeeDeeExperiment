@@ -264,4 +264,39 @@ test_that("creating", {
       topGO_IFNg_naive = topGO_results_list$ifng_vs_naive
     )
   ))
+
+  gene_ids <- paste0("gene", 1:5)
+
+  res_de_df <- data.frame(
+    log2FoldChange = c(2.1, -1.3, 0.5, NA, -0.9),
+    pvalue = c(0.01, 0.20, 0.05, NA, 0.80),
+    padj = c(0.05, 0.25, 0.10, NA, 0.90),
+    row.names = gene_ids
+  )
+
+  dde_df <- DeeDeeExperiment(de_results = res_de_df)
+
+  expect_s4_class(dde_df,"DeeDeeExperiment")
+
+  expect_length(deaInfo(dde_df), 1)
+
+  expect_true("res_de_df" == names(deaInfo(dde_df)))
+
+  expect_true(all(c("res_de_df_log2FoldChange", "res_de_df_pvalue", "res_de_df_padj")
+              %in% colnames(rowData(dde_df))))
+
+  expect_equal(rowData(dde_df)[["res_de_df_log2FoldChange"]],
+    res_de_df$log2FoldChange)
+
+  gene_ids <- c(gene_ids, rownames(de_limma)[1:6])
+
+  de_custom <- data.frame(
+    padj = rep(0.5, 11),
+    pvalue = rep(0.5, 11),
+    log2FoldChange = rep(0.5, 11),
+    row.names = gene_ids
+  )
+
+  expect_warning(addDea(dde, dea = de_custom))
+
 })
