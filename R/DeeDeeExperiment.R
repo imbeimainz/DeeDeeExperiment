@@ -325,32 +325,7 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
       res_enrich_shaken <- NULL # default
 
-      if (fe_tool == "topGO") {
-        # to be able to generate gtl objects we shouldn't convert enrich res
-        # into data.frame!!
-        res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
-      } else if (fe_tool == "clusterProfiler") {
-        if (is(res_enrich, "enrichResult")) {
-          res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
-        }
-      } else if (fe_tool == "GeneTonic") {
-        res_enrich_shaken <- res_enrich
-      } else if (fe_tool == "DAVID") {
-        # we are not taking the output of the file!!  so we cannot
-        # use genetonic shakers!!
-        # create shakers for that
-        res_enrich_shaken <- .DeeDeefy_david(res_enrich)
-      } else if (fe_tool == "fgsea") {
-        res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
-      } else if (fe_tool == "gsea") {
-        if (is(res_enrich, "gseaResult")) {
-          res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
-        }
-      } else if (fe_tool == "enrichr") {
-        res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
-      } else if (fe_tool == "gProfiler") {
-        res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
-      }
+      res_enrich_shaken <- .shake_enrich_res(res_enrich, fe_tool)
 
       if (is.null(res_enrich_shaken)) {
         cli::cli_alert_info(

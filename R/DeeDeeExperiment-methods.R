@@ -404,18 +404,16 @@ setMethod("addDea",
                 valid_matches <- !is.na(matched_ids)
 
                 # Pre-fill rowData with NA
-                rowData(x)[[paste0(i, "_log2FoldChange")]] <- NA
-                rowData(x)[[paste0(i, "_pvalue")]] <- NA
-                rowData(x)[[paste0(i, "_padj")]] <- NA
-
                 # assign values only for matched indices, to have on both sides
                 # the same length. we keep NA for unmatched genes
-                rowData(x)[[paste0(i, "_log2FoldChange")]][valid_matches] <-
-                  this_de$log2FoldChange[matched_ids[valid_matches]]
-                rowData(x)[[paste0(i, "_pvalue")]][valid_matches] <-
-                  this_de$pvalue[matched_ids[valid_matches]]
-                rowData(x)[[paste0(i, "_padj")]][valid_matches] <-
-                  this_de$padj[matched_ids[valid_matches]]
+                x <- .fill_rowdata_with_dea(sce = x,
+                                              de_name = i,
+                                              de_res = this_de,
+                                              de_cols = c(logFC = "log2FoldChange",
+                                                          pval = "pvalue",
+                                                          padj = "padj"),
+                                              valid_matches = valid_matches,
+                                              matched_ids = matched_ids)
 
 
                 dea_contrasts[[i]] <- list(
@@ -452,7 +450,7 @@ setMethod("addDea",
                   this_de,
                   n = nrow(this_de),
                   sort.by = "none"
-                )
+                )$table
 
                 # p value different from NA respect the 0-1 interval
                 stopifnot(all(na.omit(res_tbl$PValue <= 1)) &
@@ -471,24 +469,20 @@ setMethod("addDea",
                 # that the logFC column name in edgeR
                 # depends on whether we have 1 or multiple contrasts
                 for (j in logFC_cols) {
-                  rowData(x)[[paste0(i, "_log2FoldChange")]] <- NA
-                  # assign corresponding values
-                  rowData(x)[[paste0(i, "_log2FoldChange")]][valid_matches] <-
-                    res_tbl$table[[j]][matched_ids[valid_matches]]
+                  suffix <- ifelse(j == "logFC", "", paste0("_",
+                                                            sub("^logFC[.]*",
+                                                            "", j)))
+                  this_de_name <- paste0(i, suffix)
+
+                  x <- .fill_rowdata_with_dea(sce = x,
+                                                de_name = this_de_name,
+                                                de_res = res_tbl,
+                                                de_cols = c(logFC = j,
+                                                            pval = "PValue",
+                                                            padj = "FDR"),
+                                                valid_matches = valid_matches,
+                                                matched_ids = matched_ids)
                 }
-
-                # pre-fill rowData with NA the assign the corresponding values
-                # for matched indices for pval and padj
-                rowData(x)[[paste0(i, "_pvalue")]] <- NA
-                rowData(x)[[paste0(i, "_padj")]] <- NA
-
-
-                # assign values only for matched indices, to have on both sides
-                # the same length. we keep NA for unmatched genes
-                rowData(x)[[paste0(i, "_pvalue")]][valid_matches] <-
-                  res_tbl$table$PValue[matched_ids[valid_matches]]
-                rowData(x)[[paste0(i, "_padj")]][valid_matches] <-
-                  res_tbl$table$FDR[matched_ids[valid_matches]]
 
                 # store metadata
                 dea_contrasts[[i]] <- list(
@@ -537,19 +531,14 @@ setMethod("addDea",
                 # only valid indices
                 valid_matches <- !is.na(matched_ids)
 
-                # Pre-fill rowData with NA
-                rowData(x)[[paste0(i, "_log2FoldChange")]] <- NA
-                rowData(x)[[paste0(i, "_pvalue")]] <- NA
-                rowData(x)[[paste0(i, "_padj")]] <- NA
-
-                # assign values only for matched indices, to have on both sides
-                # the same length. we keep NA for unmatched genes
-                rowData(x)[[paste0(i, "_log2FoldChange")]][valid_matches] <-
-                  res_tbl$logFC[matched_ids[valid_matches]]
-                rowData(x)[[paste0(i, "_pvalue")]][valid_matches] <-
-                  res_tbl$P.Value[matched_ids[valid_matches]]
-                rowData(x)[[paste0(i, "_padj")]][valid_matches] <-
-                  res_tbl$adj.P.Val[matched_ids[valid_matches]]
+                x <- .fill_rowdata_with_dea(sce = x,
+                                              de_name = i,
+                                              de_res = res_tbl,
+                                              de_cols = c(logFC = "logFC",
+                                                          pval = "P.Value",
+                                                          padj = "adj.P.Val"),
+                                              valid_matches = valid_matches,
+                                              matched_ids = matched_ids)
 
                 # store metadata
                 dea_contrasts[[i]] <- list(
@@ -662,35 +651,40 @@ setMethod("removeDea",
               )
             }
 
-            for (i in deas_to_remove) {
-              cols_to_remove <- c(paste0(i, c("_log2FoldChange", "_pvalue",
-                                              "_padj")))
-              rowData(x) <-
-                rowData(x)[, !(colnames(rowData(x)) %in% cols_to_remove)]
-              # update the de slot
-              dea_info(x)[[i]] <- NULL
+            all_cols_to_remove <- unlist(lapply(deas_to_remove, function(i)
+              paste0(i, c("_log2FoldChange", "_pvalue",
+                          "_padj"))), use.names = FALSE)
 
-              ## fea is not removed by default, unless = TRUE
-              if (remove_linked_fea) {
-                feas <- fea_info(x)
-                removed_fea <- character()
-                for (fea_name in names(feas)) {
-                  if (!is.null(feas[[fea_name]][["de_name"]]) &&
-                      feas[[fea_name]][["de_name"]] %in% deas_to_remove) {
-                    removed_fea <- c(removed_fea, fea_name)
-                    feas[[fea_name]] <- NULL
-                    fea_info(x) <- feas
-                  }
-                }
-                if (length(removed_fea) > 0) {
-                  cli::cli_alert_success(
-                    "The following linked FEA entries were removed: {.val {paste(removed_fea, collapse = ', ')}} ")
-                }
+            rowData(x) <-
+              rowData(x)[, !(colnames(rowData(x)) %in% all_cols_to_remove)]
+            # update the de slot
+            deaInfo(x)[deas_to_remove] <- NULL
+
+            feas <- feaInfo(x)
+
+            ## fea is not removed by default, unless = TRUE
+            if (remove_linked_fea) {
+              removed_fea <- names(feas)[sapply(feas, function(fea)
+                !is.null(fea[["de_name"]]) &&
+                  fea[["de_name"]] %in% deas_to_remove)]
+              # remove
+              if (length(removed_fea) > 0) {
+                feas[removed_fea] <- NULL
+                feaInfo(x) <- feas
+                cli::cli_alert_success(
+                  "The following linked FEA entries were removed: {.val {paste(removed_fea, collapse = ', ')}} ")
               }
-              # unlink
-              fea_info(x)[[i]][["de_name"]] <- NULL
             }
-            removed_fea <- character()
+
+            # unlink
+            feas <- lapply(feas, function(fea) {
+              if (!is.null(fea[["de_name"]]) &&
+                  fea[["de_name"]] %in% deas_to_remove) {
+                fea[["de_name"]] <- NULL
+              }
+              fea
+            })
+            feaInfo(x) <- feas
 
             # here check some validity?
             validObject(x)
@@ -1181,29 +1175,7 @@ setMethod(
       }
       res_enrich_shaken <- NULL # default
 
-      if (fe_tool == "topGO") {
-        # shake using shake_topGOtableResult
-        res_enrich_shaken <- .DeeDeefy_topGOtableResult(res_enrich)
-      } else if (fe_tool == "clusterProfiler") {
-        # shake using shake_enrichResult
-        res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
-      } else if (fe_tool == "GeneTonic") {
-        # shake based on specific columns or return original object
-        res_enrich_shaken <- res_enrich # input already shaken
-      } else if (fe_tool == "DAVID") {
-        # we are not taking the output of the file!!  so we cannot
-        # use genetonic shakers!!
-        # create shakers for that
-        res_enrich_shaken <- .DeeDeefy_david(res_enrich)
-      } else if (fe_tool == "fgsea") {
-        res_enrich_shaken <- .DeeDeefy_fgseaResult(res_enrich)
-      } else if (fe_tool == "gsea") {
-        res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
-      } else if (fe_tool == "enrichr") {
-        res_enrich_shaken <- .DeeDeefy_enrichr(res_enrich)
-      } else if (fe_tool == "gProfiler") {
-        res_enrich_shaken <- .DeeDeefy_gprofiler(res_enrich)
-      }
+      res_enrich_shaken <- .shake_enrich_res(res_enrich, fe_tool)
 
       if (is.null(res_enrich_shaken)) {
         cli::cli_alert_info(
