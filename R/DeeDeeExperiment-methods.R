@@ -290,17 +290,16 @@ setMethod("renameDea",
             rd_colnames <- colnames(rd)
             suffix <- c("_log2FoldChange", "_pvalue", "_padj")
 
-            for (i in seq_along(old_name)) {
-              old_prefix <- old_name[i]
-              new_prefix <- new_name[i]
+            old_col <- unlist(lapply(old_name,
+                                     function(prefix) paste0(prefix, suffix)),
+                              use.names = FALSE)
+            new_col <- unlist(lapply(new_name,
+                                     function(prefix) paste0(prefix, suffix)),
+                              use.names = FALSE)
 
-              for (j in suffix) {
-                old_col <- paste0(old_prefix, j)
-                new_col <- paste0(new_prefix, j)
-
-                if (old_col %in% rd_colnames) {
-                  colnames(rd)[which(rd_colnames == old_col)] <- new_col
-                }
+            for (i in seq_along(old_col)) {
+              if (old_col[i] %in% rd_colnames) {
+                colnames(rd)[which(rd_colnames == old_col[i])] <- new_col[i]
               }
             }
 
