@@ -2,78 +2,78 @@
 % Please edit documentation in R/DeeDeeExperiment-methods.R
 \name{DeeDeeExperiment-methods}
 \alias{DeeDeeExperiment-methods}
-\alias{dea_info}
-\alias{dea_info<-}
-\alias{dea_names}
-\alias{rename_dea}
-\alias{add_dea}
-\alias{remove_dea}
+\alias{deaInfo}
+\alias{deaInfo<-}
+\alias{deaNames}
+\alias{renameDea}
+\alias{addDea}
+\alias{removeDea}
 \alias{dea}
-\alias{get_dea_list}
-\alias{add_scenario_info}
-\alias{fea_info}
-\alias{fea_info<-}
-\alias{fea_names}
-\alias{rename_fea}
-\alias{add_fea}
-\alias{remove_fea}
+\alias{getDeaList}
+\alias{addScenarioInfo}
+\alias{feaInfo}
+\alias{feaInfo<-}
+\alias{feaNames}
+\alias{renameFea}
+\alias{addFea}
+\alias{removeFea}
 \alias{fea}
-\alias{get_fea_list}
-\alias{link_dea_and_fea}
-\alias{dea_info,DeeDeeExperiment-method}
-\alias{dea_info<-,DeeDeeExperiment-method}
-\alias{dea_names,DeeDeeExperiment-method}
-\alias{rename_dea,DeeDeeExperiment-method}
-\alias{add_dea,DeeDeeExperiment-method}
-\alias{remove_dea,DeeDeeExperiment-method}
+\alias{getFeaList}
+\alias{linkDEAandFEA}
+\alias{deaInfo,DeeDeeExperiment-method}
+\alias{deaInfo<-,DeeDeeExperiment-method}
+\alias{deaNames,DeeDeeExperiment-method}
+\alias{renameDea,DeeDeeExperiment-method}
+\alias{addDea,DeeDeeExperiment-method}
+\alias{removeDea,DeeDeeExperiment-method}
 \alias{dea,DeeDeeExperiment-method}
-\alias{get_dea_list,DeeDeeExperiment-method}
-\alias{add_scenario_info,DeeDeeExperiment-method}
-\alias{fea_info,DeeDeeExperiment-method}
-\alias{fea_info<-,DeeDeeExperiment-method}
-\alias{fea_names,DeeDeeExperiment-method}
-\alias{rename_fea,DeeDeeExperiment-method}
-\alias{add_fea,DeeDeeExperiment-method}
-\alias{remove_fea,DeeDeeExperiment-method}
+\alias{getDeaList,DeeDeeExperiment-method}
+\alias{addScenarioInfo,DeeDeeExperiment-method}
+\alias{feaInfo,DeeDeeExperiment-method}
+\alias{feaInfo<-,DeeDeeExperiment-method}
+\alias{feaNames,DeeDeeExperiment-method}
+\alias{renameFea,DeeDeeExperiment-method}
+\alias{addFea,DeeDeeExperiment-method}
+\alias{removeFea,DeeDeeExperiment-method}
 \alias{fea,DeeDeeExperiment-method}
-\alias{get_fea_list,DeeDeeExperiment-method}
-\alias{link_dea_and_fea,DeeDeeExperiment-method}
+\alias{getFeaList,DeeDeeExperiment-method}
+\alias{linkDEAandFEA,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
-\S4method{dea_info}{DeeDeeExperiment}(x)
+\S4method{deaInfo}{DeeDeeExperiment}(x)
 
-\S4method{dea_info}{DeeDeeExperiment}(x) <- value
+\S4method{deaInfo}{DeeDeeExperiment}(x) <- value
 
-\S4method{dea_names}{DeeDeeExperiment}(x)
+\S4method{deaNames}{DeeDeeExperiment}(x)
 
-\S4method{rename_dea}{DeeDeeExperiment}(x, old_name, new_name)
+\S4method{renameDea}{DeeDeeExperiment}(x, old_name, new_name)
 
-\S4method{add_dea}{DeeDeeExperiment}(x, dea, force = FALSE)
+\S4method{addDea}{DeeDeeExperiment}(x, dea, force = FALSE)
 
-\S4method{remove_dea}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
+\S4method{removeDea}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
 
 \S4method{dea}{DeeDeeExperiment}(
   x,
   dea_name = NULL,
-  format = "minimal",
+  format = c("minimal", "original"),
   extra_rd = NULL,
-  type = "DFrame",
+  type = c("DFrame", "data.frame"),
   verbose = FALSE
 )
 
-\S4method{get_dea_list}{DeeDeeExperiment}(x, format = "minimal", verbose = FALSE)
+\S4method{getDeaList}{DeeDeeExperiment}(x, format = c("minimal", "original"), verbose = FALSE)
 
-\S4method{add_scenario_info}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
+\S4method{addScenarioInfo}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
 
-\S4method{fea_info}{DeeDeeExperiment}(x)
+\S4method{feaInfo}{DeeDeeExperiment}(x)
 
-\S4method{fea_info}{DeeDeeExperiment}(x) <- value
+\S4method{feaInfo}{DeeDeeExperiment}(x) <- value
 
-\S4method{fea_names}{DeeDeeExperiment}(x)
+\S4method{feaNames}{DeeDeeExperiment}(x)
 
-\S4method{rename_fea}{DeeDeeExperiment}(x, old_name, new_name)
+\S4method{renameFea}{DeeDeeExperiment}(x, old_name, new_name)
 
-\S4method{add_fea}{DeeDeeExperiment}(
+\S4method{addFea}{DeeDeeExperiment}(
   x,
   fea,
   de_name = NA_character_,
@@ -83,13 +83,18 @@
   verbose = FALSE
 )
 
-\S4method{remove_fea}{DeeDeeExperiment}(x, fea_name)
+\S4method{removeFea}{DeeDeeExperiment}(x, fea_name)
 
-\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = "minimal", verbose = FALSE)
+\S4method{fea}{DeeDeeExperiment}(x, fea_name = NULL, format = c("minimal", "original"), verbose = FALSE)
 
-\S4method{get_fea_list}{DeeDeeExperiment}(x, dea_name = NULL, format = "minimal", verbose = FALSE)
+\S4method{getFeaList}{DeeDeeExperiment}(
+  x,
+  dea_name = NULL,
+  format = c("minimal", "original"),
+  verbose = FALSE
+)
 
-\S4method{link_dea_and_fea}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
+\S4method{linkDEAandFEA}{DeeDeeExperiment}(x, dea_name, fea_name, force = FALSE)
 }
 \arguments{
 \item{x}{A \code{\link[=DeeDeeExperiment]{DeeDeeExperiment()}} object}
@@ -167,20 +172,20 @@ and set DE-related information and functional enrichment results in
 \details{
 DEAs
 \itemize{
-\item \code{dea_info} and \verb{dea_info<-} are the methods to get and set the \code{dea}
+\item \code{deaInfo} and \verb{deaInfo<-} are the methods to get and set the \code{dea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
-\item \code{dea_names} returns the names of the available DE contrasts in
+\item \code{deaNames} returns the names of the available DE contrasts in
 \code{DeeDeeExperiment} objects.
-\item \code{rename_dea} is the method to rename one or multiple DEAs stored in a
+\item \code{renameDea} is the method to rename one or multiple DEAs stored in a
 \code{DeeDeeExperiment} object.
-\item \code{add_dea} and \code{remove_dea} are used to respectively add or remove
+\item \code{addDea} and \code{removeDea} are used to respectively add or remove
 DE-results items. These methods also return \code{DeeDeeExperiment} objects, with
 updated content in the \code{dea} slot.
-\item \code{dea} and \code{get_dea_list} retrieve the DEA information, as well as some
+\item \code{dea} and \code{getDeaList} retrieve the DEA information, as well as some
 extra rowData information and provide this as a \code{DataFrame} object
 (for a specific analysis) or as a list, with one element for each reported
 analysis.
-\item \code{add_scenario_info} is the method to add user defined contextual
+\item \code{addScenarioInfo} is the method to add user defined contextual
 information for a specific DE analysis.
 It allows users to attach free-text notes to a specific DEA results that
 stored in a \code{DeeDeeExperiment} object. This information can include any other
@@ -191,22 +196,22 @@ which is not a default element in \code{dea}.
 
 FEAs
 \itemize{
-\item \code{fea_info} and \verb{fea_info<-} are the methods to get and set the \code{fea}
+\item \code{feaInfo} and \verb{feaInfo<-} are the methods to get and set the \code{fea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
-\item \code{fea_names} returns the names of the available enrichment results in
+\item \code{feaNames} returns the names of the available enrichment results in
 \code{DeeDeeExperiment} objects.
-\item \code{rename_fea} is the method to rename one or multiple FEAs stored in a
+\item \code{renameFea} is the method to rename one or multiple FEAs stored in a
 \code{DeeDeeExperiment} object.
-\item \code{add_fea} and \code{remove_fea} are used to respectively add or remove
+\item \code{addFea} and \code{removeFea} are used to respectively add or remove
 functional enrichment results items. These methods also return
 \code{DeeDeeExperiment} objects, with updated content in the \code{fea} slot.
 \item \code{fea} is the method to retrieve FE results stored in a \code{DeeDeeExperiment}
 object for a specific contrast, as a standardized format similar to the
 output of \code{GeneTonic} shakers.
-\item \code{get_fea_list} is the method that retrieves FEA results as a list. if the
+\item \code{getFeaList} is the method that retrieves FEA results as a list. if the
 \code{dea_name} is indicated, the method will return only FEAs linked to that
 \code{dea_name}, otherwise it returns all FEAs in the \code{fea} slot.
-\item \code{link_dea_and_fea} is the method that allows the user to manually link a
+\item \code{linkDEAandFEA} is the method that allows the user to manually link a
 FEA result to a specific DEA result.
 \item \code{show} is the method to nicely print out the information of a
 \code{DeeDeeExperiment} object.
@@ -241,37 +246,37 @@ new_del <- list(
 )
 
 # add a new (set of) DE result(s)
-dde_new <- add_dea(dde, new_del)
+dde_new <- addDea(dde, new_del)
 dde_new
 
 # removing DEAs
-dde_removed <- remove_dea(dde, "ifng_vs_naive")
+dde_removed <- removeDea(dde, "ifng_vs_naive")
 dde_removed
 
 # add a new (set of) FE result(s)
-dde_new <- add_fea(dde, fea = topGO_results_list)
+dde_new <- addFea(dde, fea = topGO_results_list)
 
 # removing FEAs
-dde_rem <- remove_fea(dde_new, "ifng_vs_naive")
+dde_rem <- removeFea(dde_new, "ifng_vs_naive")
 
 # display available DEAs
-dea_names(dde)
+deaNames(dde)
 
 # display available FEAs
-fea_names(dde)
+feaNames(dde)
 
 # print a summary of the available DEAs and FEAs
 summary(dde, FDR = 0.01)
 
 # rename DEA
-dde_new <- rename_dea(dde_new,
+dde_new <- renameDea(dde_new,
   old_name = "salmonella_vs_naive",
   new_name = "Salmo_vs_Naive_renamed"
 )
 
 # assign DEA to FEA
 
-dde_new <- link_dea_and_fea(dde_new,
+dde_new <- linkDEAandFEA(dde_new,
   dea_name = "ifngsalmo_vs_naive",
   fea_name = "ifngsalmo_vs_naive"
 )

@@ -6,7 +6,11 @@
 \alias{DeeDeeExperiment}
 \title{The DeeDeeExperiment class}
 \usage{
-DeeDeeExperiment(sce = NULL, de_results = NULL, enrich_results = NULL)
+DeeDeeExperiment(
+  sce = SingleCellExperiment(),
+  de_results = NULL,
+  enrich_results = NULL
+)
 }
 \arguments{
 \item{sce}{A \code{SingleCellExperiment} object, that will be used as a scaffold to
