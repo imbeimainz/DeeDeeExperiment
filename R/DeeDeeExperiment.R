@@ -77,7 +77,7 @@
 #'   se_macrophage_noassays,
 #'   de_results = de_named_list
 #' )
-DeeDeeExperiment <- function(sce = NULL,
+DeeDeeExperiment <- function(sce = SingleCellExperiment(),
                              de_results = NULL,
                              enrich_results = NULL) {
 
@@ -87,69 +87,58 @@ DeeDeeExperiment <- function(sce = NULL,
     de_results <- .check_de_results(de_results, entry_name)
   }
 
-  if (!is.null(sce)) {
-    if (!is(sce, "SingleCellExperiment")) {
-      if (is(sce, "SummarizedExperiment")) {
-        # check if it is SE and convert it into a RangedSE
-        sce <- as(sce, "RangedSummarizedExperiment")
-
-        # we'll build an sce from an se obj
-        available_assays <- names(assays(sce))
-        assay_list <- setNames(lapply(available_assays,
-                                      function(x) assay(sce, x)),
-                 available_assays)
-
-        se_to_sce <- SingleCellExperiment(
-          assays = assay_list,
-          colData = colData(sce),
-          rowData = rowData(sce),
-          metadata = metadata(sce)
-        )
-
-        sce <- se_to_sce
-
-      } else {
-        stop
-        ("'sce' must be a `SingleCellExperiment` or a `SummarizedExperiment` object!")
-      }
-    }
-  } else {
-
+  if (.is_empty_sce(sce)) {
+    # if empty sce and we pass de results, create a mock sce from it
     if (!is.null(de_results)) {
-      # if no sce passed but de_results is not empty, create a mock from it
       cli::cli_alert_info(
         "creating a mock SCE from the rows of the DE result objects, if available"
       )
+
+      if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
+        stop("Some elements in the de_results list do not have rownames!")
+      }
+
+      ## taking the union of all de_res elements
+      ids <- unique(unlist(lapply(de_results, rownames)))
+
+      rd_mock <- DataFrame(gene_id = ids, row.names = ids)
+
+      sce <- SingleCellExperiment(assays = SimpleList(), rowData = rd_mock)
+
+    } else if (is.null(de_results) &&
+        is.null(enrich_results)) {
+      object <- new("DeeDeeExperiment",
+                    sce,
+                    dea = list(),
+                    fea = list())
+
+      # stash the package version
+      metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
+
+      return(object)
     }
-
-    if (any(vapply(de_results, function(x) is.null(rownames(x)), logical(1)))) {
-      stop("Some elements in the de_results list do not have rownames!")
-    }
-
-    ## taking the union of all de_res elements
-    ids <- unique(unlist(lapply(de_results, rownames)))
-
-    rd_mock <- DataFrame(gene_id = ids, row.names = ids)
-
-    # way1
-    # se_mock <- SummarizedExperiment(assays = SimpleList(), rowData = rd_mock)
-    # se <- as(se_mock, "RangedSummarizedExperiment")
-
-    sce <- SingleCellExperiment(assays = SimpleList(), rowData = rd_mock)
   }
 
-  if (is.null(de_results) &&
-      is.null(enrich_results)) {
-    object <- new("DeeDeeExperiment",
-                  sce,
-                  dea = list(),
-                  fea = list()
-    )
+  # if sce not empty
+  if (!is(sce, "SingleCellExperiment")) {
+    if (is(sce, "SummarizedExperiment")) {
+      # check if it is SE and convert it into a RangedSE
+      sce <- as(sce, "RangedSummarizedExperiment")
 
-    # stash the package version
-    metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
+      # we'll build an sce from an se obj
+      available_assays <- names(assays(sce))
+      assay_list <- setNames(lapply(available_assays, function(x)
+        assay(sce, x)),
+        available_assays)
 
-    return(object)
+      se_to_sce <- SingleCellExperiment(
+        assays = assay_list,
+        colData = colData(sce),
+        rowData = rowData(sce),
+        metadata = metadata(sce)
+      )
+      sce <- se_to_sce
+    }
   }
 
   sce_out <- sce
@@ -211,8 +200,8 @@ DeeDeeExperiment <- function(sce = NULL,
           " mismatched rows detected between `rownames(rowData(sce))`",
           " and rownames for the following dea element: ",
           i,
-          "Unmatched genes will have NA values in rowData. ",
-          "Consider synchronizing your rownames in both se and",
+          " Unmatched genes will have NA values in rowData. ",
+          " Consider synchronizing your rownames in both se and",
           " de_results elements."
         )
       }
@@ -312,7 +301,7 @@ DeeDeeExperiment <- function(sce = NULL,
             "Available DE results: ",
             paste(names(de_results), collapse = ", "),
             "\n",
-            "Consider naming your enrich_results starting with one of the",
+            " Consider naming your enrich_results starting with one of the",
             " following prefixes:",
             " 'topGO_', 'clusterProfiler_','GeneTonic_', 'DAVID_',",
             "'gsea_', 'fgsea_', 'enrichr_', 'gPro_',",
