@@ -1,3 +1,10 @@
+# DeeDeeExperiment 0.99.2
+
+* Addressed the points raised in the Bioc review
+
+* Expended the supported DEAs (as simple data.frame object that contains at least
+a column named `log2FoldChange`, `pvalue`, and `padj`)
+
 # DeeDeeExperiment 0.99.1
 
 * `DeeDeeExperiment` now extends the `SingleCellExperiment` class, accommodating
