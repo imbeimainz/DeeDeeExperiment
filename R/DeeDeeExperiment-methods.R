@@ -703,9 +703,9 @@ setMethod("dea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
-                                format = "minimal",
+                                format = c("minimal", "original"),
                                 extra_rd = NULL,
-                                type = "DFrame",
+                                type = c("DFrame", "data.frame"),
                                 verbose = FALSE) {
             # checks
             if (!is.null(extra_rd) && !is.character(extra_rd)) {
@@ -715,12 +715,14 @@ setMethod("dea",
             deas <- deaInfo(x)
             dea_names <- names(deas)
 
-            if (!(format %in% c("minimal", "original"))) {
-              stop(
-                "'format' not supported. Please use 'minimal' to return the ",
-                "essential columns, or 'original' to return the original object"
-              )
-            }
+            format <- match.arg(format)
+
+            # if (!(format %in% c("minimal", "original"))) {
+            #   stop(
+            #     "'format' not supported. Please use 'minimal' to return the ",
+            #     "essential columns, or 'original' to return the original object"
+            #   )
+            # }
 
             if (is.null(dea_name)) {
               if (length(dea_names) == 0) {
@@ -747,13 +749,16 @@ setMethod("dea",
               )
             }
 
+            type <- match.arg(type)
+
             if (!is.character(type) || length(type) != 1) {
               "'type' must be a single character string!"
             }
 
-            if (!type %in% c("DFrame", "data.frame")) {
-              stop("'type' must be 'DFrame' or 'data.frame'!")
-            }
+            # if (!type %in% c("DFrame", "data.frame")) {
+            #   stop("'type' must be 'DFrame' or 'data.frame'!")
+            # }
+
 
             if (format == "minimal") {
               rd_info <- paste0(
@@ -835,14 +840,15 @@ setMethod("dea",
 setMethod("getDeaList",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
-                                format = "minimal",
+                                format = c("minimal", "original"),
                                 verbose = FALSE) {
-            if (!(format %in% c("minimal", "original"))) {
-              stop(
-                "'format' not supported. Please use 'minimal' to return the ",
-                "essential columns, or 'original' to return the original object"
-              )
-            }
+            format <- match.arg(format)
+            # if (!(format %in% c("minimal", "original"))) {
+            #   stop(
+            #     "'format' not supported. Please use 'minimal' to return the ",
+            #     "essential columns, or 'original' to return the original object"
+            #   )
+            # }
 
             deas <- deaInfo(x)
             dea_names <- names(deas)
@@ -1257,15 +1263,10 @@ setMethod("fea",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 fea_name = NULL,
-                                format = "minimal",
+                                format = c("minimal", "original"),
                                 verbose = FALSE) {
 
-            if (!(format %in% c("minimal", "original"))) {
-              stop(
-                "'format' not supported. Please use 'minimal' to return the ",
-                "essential columns, or 'original' to return the original object"
-              )
-            }
+            format <- match.arg(format)
 
             fea_names <- feaNames(x)
 
@@ -1322,14 +1323,10 @@ setMethod("getFeaList",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
-                                format = "minimal",
+                                format = c("minimal", "original"),
                                 verbose = FALSE) {
-            if (!(format %in% c("minimal", "original"))) {
-              stop(
-                "'format' not supported. Please use 'minimal' to return the ",
-                "essential columns, or 'original' to return the original object"
-              )
-            }
+
+            format <- match.arg(format)
 
             all_fea_names <- feaNames(x)
 

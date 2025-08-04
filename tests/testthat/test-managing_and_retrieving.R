@@ -270,6 +270,10 @@ test_that("managing and retrieving", {
 
   expect_error(dea(dde, format = "simple"))
 
+  expect_error(dea(dde, type = c("DFrame", "dataframe")))
+
+  expect_error(dea(dde, type = c("table")))
+
   expect_error(dea(dde3))
 
 
