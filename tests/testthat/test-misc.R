@@ -14,12 +14,12 @@ test_that("misc", {
     sep = "\t"
   )
 
-  dde_w_david <- add_fea(dde,
+  dde_w_david <- addFea(dde,
     fea = df_david, fea_tool = "DAVID",
     de_name = "ifng_vs_naive"
   )
 
-  expect_true("df_david" %in% fea_names(dde_w_david))
+  expect_true("df_david" %in% feaNames(dde_w_david))
 
   expect_error(
     .DeeDeefy_david(matrix())
