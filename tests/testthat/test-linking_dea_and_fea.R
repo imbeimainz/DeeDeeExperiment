@@ -6,16 +6,16 @@ test_that("linking dea and fea", {
     de_results = de_named_list
   )
 
-  expect_error(link_dea_and_fea(dde,
+  expect_error(linkDEAandFEA(dde,
     dea_name = "contrast1",
     fea_name = "topGO_IFNg_naive"
   ))
 
-  expect_error(link_dea_and_fea(dde,
+  expect_error(linkDEAandFEA(dde,
     dea_name = "salmonella_vs_naive",
     fea_name = "topGO"
   ))
-  expect_error(link_dea_and_fea(
+  expect_error(linkDEAandFEA(
     dde,
     "not there",
     "not there"
@@ -26,34 +26,34 @@ test_that("linking dea and fea", {
     enrich_results = topGO_results_list
   )
 
-  expect_error(link_dea_and_fea(
+  expect_error(linkDEAandFEA(
     dde_overlap,
     "new_name",
     "salmonella_vs_naive"
   ))
 
-  expect_error(link_dea_and_fea(dde_overlap,
+  expect_error(linkDEAandFEA(dde_overlap,
     "ifng_vs_naive",
     "salmonella_vs_naive",
     force = FALSE
   ))
 
-  expect_error(link_dea_and_fea(dde_overlap,
+  expect_error(linkDEAandFEA(dde_overlap,
     dea_name = 2,
     fea_name = "salmonella_vs_naive"
   ))
 
-  expect_error(link_dea_and_fea(dde_overlap,
+  expect_error(linkDEAandFEA(dde_overlap,
     dea_name = "salmonella_vs_naive",
     fea_name = 2
   ))
 
-  dde_overlap_add <- add_fea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
-  dde_overlap_add <- add_fea(dde_overlap_add,
+  dde_overlap_add <- addFea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
+  dde_overlap_add <- addFea(dde_overlap_add,
     fea = list(gPro_res = gost_res$result)
   )
 
-  expect_warning(link_dea_and_fea(dde_overlap_add,
+  expect_warning(linkDEAandFEA(dde_overlap_add,
     "ifng_vs_naive",
     "salmonella_vs_naive",
     force = TRUE

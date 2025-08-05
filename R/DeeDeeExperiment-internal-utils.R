@@ -27,22 +27,14 @@
   # only valid indices
   valid_matches <- !is.na(matched_ids)
 
-
-  # Pre-fill rowData with NA
-  rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
-    res_de$log2FoldChange[matched_ids[valid_matches]]
-  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
-    res_de$pvalue[matched_ids[valid_matches]]
-  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
-    res_de$padj[matched_ids[valid_matches]]
-
+  sce <- .fill_rowdata_with_dea(sce = sce,
+                                de_name = de_name,
+                                de_res = res_de,
+                                de_cols = c(logFC = "log2FoldChange",
+                                            pval = "pvalue",
+                                            padj = "padj"),
+                                valid_matches = valid_matches,
+                                matched_ids = matched_ids)
 
   dea_contrast <- list(
     alpha = metadata(res_de)$alpha,
@@ -94,24 +86,15 @@
   # matched indices for logFC, accounting for the fact that the logFC column
   # name in edgeR depends on whether we have 1 or multiple contrasts
   for (i in logFC_cols) {
-    rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
-    # assign correspionding values
-    rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
-      res_tbl$table[[i]][matched_ids[valid_matches]]
+    sce <- .fill_rowdata_with_dea(sce = sce,
+                                  de_name = de_name,
+                                  de_res = res_tbl,
+                                  de_cols = c(logFC = i,
+                                              pval = "PValue",
+                                              padj = "FDR"),
+                                  valid_matches = valid_matches,
+                                  matched_ids = matched_ids)
   }
-
-  # pre-fill rowData with NA the assign the corresponding values for matched
-  # indices for pval and padj
-  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
-    res_tbl$table$PValue[matched_ids[valid_matches]]
-  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
-    res_tbl$table$FDR[matched_ids[valid_matches]]
 
   dea_contrast <- list(
     alpha = NA,
@@ -172,20 +155,14 @@
   # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
-  # Pre-fill rowData with NA
-  rowData(sce)[[paste0(de_name, "_log2FoldChange")]] <- NA
-  rowData(sce)[[paste0(de_name, "_pvalue")]] <- NA
-  rowData(sce)[[paste0(de_name, "_padj")]] <- NA
-
-
-  # assign values only for matched indices, to have on both sides the
-  # same length. we keep NA for unmatched genes
-  rowData(sce)[[paste0(de_name, "_log2FoldChange")]][valid_matches] <-
-    res_tbl$logFC[matched_ids[valid_matches]]
-  rowData(sce)[[paste0(de_name, "_pvalue")]][valid_matches] <-
-    res_tbl$P.Value[matched_ids[valid_matches]]
-  rowData(sce)[[paste0(de_name, "_padj")]][valid_matches] <-
-    res_tbl$adj.P.Val[matched_ids[valid_matches]]
+  sce <- .fill_rowdata_with_dea(sce = sce,
+                                de_name = de_name,
+                                de_res = res_tbl,
+                                de_cols = c(logFC = "logFC",
+                                            pval = "P.Value",
+                                            padj = "adj.P.Val"),
+                                valid_matches = valid_matches,
+                                matched_ids = matched_ids)
 
   dea_contrast <- list(
     alpha = NA,
@@ -214,7 +191,7 @@
   ## of length 1 and ensure it has a name
   if (is(x, "DGEExact") ||
       is(x, "DGELRT") || is(x, "MArrayLM") ||
-      is(x, "DESeqResults")) {
+      is(x, "DESeqResults") || is(x, "data.frame")) {
     # convert into a named list
     x <- list(x)
     names(x) <- entry_name
@@ -229,7 +206,7 @@
   if (!all(ok_types)) {
     stop("All elements in the list must be of type DESeqResults,",
          " DGEExact, DGELRT, or MArrayLM. Alternatively, it can be a data.frame",
-         " with at least a logFC, p-value and p-adjusted value columns.")
+         " with at least a 'log2FoldChange', 'pvalue' and 'padj' columns.")
   }
   if (is.null(names(x)) || any(names(x) == "")) {
     stop("All elements in the provided de_results list must be named!")
@@ -900,3 +877,142 @@ supported_fea_formats <- function() {
     )
   )
 }
+
+
+#' .is_empty_sce() , checks whether an sce oject is empty or not
+#'
+#' @param sce a `SingleCellExperiment` object
+#'
+#' @returns a logical, indicating whether the object is empty or not
+#'
+#' @noRd
+.is_empty_sce <- function(sce) {
+  !is.null(sce) &&
+    is(sce, "SingleCellExperiment") &&
+    nrow(sce) == 0 &&
+    ncol(sce) == 0 &&
+    length(assays(sce)) == 0
+}
+
+
+#' @noRd
+.shake_enrich_res <- function(res_enrich, type) {
+  switch(type,
+  "topGO" = .DeeDeefy_topGOtableResult(res_enrich),
+  "clusterProfiler" = if (is(res_enrich, "enrichResult")) {
+    res_enrich_shaken <- .DeeDeefy_enrichResult(res_enrich)
+  } else { NULL},
+  "GeneTonic" = res_enrich,
+  "DAVID" = .DeeDeefy_david(res_enrich),
+  "fgsea" = .DeeDeefy_fgseaResult(res_enrich),
+  "gsea" = if (is(res_enrich, "gseaResult")) {
+    res_enrich_shaken <- .DeeDeefy_gsenrichResult(res_enrich)
+  } else { NULL},
+  "enrichr" = .DeeDeefy_enrichr(res_enrich),
+  "gProfiler" = .DeeDeefy_gprofiler(res_enrich),
+  NULL
+)
+}
+
+
+#' .fill_rowdata_with_dea() fills the `rowData` of an `sce` with DEA results
+#'
+#' It pre-fills the columns (logFC, pval, padj) with NAs, and assigns the
+#' corresponding DE statistics to the `rowData` of the `sce` object for a
+#' given contrast
+#'
+#' @param sce a `SingleCellExperiment` object
+#'
+#' @param de_name a character vector indicating the name of the DE contrast
+#' @param de_res a named list of DE results
+#' @param de_cols a named vector specifying the name of the columns in de_res
+#' for each DE statistics. Should have names: `"logFC"`, `"pval"`, `"padj"`
+#' @param valid_matches a logical vector indicating which features/rows have
+#' valid matches between `sce` and `de_res`
+#' @param matched_ids integer vector specifying the positions of
+#' matching features between `sce` and `de_res`
+#' @return the updated `sce` object with new columns added to the `rowData`
+#'
+#' @noRd
+.fill_rowdata_with_dea <- function(sce,
+                                   de_name,
+                                   de_res,
+                                   de_cols = c(logFC = "log2FoldChange",
+                                               pval = "pvalue",
+                                               padj = "padj"),
+                                   valid_matches,
+                                   matched_ids) {
+
+  suffixes <- c("_log2FoldChange", "_pvalue", "_padj")
+
+  col_names <- c("logFC", "pval", "padj")
+
+  for (i in seq_along(col_names)) {
+    col_name <- paste0(de_name, suffixes[i])
+    # pre-fill with NA
+    rowData(sce)[[col_name]] <- NA
+
+    # assign values only for matched indices
+    rowData(sce)[[col_name]][valid_matches] <-
+      de_res[[de_cols[col_names[i]]]][matched_ids[valid_matches]]
+  }
+  return(sce)
+}
+
+
+
+#' Import DE results as a `data.frame`, containing at least the following
+#' statistics: "log2FoldChange", "pvalue", and "padj", with that exact name
+#'
+#' @param sce A `SingleCellExperiment` object
+#' @param res_de A set of DE results, provided as `data.frame`
+#' @param de_name A character value, describing the contrast of interest. Will
+#' be used to compose the column names in the `rowData` slot.
+#'
+#' @return A list, containing the updated `SingleCellExperiment` object, and the
+#' standardized information on the DE analysis, as these are to be used in the
+#' `DeeDee` framework.
+#'
+
+#' @noRd
+.importDE_df <- function(sce, res_de, de_name) {
+  # correct object format
+  stopifnot(is(res_de, "data.frame"))
+  # contain the right columns
+  stopifnot(all(c("log2FoldChange", "pvalue", "padj") %in% colnames(res_de)))
+
+  # rownames exist
+  if (is.null(rownames(res_de))){
+    stop("`res_de` must have rownames (gene/feature IDs)")
+  }
+
+  # p value different from NA respect the 0-1 interval
+  stopifnot(all(na.omit(res_de$pvalue <= 1)) &
+              all(na.omit(res_de$pvalue > 0)))
+
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
+  # only valid indices
+  valid_matches <- !is.na(matched_ids)
+
+  sce <- .fill_rowdata_with_dea(sce = sce,
+                                de_name = de_name,
+                                de_res = res_de,
+                                de_cols = c(logFC = "log2FoldChange",
+                                            pval = "pvalue",
+                                            padj = "padj"),
+                                valid_matches = valid_matches,
+                                matched_ids = matched_ids)
+
+  dea_contrast <- list(
+    alpha = NA,
+    lfcThreshold = NA,
+    metainfo_logFC = NA,
+    metainfo_pvalue = NA,
+    original_object = res_de,
+    package = NA,
+    package_version = NA
+  )
+
+  return(list(sce = sce, dea_contrast = dea_contrast))
+}
+

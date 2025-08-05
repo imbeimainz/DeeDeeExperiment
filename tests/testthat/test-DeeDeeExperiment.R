@@ -8,8 +8,6 @@ test_that("creating", {
     de_results = de_named_list
   )
 
-  print(dde)
-
   expect_s4_class(dde, "DeeDeeExperiment")
 
   dde_only_de <- DeeDeeExperiment(
@@ -17,10 +15,10 @@ test_that("creating", {
   )
   expect_s4_class(dde_only_de, "DeeDeeExperiment")
 
-  expect_type(dea_names(dde_only_de), "character")
+  expect_type(deaNames(dde_only_de), "character")
 
   expect_equal(
-    dea_names(dde_only_de),
+    deaNames(dde_only_de),
     c("ifng_vs_naive", "ifngsalmo_vs_naive", "salmonella_vs_naive", "salmo_both")
   )
 
@@ -69,11 +67,11 @@ test_that("creating", {
 
   expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_type(dea_info(dde_one), "list")
+  expect_type(deaInfo(dde_one), "list")
 
-  expect_length(dea_info(dde_one), 1)
+  expect_length(deaInfo(dde_one), 1)
 
-  expect_true("salmo_both" == names(dea_info(dde_one)))
+  expect_true("salmo_both" == names(deaInfo(dde_one)))
 
   de_results_mismatch <- list(
     contrast = de_named_list$ifng_vs_naive
@@ -117,9 +115,10 @@ test_that("creating", {
 
   dde_list <- DeeDeeExperiment(de_results = de_res_list)
 
-  expect_warning(get_dea_list(dde_list, verbose = TRUE), regexp = NULL)
+  expect_warning(getDeaList(dde_list, verbose = TRUE), regexp = NULL)
 
-  expect_warning(dea(dde_list, dea_name = "dge_lrt", verbose = TRUE), regexp = NULL)
+  expect_warning(dea(dde_list, dea_name = "dge_lrt", verbose = TRUE),
+                 regexp = NULL)
 
   expect_warning(DeeDeeExperiment(
     sce = se_macrophage_noassays,
@@ -160,7 +159,8 @@ test_that("creating", {
 
 
   broken_limma <- de_limma
-  broken_limma$coefficients <- broken_limma$coefficients[, "Salm_both", drop = FALSE]
+  broken_limma$coefficients <- broken_limma$coefficients[, "Salm_both",
+                                                         drop = FALSE]
   broken_limma$t <- broken_limma$t[, "Salm_both", drop = FALSE]
   broken_limma$p.value <- broken_limma$p.value[, "Salm_both", drop = FALSE]
   broken_limma$lods <- broken_limma$lods[, "Salm_both", drop = FALSE]
@@ -181,7 +181,7 @@ test_that("creating", {
 
   expect_s3_class(fea(dde5, "enrichr_salmo_vs_naive", verbose = TRUE), "data.frame")
 
-  expect_length(fea_info(dde5), 1)
+  expect_length(feaInfo(dde5), 1)
 
 
   expect_error(DeeDeeExperiment(
@@ -209,11 +209,11 @@ test_that("creating", {
 
   expect_s4_class(new_dde, "DeeDeeExperiment")
 
-  expect_equal(fea_info(new_dde)$fgsea$fe_tool, "fgsea")
+  expect_equal(feaInfo(new_dde)$fgsea$fe_tool, "fgsea")
 
-  expect_equal(fea_info(new_dde)$gPro_res$fe_tool, "gProfiler")
+  expect_equal(feaInfo(new_dde)$gPro_res$fe_tool, "gProfiler")
 
-  expect_equal(fea_info(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
+  expect_equal(feaInfo(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
 
   failing_fgsea <- fgseaRes
   expect_error(
@@ -264,4 +264,39 @@ test_that("creating", {
       topGO_IFNg_naive = topGO_results_list$ifng_vs_naive
     )
   ))
+
+  gene_ids <- paste0("gene", 1:5)
+
+  res_de_df <- data.frame(
+    log2FoldChange = c(2.1, -1.3, 0.5, NA, -0.9),
+    pvalue = c(0.01, 0.20, 0.05, NA, 0.80),
+    padj = c(0.05, 0.25, 0.10, NA, 0.90),
+    row.names = gene_ids
+  )
+
+  dde_df <- DeeDeeExperiment(de_results = res_de_df)
+
+  expect_s4_class(dde_df,"DeeDeeExperiment")
+
+  expect_length(deaInfo(dde_df), 1)
+
+  expect_true("res_de_df" == names(deaInfo(dde_df)))
+
+  expect_true(all(c("res_de_df_log2FoldChange", "res_de_df_pvalue", "res_de_df_padj")
+              %in% colnames(rowData(dde_df))))
+
+  expect_equal(rowData(dde_df)[["res_de_df_log2FoldChange"]],
+    res_de_df$log2FoldChange)
+
+  gene_ids <- c(gene_ids, rownames(de_limma)[1:6])
+
+  de_custom <- data.frame(
+    padj = rep(0.5, 11),
+    pvalue = rep(0.5, 11),
+    log2FoldChange = rep(0.5, 11),
+    row.names = gene_ids
+  )
+
+  expect_warning(addDea(dde, dea = de_custom))
+
 })
