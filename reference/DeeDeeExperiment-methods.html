@@ -11,7 +11,7 @@ DeeDeeExperiment objects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ DeeDeeExperiment objects."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Methods for <a href="DeeDeeExperiment.html">DeeDeeExperiment</a> objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
       <div class="d-none name"><code>DeeDeeExperiment-methods.Rd</code></div>
     </div>
 
@@ -383,14 +383,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># print a summary of the available DEAs and FEAs</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dde</span>, FDR <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> DE Results Summary:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             DEA_name  Up Down  FDR</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        ifng_vs_naive  30   15 0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   ifngsalmo_vs_naive 104   29 0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  salmonella_vs_naive  80   29 0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           salmo_both  37   20 0.01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> No FEA results stored.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .Vector_summary(object, ...):</span> unused argument (FDR = 0.01)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename DEA</span></span></span>
 <span class="r-in"><span><span class="va">dde_new</span> <span class="op">&lt;-</span> <span class="fu">renameDEA</span><span class="op">(</span><span class="va">dde_new</span>,</span></span>
@@ -418,7 +411,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.9000.</p>
 </div>
 
     </footer></div>
