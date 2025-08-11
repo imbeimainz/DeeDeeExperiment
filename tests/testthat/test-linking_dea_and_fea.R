@@ -48,8 +48,8 @@ test_that("linking dea and fea", {
     fea_name = 2
   ))
 
-  dde_overlap_add <- addFea(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
-  dde_overlap_add <- addFea(dde_overlap_add,
+  dde_overlap_add <- addFEA(dde_overlap, fea = list(INFg_vs_Naive = topGO_results_list$ifng_vs_naive))
+  dde_overlap_add <- addFEA(dde_overlap_add,
     fea = list(gPro_res = gost_res$result)
   )
 

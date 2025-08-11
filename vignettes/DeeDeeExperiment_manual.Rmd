@@ -505,21 +505,21 @@ been added to the original object.
 
 ### Adding DEA results
 
-Additional DE results can be added using the `addDea()` method. These results
+Additional DE results can be added using the `addDEA()` method. These results
 are stored in both the `dea` slot and in the `rowData`.
 
 We can also add results as individual element of class `DESeqResults`,
 `MArrayLM`, `DGEExact` or `DGELRT`.
 
-```{r addDea}
+```{r addDEA}
 # add a named list of results from edgeR
-dde <- addDea(dde, dea = list(
+dde <- addDEA(dde, dea = list(
   dge_exact_IFNg_vs_naive = dge_exact_IFNg_vs_naive,
   dge_lrt_IFNg_vs_naive = dge_lrt_IFNg_vs_naive
 ))
 
 # add results from limma as a MArrayLM object
-dde <- addDea(dde, dea = de_limma)
+dde <- addDEA(dde, dea = de_limma)
 
 dde
 # inspect the columns of the rowData
@@ -533,12 +533,12 @@ contrast.
 It is possible to overwrite the results, when the argument `force` is set to
 `TRUE`
 
-```{r addDea_force}
-dde <- addDea(dde, dea = list(same_contrast = dge_lrt_Salm_vs_naive))
+```{r addDEA_force}
+dde <- addDEA(dde, dea = list(same_contrast = dge_lrt_Salm_vs_naive))
 
 # overwrite results with the same name
 # e.g. if the content of the same object has changed
-dde <- addDea(dde,
+dde <- addDEA(dde,
                dea = list(same_contrast = dge_exact_Salm_vs_naive),
                force = TRUE)
 
@@ -547,7 +547,7 @@ dde
 
 ### Adding FEA results
 
-FEA results can be added to a `dde` object using the `addFea()` method. These
+FEA results can be added to a `dde` object using the `addFEA()` method. These
 results are stored in the `fea` slot.
 
 If the `fea_tool` argument was not specified, the internal function used to
@@ -555,16 +555,16 @@ generate the standardized format of FEA result is automatically detected - this
 should work in most cases, but it can be beneficial to explicitly specify the
 `fea_tool` used, also for simple bookkeeping reasons.
 
-```{r addFea}
+```{r addFEA}
 # add FEA results as a named list
-dde <- addFea(dde,
+dde <- addFEA(dde,
                fea = list(IFNg_vs_naive = topGO_results_list$ifng_vs_naive))
 
 # add FEA results as a single object
-dde <- addFea(dde, fea = gost_res$result)
+dde <- addFEA(dde, fea = gost_res$result)
 
 # add FEA results and specify the FEA tool
-dde <- addFea(dde, fea = clusterPro_res, fea_tool = "clusterProfiler")
+dde <- addFEA(dde, fea = clusterPro_res, fea_tool = "clusterProfiler")
 
 dde
 ```
@@ -633,25 +633,25 @@ summary(dde, show_scenario_info = TRUE)
 
 ## Renaming results in a `dde` object
 
-Specific results can be renamed after being added using the `renameDea()` and
-`renameFea()` methods. The corresponding column names in the `rowData` will be
+Specific results can be renamed after being added using the `renameDEA()` and
+`renameFEA()` methods. The corresponding column names in the `rowData` will be
 updated accordingly.
 
 ```{r rename}
 # rename dea, one element
-dde <- renameDea(dde,
+dde <- renameDEA(dde,
                   old_name = "de_limma",
                   new_name = "ifng_vs_naive_&_salm_vs_naive"
 )
 
 # multiple entries at once
-dde <- renameDea(dde,
+dde <- renameDEA(dde,
                   old_name = c("dge_exact_IFNg_vs_naive", "dge_lrt_IFNg_vs_naive"),
                   new_name = c("exact_IFNg_vs_naive", "lrt_IFNg_vs_naive")
 )
 
 # rename fea
-dde <- renameFea(dde,
+dde <- renameFEA(dde,
                   old_name = "gost_res$result",
                   new_name = "salm_vs_naive"
 )
@@ -659,19 +659,19 @@ dde <- renameFea(dde,
 
 ## Removing results in a `dde` object
 
-The method `removeDea()` and `removeFea()` can be used to delete results from
+The method `removeDEA()` and `removeFEA()` can be used to delete results from
 a `dde` object.
 
 ```{r remove}
 # removing dea
-dde <- removeDea(dde, c(
+dde <- removeDEA(dde, c(
   "ifng_vs_naive_&_salm_vs_naive",
   "exact_IFNg_vs_naive",
   "dge_Salm_vs_naive"
 ))
 
 # removing fea
-dde <- removeFea(dde, c("salmonella_vs_naive"))
+dde <- removeFEA(dde, c("salmonella_vs_naive"))
 
 dde
 ```
@@ -681,15 +681,15 @@ dde
 Several accessor methods are available to retrieve DEA and FEA results stored
 within a `dde` object.
 
-`deaNames()` and `feaNames()` are the methods to quickly retrieve the names
+`DEANames()` and `FEANames()` are the methods to quickly retrieve the names
 of available DEAs and FEAs
 
 ```{r names}
 # get DEA names
-deaNames(dde)
+DEANames(dde)
 
 # get FEA names
-feaNames(dde)
+FEANames(dde)
 ```
 
 It is possible to directly access specific DEA results either in their original
@@ -698,43 +698,43 @@ the same class as originally provided (e.g., `DESeqResults`, `MArrayLM`...).
 
 ```{r get_dea_res}
 # access the 1st DEA if dea_name is not specified (default: minimal format)
-dea(dde) |> head()
+DEA(dde) |> head()
 
 # access the 1st DEA, in original format
-dea(dde, format = "original") |> head()
+DEA(dde, format = "original") |> head()
 
 # access specific DEA by name, in original format
-dea(dde,
+DEA(dde,
     dea_name = "lrt_IFNg_vs_naive",
     format = "original"
 ) |> head()
 
 # access specific DEA by name (default: minimal format)
-dea(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
+DEA(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
 ```
 
-`getDeaList()` retrieves all available DEAs stored in a dde object as a list.
+`getDEAList()` retrieves all available DEAs stored in a dde object as a list.
 
-```{r getDeaList}
+```{r getDEAList}
 # get dea results as a list, (default: minimal format)
-lapply(getDeaList(dde), head)
+lapply(getDEAList(dde), head)
 ```
 
 The next command can be quite verbose in its output, but it gives full access to
 the original objects provided when creating and updating the `dde` container.
 
-```{r getDeaList-original, eval = FALSE}
+```{r getDEAList-original, eval = FALSE}
 # get dea results as a list, in original format
-lapply(getDeaList(dde, format = "original"), head)
+lapply(getDEAList(dde, format = "original"), head)
 ```
 
-`deaInfo()` returns the whole content of the `dea` slot, including the DEA
+`DEAInfo()` returns the whole content of the `dea` slot, including the DEA
 tables and their associated metadata - the following chunk is left unevaluated
 for clarity as its output can be very verbose.
 
-```{r deaInfo, eval = FALSE}
+```{r DEAInfo, eval = FALSE}
 # extra info
-deaInfo(dde)
+DEAInfo(dde)
 ```
 
 It is easy, still, to retrieve some specific set of information, such as the
@@ -743,46 +743,46 @@ It is easy, still, to retrieve some specific set of information, such as the
 ```{r dea_info_specific}
 # retrieve specific information like the package name used for specific dea
 dea_name <- "Salm_vs_naive"
-deaInfo(dde)[[dea_name]][["package"]]
+DEAInfo(dde)[[dea_name]][["package"]]
 ```
 
-`fea()` directly accesses specific FEA results either in their original format
+`FEA()` directly accesses specific FEA results either in their original format
 or in minimal format
 
 ```{r get_fea_res}
 # access the 1st FEA, (default: minimal format)
-fea(dde) |> head()
+FEA(dde) |> head()
 
 # access the 1st FEA, in original format
-fea(dde, format = "original") |> head()
+FEA(dde, format = "original") |> head()
 
 # access specific FEA by name
-fea(dde, fea_name = "ifng_vs_naive") |> head()
+FEA(dde, fea_name = "ifng_vs_naive") |> head()
 
 # access specific FEA by name, in original format
-fea(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
+FEA(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
 ```
 
-Similarly to `getDeaList()`, `getFeaList()` returns all FEAs stored in a
+Similarly to `getDEAList()`, `getFEAList()` returns all FEAs stored in a
 `dde` object. Optionally, if `dea_name` is set, it returns all FEAs linked to a
 specific DEA. This is illustrated in the following chunk
 
-```{r getFeaList}
+```{r getFEAList}
 # get fea results as a list (default: minimal format)
-lapply(getFeaList(dde), head)
+lapply(getFEAList(dde), head)
 
 
 # get all FEAs for this de_name, in original format
-lapply(getFeaList(dde, dea_name = "IFNg_vs_naive", format = "original"), head)
+lapply(getFEAList(dde, dea_name = "IFNg_vs_naive", format = "original"), head)
 ```
 
-`feaInfo()` returns the whole content of the `fea` slot, including the FEA
+`FEAInfo()` returns the whole content of the `fea` slot, including the FEA
 tables and their associated metadata. Again, the following chunk is left
 unevaluated for clarity as its output can be very verbose:
 
-```{r feaInfo, eval = FALSE}
+```{r FEAInfo, eval = FALSE}
 # extra info
-feaInfo(dde)
+FEAInfo(dde)
 ```
 
 Yet, specific set of information, such as the `fe_tool` used for a specific
@@ -790,7 +790,7 @@ Yet, specific set of information, such as the `fe_tool` used for a specific
 
 ```{r fea_info_specific}
 # the tool used to perform the FEA
-feaInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
+FEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
 ```
 
 # Downstream operations with `DeeDeeExperiment` objects
@@ -821,8 +821,8 @@ chunk:
 library("GeneTonic")
 my_dde <- dde
 
-res_de <- dea(my_dde, dea_name = "IFNg_vs_naive", format = "original")
-res_enrich <- fea(my_dde, fea_name = "ifng_vs_naive")
+res_de <- DEA(my_dde, dea_name = "IFNg_vs_naive", format = "original")
+res_enrich <- FEA(my_dde, fea_name = "ifng_vs_naive")
 annotation_object <- mosdef::get_annotation_orgdb(dds_macrophage,
                                                   "org.Hs.eg.db",
                                                   "ENSEMBL")
