@@ -20,11 +20,11 @@ test_that("validity and so", {
   dea_not_list <- dde3
 
   expect_error({
-    deaInfo(dea_not_list) <- data.frame()
+    DEAInfo(dea_not_list) <- data.frame()
   })
 
   expect_error({
-    feaInfo(dea_not_list) <- data.frame()
+    FEAInfo(dea_not_list) <- data.frame()
   })
 
   dde4 <- DeeDeeExperiment(
@@ -35,12 +35,12 @@ test_that("validity and so", {
   expect_error(validObject(dde4))
 
   expect_error({
-    addFea(dde4, fea = "meow", fea_tool = "fujitsu")
+    addFEA(dde4, fea = "meow", fea_tool = "fujitsu")
   })
 
 
   expect_error({
-    feaInfo(dde4) <- list(list(
+    FEAInfo(dde4) <- list(list(
       de_name = "c1",
       fe_name = "c1",
       shaken_results = NULL,
@@ -50,7 +50,7 @@ test_that("validity and so", {
   })
 
   expect_error({
-    feaInfo(dde4) <- list(list(
+    FEAInfo(dde4) <- list(list(
       de_name = "c1",
       fe_name = "c1",
       shaken_results = NULL,

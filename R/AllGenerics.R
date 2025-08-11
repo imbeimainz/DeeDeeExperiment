@@ -1,54 +1,54 @@
 # DeeDeeExperiment methods -----------------------------------------------------
 
 #' @export
-setGeneric("deaInfo", function(x, ...) standardGeneric("deaInfo"))
+setGeneric("DEAInfo", function(x, ...) standardGeneric("DEAInfo"))
 
 #' @export
-setGeneric("deaInfo<-", function(x, value) standardGeneric("deaInfo<-"))
+setGeneric("DEAInfo<-", function(x, value) standardGeneric("DEAInfo<-"))
 
 #' @export
-setGeneric("deaNames", function(x, ...) standardGeneric("deaNames"))
+setGeneric("DEANames", function(x, ...) standardGeneric("DEANames"))
 
 #' @export
-setGeneric("renameDea", function(x, ...) standardGeneric("renameDea"))
+setGeneric("renameDEA", function(x, ...) standardGeneric("renameDEA"))
 
 #' @export
-setGeneric("addDea", function(x, ...) standardGeneric("addDea"))
+setGeneric("addDEA", function(x, ...) standardGeneric("addDEA"))
 
 #' @export
-setGeneric("removeDea", function(x, ...) standardGeneric("removeDea"))
+setGeneric("removeDEA", function(x, ...) standardGeneric("removeDEA"))
 
 #' @export
-setGeneric("dea", function(x, ...) standardGeneric("dea"))
+setGeneric("DEA", function(x, ...) standardGeneric("DEA"))
 
 #' @export
-setGeneric("getDeaList", function(x, ...) standardGeneric("getDeaList"))
+setGeneric("getDEAList", function(x, ...) standardGeneric("getDEAList"))
 
 
 
 #' @export
-setGeneric("feaInfo", function(x, ...) standardGeneric("feaInfo"))
+setGeneric("FEAInfo", function(x, ...) standardGeneric("FEAInfo"))
 
 #' @export
-setGeneric("feaInfo<-", function(x, value) standardGeneric("feaInfo<-"))
+setGeneric("FEAInfo<-", function(x, value) standardGeneric("FEAInfo<-"))
 
 #' @export
-setGeneric("feaNames", function(x, ...) standardGeneric("feaNames"))
+setGeneric("FEANames", function(x, ...) standardGeneric("FEANames"))
 
 #' @export
-setGeneric("renameFea", function(x, ...) standardGeneric("renameFea"))
+setGeneric("renameFEA", function(x, ...) standardGeneric("renameFEA"))
 
 #' @export
-setGeneric("addFea", function(x, ...) standardGeneric("addFea"))
+setGeneric("addFEA", function(x, ...) standardGeneric("addFEA"))
 
 #' @export
-setGeneric("removeFea", function(x, ...) standardGeneric("removeFea"))
+setGeneric("removeFEA", function(x, ...) standardGeneric("removeFEA"))
 
 #' @export
-setGeneric("fea", function(x, ...) standardGeneric("fea"))
+setGeneric("FEA", function(x, ...) standardGeneric("FEA"))
 
 #' @export
-setGeneric("getFeaList", function(x, ...) standardGeneric("getFeaList"))
+setGeneric("getFEAList", function(x, ...) standardGeneric("getFEAList"))
 
 #' @export
 setGeneric("linkDEAandFEA",
