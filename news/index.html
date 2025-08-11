@@ -40,7 +40,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.99.2" id="deedeeexperiment-0992">DeeDeeExperiment 0.99.2<a class="anchor" aria-label="anchor" href="#deedeeexperiment-0992"></a></h2>
 <ul><li><p>Addressed the points raised in the Bioc review</p></li>
-<li><p>Expended the supported DEAs (as simple data.frame object that contains at least a column named <code>log2FoldChange</code>, <code>pvalue</code>, and <code>padj</code>)</p></li>
+<li><p>Expended the supported DEAs (as simple <code>data.frame</code> object that contains at least three columns named <code>log2FoldChange</code>, <code>pvalue</code>, and <code>padj</code>)</p></li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.99.1" id="deedeeexperiment-0991">DeeDeeExperiment 0.99.1<a class="anchor" aria-label="anchor" href="#deedeeexperiment-0991"></a></h2>
@@ -79,10 +79,10 @@
 <div class="section level3">
 <h3 id="new-features-0-2-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0"></a></h3>
 <ul><li>
-<code><a href="../reference/DeeDeeExperiment-methods.html">dea()</a></code> has been refactored for clarity:
+<code>dea()</code> has been refactored for clarity:
 <ul><li>Now it returns only the main results table, acting as <code>get_dea_df()</code>
 </li>
-<li>A new function, <code>dea_info()</code>, has been added to return additional information previously returned by <code><a href="../reference/DeeDeeExperiment-methods.html">dea()</a></code>
+<li>A new function, <code>dea_info()</code>, has been added to return additional information previously returned by <code>dea()</code>
 </li>
 </ul></li>
 <li>Initial implementation of the <code>fea</code> slot</li>
