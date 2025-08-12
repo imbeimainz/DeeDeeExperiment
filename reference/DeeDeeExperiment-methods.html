@@ -11,7 +11,7 @@ DeeDeeExperiment objects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ DeeDeeExperiment objects."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Methods for <a href="DeeDeeExperiment.html">DeeDeeExperiment</a> objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
       <div class="d-none name"><code>DeeDeeExperiment-methods.Rd</code></div>
     </div>
 
@@ -51,13 +51,13 @@ and set DE-related information and functional enrichment results in
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">DEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">getDEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">DEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">getDEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">DEANames</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">getDEANames</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">renameDEA</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
@@ -69,7 +69,7 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">removeDEA</span><span class="op">(</span><span class="va">x</span>, <span class="va">dea_name</span>, remove_linked_fea <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">DEA</span><span class="op">(</span></span>
+<span><span class="fu">getDEA</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  dea_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"minimal"</span>, <span class="st">"original"</span><span class="op">)</span>,</span>
@@ -85,13 +85,13 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">addScenarioInfo</span><span class="op">(</span><span class="va">x</span>, <span class="va">dea_name</span>, info <span class="op">=</span> <span class="cn">NULL</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">FEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">getFEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">FEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
+<span><span class="fu">getFEAInfo</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">value</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">FEANames</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span><span class="fu">getFEANames</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">renameFEA</span><span class="op">(</span><span class="va">x</span>, <span class="va">old_name</span>, <span class="va">new_name</span><span class="op">)</span></span>
@@ -111,7 +111,7 @@ and set DE-related information and functional enrichment results in
 <span><span class="fu">removeFEA</span><span class="op">(</span><span class="va">x</span>, <span class="va">fea_name</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
-<span><span class="fu">FEA</span><span class="op">(</span><span class="va">x</span>, fea_name <span class="op">=</span> <span class="cn">NULL</span>, format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"minimal"</span>, <span class="st">"original"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="fu">getFEA</span><span class="op">(</span><span class="va">x</span>, fea_name <span class="op">=</span> <span class="cn">NULL</span>, format <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"minimal"</span>, <span class="st">"original"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S4 method for class 'DeeDeeExperiment'</span></span>
 <span><span class="fu">getFEAList</span><span class="op">(</span></span>
@@ -185,7 +185,7 @@ to include. It defaults to c("gene_id", "SYMBOL").</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p>A character string referring to the type of object returned by
-<code>DEA()</code>. It defaults to <code>DFrame</code>, but can also take the value of <code>data.frame</code></p></dd>
+<code>getDEA()</code>. It defaults to <code>DFrame</code>, but can also take the value of <code>data.frame</code></p></dd>
 
 
 <dt id="arg-verbose">verbose<a class="anchor" aria-label="anchor" href="#arg-verbose"></a></dt>
@@ -235,9 +235,9 @@ below.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>DEAs</p><ul><li><p><code>DEAInfo</code> and <code>DEAInfo&lt;-</code> are the methods to get and set the <code>dea</code>
+    <p>DEAs</p><ul><li><p><code>getDEAInfo</code> and <code>getDEAInfo&lt;-</code> are the methods to get and set the <code>dea</code>
 information as a whole. These methods return <code>DeeDeeExperiment</code> objects.</p></li>
-<li><p><code>DEANames</code> returns the names of the available DE contrasts in
+<li><p><code>getDEANames</code> returns the names of the available DE contrasts in
 <code>DeeDeeExperiment</code> objects.</p></li>
 <li><p><code>renameDEA</code> is the method to rename one or multiple DEAs stored in a
 <code>DeeDeeExperiment</code> object.</p></li>
@@ -255,9 +255,9 @@ stored in a <code>DeeDeeExperiment</code> object. This information can include a
 relevant information to help document that DEA scenario.
 This context is stored in the <code>dea</code> slot under the name <code>scenario_info</code>,
 which is not a default element in <code>dea</code>.</p></li>
-</ul><p>FEAs</p><ul><li><p><code>FEAInfo</code> and <code>FEAInfo&lt;-</code> are the methods to get and set the <code>fea</code>
+</ul><p>FEAs</p><ul><li><p><code>getFEAInfo</code> and <code>getFEAInfo&lt;-</code> are the methods to get and set the <code>fea</code>
 information as a whole. These methods return <code>DeeDeeExperiment</code> objects.</p></li>
-<li><p><code>FEANames</code> returns the names of the available enrichment results in
+<li><p><code>getFEANames</code> returns the names of the available enrichment results in
 <code>DeeDeeExperiment</code> objects.</p></li>
 <li><p><code>renameFEA</code> is the method to rename one or multiple FEAs stored in a
 <code>DeeDeeExperiment</code> object.</p></li>
@@ -373,17 +373,24 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span><span class="va">dde_rem</span> <span class="op">&lt;-</span> <span class="fu">removeFEA</span><span class="op">(</span><span class="va">dde_new</span>, <span class="st">"ifng_vs_naive"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># display available DEAs</span></span></span>
-<span class="r-in"><span><span class="fu">DEANames</span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">getDEANames</span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ifng_vs_naive"       "ifngsalmo_vs_naive"  "salmonella_vs_naive"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [4] "salmo_both"         </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># display available FEAs</span></span></span>
-<span class="r-in"><span><span class="fu">FEANames</span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">getFEANames</span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># print a summary of the available DEAs and FEAs</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dde</span>, FDR <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .Vector_summary(object, ...):</span> unused argument (FDR = 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DE Results Summary:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             DEA_name  Up Down  FDR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ifng_vs_naive  30   15 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ifngsalmo_vs_naive 104   29 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  salmonella_vs_naive  80   29 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           salmo_both  37   20 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No FEA results stored.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename DEA</span></span></span>
 <span class="r-in"><span><span class="va">dde_new</span> <span class="op">&lt;-</span> <span class="fu">renameDEA</span><span class="op">(</span><span class="va">dde_new</span>,</span></span>
@@ -411,7 +418,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer></div>
