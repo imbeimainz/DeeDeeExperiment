@@ -1,3 +1,8 @@
+# DeeDeeExperiment 0.99.4
+
+* Addressing more points related t the Bioc review, mainly adopting camelCase
+naming for generics & methods
+
 # DeeDeeExperiment 0.99.2
 
 * Addressed the points raised in the Bioc review

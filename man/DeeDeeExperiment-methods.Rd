@@ -2,49 +2,49 @@
 % Please edit documentation in R/DeeDeeExperiment-methods.R
 \name{DeeDeeExperiment-methods}
 \alias{DeeDeeExperiment-methods}
-\alias{DEAInfo}
-\alias{DEAInfo<-}
-\alias{DEANames}
+\alias{infoDEA}
+\alias{infoDEA<-}
+\alias{getDEANames}
 \alias{renameDEA}
 \alias{addDEA}
 \alias{removeDEA}
-\alias{DEA}
+\alias{getDEA}
 \alias{getDEAList}
 \alias{addScenarioInfo}
-\alias{FEAInfo}
-\alias{FEAInfo<-}
-\alias{FEANames}
+\alias{infoFEA}
+\alias{infoFEA<-}
+\alias{getFEANames}
 \alias{renameFEA}
 \alias{addFEA}
 \alias{removeFEA}
-\alias{FEA}
+\alias{getFEA}
 \alias{getFEAList}
 \alias{linkDEAandFEA}
-\alias{DEAInfo,DeeDeeExperiment-method}
-\alias{DEAInfo<-,DeeDeeExperiment-method}
-\alias{DEANames,DeeDeeExperiment-method}
+\alias{infoDEA,DeeDeeExperiment-method}
+\alias{infoDEA<-,DeeDeeExperiment-method}
+\alias{getDEANames,DeeDeeExperiment-method}
 \alias{renameDEA,DeeDeeExperiment-method}
 \alias{addDEA,DeeDeeExperiment-method}
 \alias{removeDEA,DeeDeeExperiment-method}
-\alias{DEA,DeeDeeExperiment-method}
+\alias{getDEA,DeeDeeExperiment-method}
 \alias{getDEAList,DeeDeeExperiment-method}
 \alias{addScenarioInfo,DeeDeeExperiment-method}
-\alias{FEAInfo,DeeDeeExperiment-method}
-\alias{FEAInfo<-,DeeDeeExperiment-method}
-\alias{FEANames,DeeDeeExperiment-method}
+\alias{infoFEA,DeeDeeExperiment-method}
+\alias{infoFEA<-,DeeDeeExperiment-method}
+\alias{getFEANames,DeeDeeExperiment-method}
 \alias{renameFEA,DeeDeeExperiment-method}
 \alias{addFEA,DeeDeeExperiment-method}
 \alias{removeFEA,DeeDeeExperiment-method}
-\alias{FEA,DeeDeeExperiment-method}
+\alias{getFEA,DeeDeeExperiment-method}
 \alias{getFEAList,DeeDeeExperiment-method}
 \alias{linkDEAandFEA,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
-\S4method{DEAInfo}{DeeDeeExperiment}(x)
+\S4method{infoDEA}{DeeDeeExperiment}(x)
 
-\S4method{DEAInfo}{DeeDeeExperiment}(x) <- value
+\S4method{infoDEA}{DeeDeeExperiment}(x) <- value
 
-\S4method{DEANames}{DeeDeeExperiment}(x)
+\S4method{getDEANames}{DeeDeeExperiment}(x)
 
 \S4method{renameDEA}{DeeDeeExperiment}(x, old_name, new_name)
 
@@ -52,7 +52,7 @@
 
 \S4method{removeDEA}{DeeDeeExperiment}(x, dea_name, remove_linked_fea = FALSE)
 
-\S4method{DEA}{DeeDeeExperiment}(
+\S4method{getDEA}{DeeDeeExperiment}(
   x,
   dea_name = NULL,
   format = c("minimal", "original"),
@@ -65,11 +65,11 @@
 
 \S4method{addScenarioInfo}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
 
-\S4method{FEAInfo}{DeeDeeExperiment}(x)
+\S4method{infoFEA}{DeeDeeExperiment}(x)
 
-\S4method{FEAInfo}{DeeDeeExperiment}(x) <- value
+\S4method{infoFEA}{DeeDeeExperiment}(x) <- value
 
-\S4method{FEANames}{DeeDeeExperiment}(x)
+\S4method{getFEANames}{DeeDeeExperiment}(x)
 
 \S4method{renameFEA}{DeeDeeExperiment}(x, old_name, new_name)
 
@@ -85,7 +85,7 @@
 
 \S4method{removeFEA}{DeeDeeExperiment}(x, fea_name)
 
-\S4method{FEA}{DeeDeeExperiment}(x, fea_name = NULL, format = c("minimal", "original"), verbose = FALSE)
+\S4method{getFEA}{DeeDeeExperiment}(x, fea_name = NULL, format = c("minimal", "original"), verbose = FALSE)
 
 \S4method{getFEAList}{DeeDeeExperiment}(
   x,
@@ -132,7 +132,7 @@ return the full result object. It defaults to "minimal"}
 to include. It defaults to c("gene_id", "SYMBOL").}
 
 \item{type}{A character string referring to the type of object returned by
-\code{DEA()}. It defaults to \code{DFrame}, but can also take the value of \code{data.frame}}
+\code{getDEA()}. It defaults to \code{DFrame}, but can also take the value of \code{data.frame}}
 
 \item{verbose}{Logical, whether or not to display warnings. If TRUE,
 warnings/messages will be displayed. If FALSE, the function runs silently}
@@ -172,9 +172,9 @@ and set DE-related information and functional enrichment results in
 \details{
 DEAs
 \itemize{
-\item \code{DEAInfo} and \verb{DEAInfo<-} are the methods to get and set the \code{dea}
+\item \code{infoDEA} and \verb{infoDEA<-} are the methods to get and set the \code{dea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
-\item \code{DEANames} returns the names of the available DE contrasts in
+\item \code{getDEANames} returns the names of the available DE contrasts in
 \code{DeeDeeExperiment} objects.
 \item \code{renameDEA} is the method to rename one or multiple DEAs stored in a
 \code{DeeDeeExperiment} object.
@@ -196,9 +196,9 @@ which is not a default element in \code{dea}.
 
 FEAs
 \itemize{
-\item \code{FEAInfo} and \verb{FEAInfo<-} are the methods to get and set the \code{fea}
+\item \code{infoFEA} and \verb{infoFEA<-} are the methods to get and set the \code{fea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
-\item \code{FEANames} returns the names of the available enrichment results in
+\item \code{getFEANames} returns the names of the available enrichment results in
 \code{DeeDeeExperiment} objects.
 \item \code{renameFEA} is the method to rename one or multiple FEAs stored in a
 \code{DeeDeeExperiment} object.
@@ -260,10 +260,10 @@ dde_new <- addFEA(dde, fea = topGO_results_list)
 dde_rem <- removeFEA(dde_new, "ifng_vs_naive")
 
 # display available DEAs
-DEANames(dde)
+getDEANames(dde)
 
 # display available FEAs
-FEANames(dde)
+getFEANames(dde)
 
 # print a summary of the available DEAs and FEAs
 summary(dde, FDR = 0.01)

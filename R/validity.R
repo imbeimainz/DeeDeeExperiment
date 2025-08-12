@@ -2,16 +2,16 @@ validDeeDeeExperiment <- function(object) {
   msg <- NULL
 
   ## check dea validity
-  if (!is(DEAInfo(object), "list")) {
+  if (!is(infoDEA(object), "list")) {
     msg <- c(msg, "`dea` must be a list")
   }
 
-  if (length(DEAInfo(object)) > 0) {
-    if (any(is.null(names(DEAInfo(object))))) {
+  if (length(infoDEA(object)) > 0) {
+    if (any(is.null(names(infoDEA(object))))) {
       msg <- c(msg, "`dea` must be a named list")
     }
 
-    dea_names <- names(DEAInfo(object))
+    dea_names <- names(infoDEA(object))
 
 
     required_rowdata <- unlist(
@@ -32,18 +32,18 @@ validDeeDeeExperiment <- function(object) {
   }
 
   ## check fea validity
-  if (!is(FEAInfo(object), "list")) {
+  if (!is(infoFEA(object), "list")) {
     msg <- c(msg, "`fea` must be a list")
   }
 
-  if (length(FEAInfo(object)) > 0) {
-    if (any(is.null(names(FEAInfo(object))))) {
+  if (length(infoFEA(object)) > 0) {
+    if (any(is.null(names(infoFEA(object))))) {
       msg <- c(msg, "`fea` must be a named list")
     }
   }
 
-  if (length(FEAInfo(object)) > 0) {
-    for (entry in FEAInfo(object)) {
+  if (length(infoFEA(object)) > 0) {
+    for (entry in infoFEA(object)) {
       if (!is(entry$original_object, "data.frame") &&
           !is(entry$original_object, "enrichResult") &&
           !is(entry$original_object, "gseaResult")) {

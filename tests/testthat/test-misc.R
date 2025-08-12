@@ -19,7 +19,7 @@ test_that("misc", {
     de_name = "ifng_vs_naive"
   )
 
-  expect_true("df_david" %in% FEANames(dde_w_david))
+  expect_true("df_david" %in% getFEANames(dde_w_david))
 
   expect_error(
     .DeeDeefy_david(matrix())
