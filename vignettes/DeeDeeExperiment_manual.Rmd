@@ -728,13 +728,12 @@ the original objects provided when creating and updating the `dde` container.
 lapply(getDEAList(dde, format = "original"), head)
 ```
 
-`infoDEA()` returns the whole content of the `dea` slot, including the DEA
-tables and their associated metadata - the following chunk is left unevaluated
+`getDEAInfo()` returns the whole content of the `dea` slot, including the DEA tables and their associated metadata - the following chunk is left unevaluated
 for clarity as its output can be very verbose.
 
-```{r infoDEA, eval = FALSE}
+```{r getDEAInfo, eval = FALSE}
 # extra info
-infoDEA(dde)
+getDEAInfo(dde)
 ```
 
 It is easy, still, to retrieve some specific set of information, such as the
@@ -743,7 +742,7 @@ It is easy, still, to retrieve some specific set of information, such as the
 ```{r dea_info_specific}
 # retrieve specific information like the package name used for specific dea
 dea_name <- "Salm_vs_naive"
-infoDEA(dde)[[dea_name]][["package"]]
+getDEAInfo(dde)[[dea_name]][["package"]]
 ```
 
 `getFEA()` directly accesses specific FEA results either in their original format
@@ -776,13 +775,12 @@ lapply(getFEAList(dde), head)
 lapply(getFEAList(dde, dea_name = "IFNg_vs_naive", format = "original"), head)
 ```
 
-`infoFEA()` returns the whole content of the `fea` slot, including the FEA
-tables and their associated metadata. Again, the following chunk is left
+`getFEAInfo()` returns the whole content of the `fea` slot, including the FEA tables and their associated metadata. Again, the following chunk is left
 unevaluated for clarity as its output can be very verbose:
 
-```{r infoFEA, eval = FALSE}
+```{r getFEAInfo, eval = FALSE}
 # extra info
-infoFEA(dde)
+getFEAInfo(dde)
 ```
 
 Yet, specific set of information, such as the `fe_tool` used for a specific
@@ -790,7 +788,7 @@ Yet, specific set of information, such as the `fe_tool` used for a specific
 
 ```{r fea_info_specific}
 # the tool used to perform the FEA
-infoFEA(dde)[["ifng_vs_naive"]][["fe_tool"]]
+getFEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
 ```
 
 # Downstream operations with `DeeDeeExperiment` objects

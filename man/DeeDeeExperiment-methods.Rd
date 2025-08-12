@@ -2,8 +2,8 @@
 % Please edit documentation in R/DeeDeeExperiment-methods.R
 \name{DeeDeeExperiment-methods}
 \alias{DeeDeeExperiment-methods}
-\alias{infoDEA}
-\alias{infoDEA<-}
+\alias{getDEAInfo}
+\alias{getDEAInfo<-}
 \alias{getDEANames}
 \alias{renameDEA}
 \alias{addDEA}
@@ -11,8 +11,8 @@
 \alias{getDEA}
 \alias{getDEAList}
 \alias{addScenarioInfo}
-\alias{infoFEA}
-\alias{infoFEA<-}
+\alias{getFEAInfo}
+\alias{getFEAInfo<-}
 \alias{getFEANames}
 \alias{renameFEA}
 \alias{addFEA}
@@ -20,8 +20,8 @@
 \alias{getFEA}
 \alias{getFEAList}
 \alias{linkDEAandFEA}
-\alias{infoDEA,DeeDeeExperiment-method}
-\alias{infoDEA<-,DeeDeeExperiment-method}
+\alias{getDEAInfo,DeeDeeExperiment-method}
+\alias{getDEAInfo<-,DeeDeeExperiment-method}
 \alias{getDEANames,DeeDeeExperiment-method}
 \alias{renameDEA,DeeDeeExperiment-method}
 \alias{addDEA,DeeDeeExperiment-method}
@@ -29,8 +29,8 @@
 \alias{getDEA,DeeDeeExperiment-method}
 \alias{getDEAList,DeeDeeExperiment-method}
 \alias{addScenarioInfo,DeeDeeExperiment-method}
-\alias{infoFEA,DeeDeeExperiment-method}
-\alias{infoFEA<-,DeeDeeExperiment-method}
+\alias{getFEAInfo,DeeDeeExperiment-method}
+\alias{getFEAInfo<-,DeeDeeExperiment-method}
 \alias{getFEANames,DeeDeeExperiment-method}
 \alias{renameFEA,DeeDeeExperiment-method}
 \alias{addFEA,DeeDeeExperiment-method}
@@ -40,9 +40,9 @@
 \alias{linkDEAandFEA,DeeDeeExperiment-method}
 \title{Methods for \link{DeeDeeExperiment} objects}
 \usage{
-\S4method{infoDEA}{DeeDeeExperiment}(x)
+\S4method{getDEAInfo}{DeeDeeExperiment}(x)
 
-\S4method{infoDEA}{DeeDeeExperiment}(x) <- value
+\S4method{getDEAInfo}{DeeDeeExperiment}(x) <- value
 
 \S4method{getDEANames}{DeeDeeExperiment}(x)
 
@@ -65,9 +65,9 @@
 
 \S4method{addScenarioInfo}{DeeDeeExperiment}(x, dea_name, info = NULL, force = FALSE)
 
-\S4method{infoFEA}{DeeDeeExperiment}(x)
+\S4method{getFEAInfo}{DeeDeeExperiment}(x)
 
-\S4method{infoFEA}{DeeDeeExperiment}(x) <- value
+\S4method{getFEAInfo}{DeeDeeExperiment}(x) <- value
 
 \S4method{getFEANames}{DeeDeeExperiment}(x)
 
@@ -172,7 +172,7 @@ and set DE-related information and functional enrichment results in
 \details{
 DEAs
 \itemize{
-\item \code{infoDEA} and \verb{infoDEA<-} are the methods to get and set the \code{dea}
+\item \code{getDEAInfo} and \verb{getDEAInfo<-} are the methods to get and set the \code{dea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{getDEANames} returns the names of the available DE contrasts in
 \code{DeeDeeExperiment} objects.
@@ -196,7 +196,7 @@ which is not a default element in \code{dea}.
 
 FEAs
 \itemize{
-\item \code{infoFEA} and \verb{infoFEA<-} are the methods to get and set the \code{fea}
+\item \code{getFEAInfo} and \verb{getFEAInfo<-} are the methods to get and set the \code{fea}
 information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{getFEANames} returns the names of the available enrichment results in
 \code{DeeDeeExperiment} objects.

@@ -12,8 +12,8 @@ test_that("managing and retrieving", {
   # add a new (set of) DE result(s)
   dde_new <- addDEA(dde, new_del)
   expect_s4_class(dde_new, "DeeDeeExperiment")
-  expect_equal(length(infoDEA(dde)), 4)
-  expect_equal(length(infoDEA(dde_new)), 6)
+  expect_equal(length(getDEAInfo(dde)), 4)
+  expect_equal(length(getDEAInfo(dde_new)), 6)
 
   expect_error({
     addDEA(x = dde, dea = list(de_named_list$ifng_vs_naive))
@@ -32,11 +32,11 @@ test_that("managing and retrieving", {
 
   dde_edgeR <- addDEA(dde, dea = list(DGEExact_IFNg_both = dge_exact_IFNg_both))
   expect_s4_class(dde_edgeR, "DeeDeeExperiment")
-  expect_equal(length(infoDEA(dde_edgeR)), 5)
+  expect_equal(length(getDEAInfo(dde_edgeR)), 5)
 
   dde_limma <- addDEA(dde, dea = list(de_limma = de_limma))
   expect_s4_class(dde_limma, "DeeDeeExperiment")
-  expect_equal(length(infoDEA(dde_limma)), 5)
+  expect_equal(length(getDEAInfo(dde_limma)), 5)
 
   expect_no_error(addDEA(dde_limma,
     dea = list(de_limma = de_limma),
@@ -74,7 +74,7 @@ test_that("managing and retrieving", {
 
   dde_overlap <- addDEA(dde_overlap, dea = res_de_df)
   expect_s4_class(dde_overlap, "DeeDeeExperiment")
-  expect_equal(length(infoDEA(dde_overlap)), 5)
+  expect_equal(length(getDEAInfo(dde_overlap)), 5)
   expect_true(all(
     c("res_de_df_log2FoldChange", "res_de_df_pvalue", "res_de_df_padj")
     %in% colnames(rowData(dde_overlap))
@@ -97,7 +97,7 @@ test_that("managing and retrieving", {
 
   dde_removed <- removeDEA(dde, "ifngsalmo_vs_naive")
   expect_s4_class(dde_removed, "DeeDeeExperiment")
-  expect_equal(length(infoDEA(dde_removed)), 3)
+  expect_equal(length(getDEAInfo(dde_removed)), 3)
 
   expect_warning(dde_removed <- removeDEA(dde, "lol"))
 
@@ -114,11 +114,11 @@ test_that("managing and retrieving", {
     remove_linked_fea = TRUE
   )
 
-  expect_equal(length(infoFEA(new_remove_dea)), 5)
+  expect_equal(length(getFEAInfo(new_remove_dea)), 5)
 
   expect_error(removeDEA(dde, dea_name = NULL))
 
-  expect_equal(length(infoDEA(removeDEA(dde_overlap,
+  expect_equal(length(getDEAInfo(removeDEA(dde_overlap,
                                         dea_name = "res_de_df"))), 4)
 
   ## adding FEA ----------------------------------------------------------------
@@ -135,7 +135,7 @@ test_that("managing and retrieving", {
   )
 
   expect_s4_class(dde2, "DeeDeeExperiment")
-  expect_equal(length(infoFEA(dde2)), 2)
+  expect_equal(length(getFEAInfo(dde2)), 2)
 
   dde3 <- DeeDeeExperiment(sce = se_macrophage_noassays)
   expect_warning(addFEA(dde3,
@@ -172,7 +172,7 @@ test_that("managing and retrieving", {
 
   dde3 <- addFEA(dde3, fea = list(gPro_salmonella_vs_naive = gost_res$result))
 
-  expect_equal(infoFEA(dde3)$gPro_salmonella_vs_naive$fe_tool, "gProfiler")
+  expect_equal(getFEAInfo(dde3)$gPro_salmonella_vs_naive$fe_tool, "gProfiler")
 
   expect_message(dde3 <- addFEA(dde3,
     fea =
@@ -251,7 +251,7 @@ test_that("managing and retrieving", {
 
   dde2 <- removeFEA(dde2, "topGO_IFNg_naive")
   expect_s4_class(dde2, "DeeDeeExperiment")
-  expect_equal(length(infoFEA(dde2)), 1)
+  expect_equal(length(getFEAInfo(dde2)), 1)
 
   expect_error(removeFEA(dde2, "IFNgVSnaive"))
 
@@ -341,7 +341,7 @@ test_that("managing and retrieving", {
 
   expect_length(getFEAList(dde_overlap_add, dea_name = "ifng_vs_naive", format = "original", verbose = TRUE), 1)
 
-  expect_equal(length(infoFEA(dde_overlap_add)), 6)
+  expect_equal(length(getFEAInfo(dde_overlap_add)), 6)
 
   ## adding scenario info ------------------------------------------------------
 

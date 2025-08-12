@@ -67,11 +67,11 @@ test_that("creating", {
 
   expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_type(infoDEA(dde_one), "list")
+  expect_type(getDEAInfo(dde_one), "list")
 
-  expect_length(infoDEA(dde_one), 1)
+  expect_length(getDEAInfo(dde_one), 1)
 
-  expect_true("salmo_both" == names(infoDEA(dde_one)))
+  expect_true("salmo_both" == names(getDEAInfo(dde_one)))
 
   de_results_mismatch <- list(
     contrast = de_named_list$ifng_vs_naive
@@ -181,7 +181,7 @@ test_that("creating", {
 
   expect_s3_class(getFEA(dde5, "enrichr_salmo_vs_naive", verbose = TRUE), "data.frame")
 
-  expect_length(infoFEA(dde5), 1)
+  expect_length(getFEAInfo(dde5), 1)
 
 
   expect_error(DeeDeeExperiment(
@@ -209,11 +209,11 @@ test_that("creating", {
 
   expect_s4_class(new_dde, "DeeDeeExperiment")
 
-  expect_equal(infoFEA(new_dde)$fgsea$fe_tool, "fgsea")
+  expect_equal(getFEAInfo(new_dde)$fgsea$fe_tool, "fgsea")
 
-  expect_equal(infoFEA(new_dde)$gPro_res$fe_tool, "gProfiler")
+  expect_equal(getFEAInfo(new_dde)$gPro_res$fe_tool, "gProfiler")
 
-  expect_equal(infoFEA(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
+  expect_equal(getFEAInfo(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
 
   failing_fgsea <- fgseaRes
   expect_error(
@@ -278,9 +278,9 @@ test_that("creating", {
 
   expect_s4_class(dde_df,"DeeDeeExperiment")
 
-  expect_length(infoDEA(dde_df), 1)
+  expect_length(getDEAInfo(dde_df), 1)
 
-  expect_true("res_de_df" == names(infoDEA(dde_df)))
+  expect_true("res_de_df" == names(getDEAInfo(dde_df)))
 
   expect_true(all(c("res_de_df_log2FoldChange", "res_de_df_pvalue", "res_de_df_padj")
               %in% colnames(rowData(dde_df))))
