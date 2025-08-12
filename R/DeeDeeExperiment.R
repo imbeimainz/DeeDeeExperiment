@@ -107,10 +107,14 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
     } else if (is.null(de_results) &&
         is.null(enrich_results)) {
-      object <- new("DeeDeeExperiment",
-                    sce,
-                    dea = list(),
-                    fea = list())
+      # object <- new("DeeDeeExperiment",
+      #               sce,
+      #               dea = list(),
+      #               fea = list())
+
+      object <- .DeeDeeExperiment(sce,
+                                  dea = list(),
+                                  fea = list())
 
       # stash the package version
       metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
@@ -348,14 +352,27 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
     }
   }
 
-  object <- new("DeeDeeExperiment",
-                sce_out,
-                dea = dea_contrasts,
-                fea = fea_contrasts
-  )
+  # object <- new("DeeDeeExperiment",
+  #               sce_out,
+  #               dea = dea_contrasts,
+  #               fea = fea_contrasts
+  # )
+
+  object <- .DeeDeeExperiment(sce_out,
+                              dea = dea_contrasts,
+                              fea = fea_contrasts)
 
   # stash the package version
   metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
 
   return(object)
 }
+
+
+.DeeDeeExperiment <- setClass("DeeDeeExperiment",
+                              contains = "SingleCellExperiment",
+                              slots = representation(
+                                dea = "list",
+                                fea = "list"
+                              )
+)
