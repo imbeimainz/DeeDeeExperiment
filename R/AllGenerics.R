@@ -1,13 +1,13 @@
 # DeeDeeExperiment methods -----------------------------------------------------
 
 #' @export
-setGeneric("DEAInfo", function(x, ...) standardGeneric("DEAInfo"))
+setGeneric("getDEAInfo", function(x, ...) standardGeneric("getDEAInfo"))
 
 #' @export
-setGeneric("DEAInfo<-", function(x, value) standardGeneric("DEAInfo<-"))
+setGeneric("getDEAInfo<-", function(x, value) standardGeneric("getDEAInfo<-"))
 
 #' @export
-setGeneric("DEANames", function(x, ...) standardGeneric("DEANames"))
+setGeneric("getDEANames", function(x, ...) standardGeneric("getDEANames"))
 
 #' @export
 setGeneric("renameDEA", function(x, ...) standardGeneric("renameDEA"))
@@ -19,7 +19,7 @@ setGeneric("addDEA", function(x, ...) standardGeneric("addDEA"))
 setGeneric("removeDEA", function(x, ...) standardGeneric("removeDEA"))
 
 #' @export
-setGeneric("DEA", function(x, ...) standardGeneric("DEA"))
+setGeneric("getDEA", function(x, ...) standardGeneric("getDEA"))
 
 #' @export
 setGeneric("getDEAList", function(x, ...) standardGeneric("getDEAList"))
@@ -27,13 +27,13 @@ setGeneric("getDEAList", function(x, ...) standardGeneric("getDEAList"))
 
 
 #' @export
-setGeneric("FEAInfo", function(x, ...) standardGeneric("FEAInfo"))
+setGeneric("getFEAInfo", function(x, ...) standardGeneric("getFEAInfo"))
 
 #' @export
-setGeneric("FEAInfo<-", function(x, value) standardGeneric("FEAInfo<-"))
+setGeneric("getFEAInfo<-", function(x, value) standardGeneric("getFEAInfo<-"))
 
 #' @export
-setGeneric("FEANames", function(x, ...) standardGeneric("FEANames"))
+setGeneric("getFEANames", function(x, ...) standardGeneric("getFEANames"))
 
 #' @export
 setGeneric("renameFEA", function(x, ...) standardGeneric("renameFEA"))
@@ -45,7 +45,7 @@ setGeneric("addFEA", function(x, ...) standardGeneric("addFEA"))
 setGeneric("removeFEA", function(x, ...) standardGeneric("removeFEA"))
 
 #' @export
-setGeneric("FEA", function(x, ...) standardGeneric("FEA"))
+setGeneric("getFEA", function(x, ...) standardGeneric("getFEA"))
 
 #' @export
 setGeneric("getFEAList", function(x, ...) standardGeneric("getFEAList"))

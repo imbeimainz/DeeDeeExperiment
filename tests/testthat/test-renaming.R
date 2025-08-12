@@ -19,7 +19,7 @@ test_that("renaming", {
 
   expect_s4_class(dde_rename, "DeeDeeExperiment")
 
-  expect_equal(names(DEAInfo(dde_rename)), c(
+  expect_equal(names(getDEAInfo(dde_rename)), c(
     "ifng_vs_naive", "ifngsalmo_vs_naive",
     "SalmvsNaive", "salmo_both"
   ))
@@ -74,7 +74,7 @@ test_that("renaming", {
 
   expect_s4_class(dde3_rename, "DeeDeeExperiment")
 
-  expect_equal(names(DEAInfo(dde3_rename)), c(
+  expect_equal(names(getDEAInfo(dde3_rename)), c(
     "ifng_vs_naive", "IFNg_SalmvsNaive",
     "SalmvsNaive", "salmo_both"
   ))
@@ -117,7 +117,7 @@ test_that("renaming", {
   ))
 
   expect_equal(
-    FEAInfo(dde3_rename)[["ifngsalmo_vs_naive"]][["de_name"]],
+    getFEAInfo(dde3_rename)[["ifngsalmo_vs_naive"]][["de_name"]],
     "IFNg_SalmvsNaive"
   )
 
@@ -127,7 +127,7 @@ test_that("renaming", {
   )
   expect_s4_class(fea_rename, "DeeDeeExperiment")
 
-  expect_equal(FEANames(fea_rename), c(
+  expect_equal(getFEANames(fea_rename), c(
     "ifng_vs_naive",
     "ifngsalmo_vs_naive",
     "topGO_SalmonellavsNaive",

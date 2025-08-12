@@ -15,10 +15,10 @@ test_that("creating", {
   )
   expect_s4_class(dde_only_de, "DeeDeeExperiment")
 
-  expect_type(DEANames(dde_only_de), "character")
+  expect_type(getDEANames(dde_only_de), "character")
 
   expect_equal(
-    DEANames(dde_only_de),
+    getDEANames(dde_only_de),
     c("ifng_vs_naive", "ifngsalmo_vs_naive", "salmonella_vs_naive", "salmo_both")
   )
 
@@ -29,17 +29,17 @@ test_that("creating", {
 
 
   expect_s4_class(
-    DEA(dde, "ifng_vs_naive"), "DataFrame"
+    getDEA(dde, "ifng_vs_naive"), "DataFrame"
   )
 
   expect_error(
-    DEA(dde, "wrong_name", verbose = TRUE)
+    getDEA(dde, "wrong_name", verbose = TRUE)
   )
 
   dde_gone_wrong <- dde
   rowData(dde_gone_wrong)[["ifng_vs_naive_log2FoldChange"]] <- NULL
   expect_error(
-    DEA(dde_gone_wrong, "ifng_vs_naive", verbose = TRUE)
+    getDEA(dde_gone_wrong, "ifng_vs_naive", verbose = TRUE)
   )
 
   expect_error(
@@ -67,11 +67,11 @@ test_that("creating", {
 
   expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_type(DEAInfo(dde_one), "list")
+  expect_type(getDEAInfo(dde_one), "list")
 
-  expect_length(DEAInfo(dde_one), 1)
+  expect_length(getDEAInfo(dde_one), 1)
 
-  expect_true("salmo_both" == names(DEAInfo(dde_one)))
+  expect_true("salmo_both" == names(getDEAInfo(dde_one)))
 
   de_results_mismatch <- list(
     contrast = de_named_list$ifng_vs_naive
@@ -117,7 +117,7 @@ test_that("creating", {
 
   expect_warning(getDEAList(dde_list, verbose = TRUE), regexp = NULL)
 
-  expect_warning(DEA(dde_list, dea_name = "dge_lrt", verbose = TRUE),
+  expect_warning(getDEA(dde_list, dea_name = "dge_lrt", verbose = TRUE),
                  regexp = NULL)
 
   expect_warning(DeeDeeExperiment(
@@ -179,9 +179,9 @@ test_that("creating", {
     enrich_results = list(enrichr_salmo_vs_naive = enrichr_res$Reactome_2016)
   )
 
-  expect_s3_class(FEA(dde5, "enrichr_salmo_vs_naive", verbose = TRUE), "data.frame")
+  expect_s3_class(getFEA(dde5, "enrichr_salmo_vs_naive", verbose = TRUE), "data.frame")
 
-  expect_length(FEAInfo(dde5), 1)
+  expect_length(getFEAInfo(dde5), 1)
 
 
   expect_error(DeeDeeExperiment(
@@ -209,11 +209,11 @@ test_that("creating", {
 
   expect_s4_class(new_dde, "DeeDeeExperiment")
 
-  expect_equal(FEAInfo(new_dde)$fgsea$fe_tool, "fgsea")
+  expect_equal(getFEAInfo(new_dde)$fgsea$fe_tool, "fgsea")
 
-  expect_equal(FEAInfo(new_dde)$gPro_res$fe_tool, "gProfiler")
+  expect_equal(getFEAInfo(new_dde)$gPro_res$fe_tool, "gProfiler")
 
-  expect_equal(FEAInfo(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
+  expect_equal(getFEAInfo(new_dde)$clusterPro_res$fe_tool, "clusterProfiler")
 
   failing_fgsea <- fgseaRes
   expect_error(
@@ -278,9 +278,9 @@ test_that("creating", {
 
   expect_s4_class(dde_df,"DeeDeeExperiment")
 
-  expect_length(DEAInfo(dde_df), 1)
+  expect_length(getDEAInfo(dde_df), 1)
 
-  expect_true("res_de_df" == names(DEAInfo(dde_df)))
+  expect_true("res_de_df" == names(getDEAInfo(dde_df)))
 
   expect_true(all(c("res_de_df_log2FoldChange", "res_de_df_pvalue", "res_de_df_padj")
               %in% colnames(rowData(dde_df))))

@@ -681,15 +681,15 @@ dde
 Several accessor methods are available to retrieve DEA and FEA results stored
 within a `dde` object.
 
-`DEANames()` and `FEANames()` are the methods to quickly retrieve the names
+`getDEANames()` and `getFEANames()` are the methods to quickly retrieve the names
 of available DEAs and FEAs
 
 ```{r names}
 # get DEA names
-DEANames(dde)
+getDEANames(dde)
 
 # get FEA names
-FEANames(dde)
+getFEANames(dde)
 ```
 
 It is possible to directly access specific DEA results either in their original
@@ -698,19 +698,19 @@ the same class as originally provided (e.g., `DESeqResults`, `MArrayLM`...).
 
 ```{r get_dea_res}
 # access the 1st DEA if dea_name is not specified (default: minimal format)
-DEA(dde) |> head()
+getDEA(dde) |> head()
 
 # access the 1st DEA, in original format
-DEA(dde, format = "original") |> head()
+getDEA(dde, format = "original") |> head()
 
 # access specific DEA by name, in original format
-DEA(dde,
+getDEA(dde,
     dea_name = "lrt_IFNg_vs_naive",
     format = "original"
 ) |> head()
 
 # access specific DEA by name (default: minimal format)
-DEA(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
+getDEA(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
 ```
 
 `getDEAList()` retrieves all available DEAs stored in a dde object as a list.
@@ -728,13 +728,12 @@ the original objects provided when creating and updating the `dde` container.
 lapply(getDEAList(dde, format = "original"), head)
 ```
 
-`DEAInfo()` returns the whole content of the `dea` slot, including the DEA
-tables and their associated metadata - the following chunk is left unevaluated
+`getDEAInfo()` returns the whole content of the `dea` slot, including the DEA tables and their associated metadata - the following chunk is left unevaluated
 for clarity as its output can be very verbose.
 
-```{r DEAInfo, eval = FALSE}
+```{r getDEAInfo, eval = FALSE}
 # extra info
-DEAInfo(dde)
+getDEAInfo(dde)
 ```
 
 It is easy, still, to retrieve some specific set of information, such as the
@@ -743,24 +742,24 @@ It is easy, still, to retrieve some specific set of information, such as the
 ```{r dea_info_specific}
 # retrieve specific information like the package name used for specific dea
 dea_name <- "Salm_vs_naive"
-DEAInfo(dde)[[dea_name]][["package"]]
+getDEAInfo(dde)[[dea_name]][["package"]]
 ```
 
-`FEA()` directly accesses specific FEA results either in their original format
+`getFEA()` directly accesses specific FEA results either in their original format
 or in minimal format
 
 ```{r get_fea_res}
 # access the 1st FEA, (default: minimal format)
-FEA(dde) |> head()
+getFEA(dde) |> head()
 
 # access the 1st FEA, in original format
-FEA(dde, format = "original") |> head()
+getFEA(dde, format = "original") |> head()
 
 # access specific FEA by name
-FEA(dde, fea_name = "ifng_vs_naive") |> head()
+getFEA(dde, fea_name = "ifng_vs_naive") |> head()
 
 # access specific FEA by name, in original format
-FEA(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
+getFEA(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
 ```
 
 Similarly to `getDEAList()`, `getFEAList()` returns all FEAs stored in a
@@ -776,13 +775,12 @@ lapply(getFEAList(dde), head)
 lapply(getFEAList(dde, dea_name = "IFNg_vs_naive", format = "original"), head)
 ```
 
-`FEAInfo()` returns the whole content of the `fea` slot, including the FEA
-tables and their associated metadata. Again, the following chunk is left
+`getFEAInfo()` returns the whole content of the `fea` slot, including the FEA tables and their associated metadata. Again, the following chunk is left
 unevaluated for clarity as its output can be very verbose:
 
-```{r FEAInfo, eval = FALSE}
+```{r getFEAInfo, eval = FALSE}
 # extra info
-FEAInfo(dde)
+getFEAInfo(dde)
 ```
 
 Yet, specific set of information, such as the `fe_tool` used for a specific
@@ -790,7 +788,7 @@ Yet, specific set of information, such as the `fe_tool` used for a specific
 
 ```{r fea_info_specific}
 # the tool used to perform the FEA
-FEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
+getFEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
 ```
 
 # Downstream operations with `DeeDeeExperiment` objects
@@ -821,8 +819,8 @@ chunk:
 library("GeneTonic")
 my_dde <- dde
 
-res_de <- DEA(my_dde, dea_name = "IFNg_vs_naive", format = "original")
-res_enrich <- FEA(my_dde, fea_name = "ifng_vs_naive")
+res_de <- getDEA(my_dde, dea_name = "IFNg_vs_naive", format = "original")
+res_enrich <- getFEA(my_dde, fea_name = "ifng_vs_naive")
 annotation_object <- mosdef::get_annotation_orgdb(dds_macrophage,
                                                   "org.Hs.eg.db",
                                                   "ENSEMBL")

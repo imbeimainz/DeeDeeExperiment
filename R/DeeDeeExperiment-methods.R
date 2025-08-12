@@ -3,22 +3,22 @@
 #' @title Methods for [DeeDeeExperiment] objects
 #'
 #' @aliases
-#' DEAInfo
-#' DEAInfo<-
-#' DEANames
+#' getDEAInfo
+#' getDEAInfo<-
+#' getDEANames
 #' renameDEA
 #' addDEA
 #' removeDEA
-#' DEA
+#' getDEA
 #' getDEAList
 #' addScenarioInfo
-#' FEAInfo
-#' FEAInfo<-
-#' FEANames
+#' getFEAInfo
+#' getFEAInfo<-
+#' getFEANames
 #' renameFEA
 #' addFEA
 #' removeFEA
-#' FEA
+#' getFEA
 #' getFEAList
 #' linkDEAandFEA
 #'
@@ -39,7 +39,7 @@
 #' @param extra_rd A character vector of additional columns from rowData(x)
 #' to include. It defaults to c("gene_id", "SYMBOL").
 #' @param type A character string referring to the type of object returned by
-#' `DEA()`. It defaults to `DFrame`, but can also take the value of `data.frame`
+#' `getDEA()`. It defaults to `DFrame`, but can also take the value of `data.frame`
 #' @param old_name A character vector of existing DEA names to be renamed in a
 #' `DeeDeeExperiment` object
 #' @param new_name A character vector with new names to assign to existing DEA
@@ -80,9 +80,9 @@
 #'
 #' DEAs
 #'
-#' * `DEAInfo` and `DEAInfo<-` are the methods to get and set the `dea`
+#' * `getDEAInfo` and `getDEAInfo<-` are the methods to get and set the `dea`
 #' information as a whole. These methods return `DeeDeeExperiment` objects.
-#' * `DEANames` returns the names of the available DE contrasts in
+#' * `getDEANames` returns the names of the available DE contrasts in
 #' `DeeDeeExperiment` objects.
 #' * `renameDEA` is the method to rename one or multiple DEAs stored in a
 #' `DeeDeeExperiment` object.
@@ -103,9 +103,9 @@
 #'
 #' FEAs
 #'
-#' * `FEAInfo` and `FEAInfo<-` are the methods to get and set the `fea`
+#' * `getFEAInfo` and `getFEAInfo<-` are the methods to get and set the `fea`
 #' information as a whole. These methods return `DeeDeeExperiment` objects.
-#' * `FEANames` returns the names of the available enrichment results in
+#' * `getFEANames` returns the names of the available enrichment results in
 #' `DeeDeeExperiment` objects.
 #' * `renameFEA` is the method to rename one or multiple FEAs stored in a
 #' `DeeDeeExperiment` object.
@@ -167,10 +167,10 @@
 #' dde_rem <- removeFEA(dde_new, "ifng_vs_naive")
 #'
 #' # display available DEAs
-#' DEANames(dde)
+#' getDEANames(dde)
 #'
 #' # display available FEAs
-#' FEANames(dde)
+#' getFEANames(dde)
 #'
 #' # print a summary of the available DEAs and FEAs
 #' summary(dde, FDR = 0.01)
@@ -193,22 +193,22 @@ NULL
 
 # dea slot - get & set ---------------------------------------------------------
 
-## DEAInfo --------------------------------------------------------------------
+## getDEAInfo --------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("DEAInfo",
+setMethod("getDEAInfo",
           signature = "DeeDeeExperiment",
           definition = function(x) {
             x@dea
           }
 )
 
-## DEAInfo <- -----------------------------------------------------------------
+## getDEAInfo <- -----------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setReplaceMethod("DEAInfo",
+setReplaceMethod("getDEAInfo",
                  signature = c("DeeDeeExperiment", "ANY"),
                  definition = function(x, value) {
                    x@dea <- value
@@ -220,14 +220,14 @@ setReplaceMethod("DEAInfo",
 
 # dea info - add, remove, get --------------------------------------------------
 
-## DEANames -------------------------------------------------------------------
+## getDEANames -------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("DEANames",
+setMethod("getDEANames",
           signature = "DeeDeeExperiment",
           definition = function(x) {
-            names(DEAInfo(x))
+            names(getDEAInfo(x))
           }
 )
 
@@ -251,8 +251,8 @@ setMethod("renameDEA",
               stop("'new_name' must be a non empty character vector!")
             }
 
-            deas <- DEAInfo(x)
-            current_names <- DEANames(x)
+            deas <- getDEAInfo(x)
+            current_names <- getDEANames(x)
             if (length(current_names) == 0) {
               stop("No DEA results found")
             }
@@ -307,15 +307,15 @@ setMethod("renameDEA",
 
             # also rename in fea slot in there is a linked fea
 
-            fea_names <- FEANames(x)
+            fea_names <- getFEANames(x)
 
             for (fea in fea_names) {
-              current_link <- FEAInfo(x)[[fea]][["de_name"]]
+              current_link <- getFEAInfo(x)[[fea]][["de_name"]]
               if (!is.null(current_link) && current_link %in% old_name) {
                 new_index <- match(current_link, old_name)
                 updated_name <- new_name[new_index]
 
-                FEAInfo(x)[[fea]][["de_name"]] <- updated_name
+                getFEAInfo(x)[[fea]][["de_name"]] <- updated_name
               }
             }
 
@@ -351,7 +351,7 @@ setMethod("addDEA",
             # unless force is TRUE
 
             new_names <- names(dea)
-            existing_names <- names(DEAInfo(x))
+            existing_names <- names(getDEAInfo(x))
 
             overlapping_names <- intersect(new_names, existing_names)
 
@@ -370,7 +370,7 @@ setMethod("addDEA",
             # check and preocess dea
             dea <- .check_de_results(dea, entry_name)
 
-            dea_contrasts <- DEAInfo(x)
+            dea_contrasts <- getDEAInfo(x)
 
             # update rowData, naming them correctly
             for (i in names(dea)) {
@@ -613,7 +613,7 @@ setMethod("addDEA",
             }
 
             # update the dea slot
-            DEAInfo(x) <- dea_contrasts
+            getDEAInfo(x) <- dea_contrasts
 
             # check here the validity
             validObject(x)
@@ -639,7 +639,7 @@ setMethod("removeDEA",
             }
 
             # dea must be char vector
-            deas <- names(DEAInfo(x))
+            deas <- names(getDEAInfo(x))
 
             deas_to_remove <- intersect(dea_name, deas)
 
@@ -658,9 +658,9 @@ setMethod("removeDEA",
             rowData(x) <-
               rowData(x)[, !(colnames(rowData(x)) %in% all_cols_to_remove)]
             # update the de slot
-            DEAInfo(x)[deas_to_remove] <- NULL
+            getDEAInfo(x)[deas_to_remove] <- NULL
 
-            feas <- FEAInfo(x)
+            feas <- getFEAInfo(x)
 
             ## fea is not removed by default, unless = TRUE
             if (remove_linked_fea) {
@@ -670,7 +670,7 @@ setMethod("removeDEA",
               # remove
               if (length(removed_fea) > 0) {
                 feas[removed_fea] <- NULL
-                FEAInfo(x) <- feas
+                getFEAInfo(x) <- feas
                 cli::cli_alert_success(
                   "The following linked FEA entries were removed: {.val {paste(removed_fea, collapse = ', ')}} ")
               }
@@ -684,7 +684,7 @@ setMethod("removeDEA",
               }
               fea
             })
-            FEAInfo(x) <- feas
+            getFEAInfo(x) <- feas
 
             # here check some validity?
             validObject(x)
@@ -695,11 +695,11 @@ setMethod("removeDEA",
 )
 
 
-## DEA -------------------------------------------------------------------------
+## getDEA -------------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("DEA",
+setMethod("getDEA",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 dea_name = NULL,
@@ -712,7 +712,7 @@ setMethod("DEA",
               stop("'extra_rd' must be a character vector!")
             }
 
-            deas <- DEAInfo(x)
+            deas <- getDEAInfo(x)
             dea_names <- names(deas)
 
             format <- match.arg(format)
@@ -795,7 +795,7 @@ setMethod("DEA",
               # maybe check for rowname mismatches potential gene version issue?
               rownames_x <- rownames(rowData(x))
               rownames_y <-
-                rownames(DEAInfo(x)[[dea_name]][["original_object"]])
+                rownames(getDEAInfo(x)[[dea_name]][["original_object"]])
               mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
               affected_deas <- character()
@@ -825,7 +825,7 @@ setMethod("DEA",
                 out <- as.data.frame(out)
               }
             } else if (format == "original") {
-              out <- DEAInfo(x)[[dea_name]][["original_object"]]
+              out <- getDEAInfo(x)[[dea_name]][["original_object"]]
             }
             return(out)
           }
@@ -850,7 +850,7 @@ setMethod("getDEAList",
             #   )
             # }
 
-            deas <- DEAInfo(x)
+            deas <- getDEAInfo(x)
             dea_names <- names(deas)
 
             dea_list <- list()
@@ -858,7 +858,7 @@ setMethod("getDEAList",
 
             for (i in dea_names) {
               dea_list[[i]] <- as.data.frame(
-                DEA(x, dea_name = i, format = format, verbose = verbose)
+                getDEA(x, dea_name = i, format = format, verbose = verbose)
               )
 
               if (format == "minimal") {
@@ -889,8 +889,8 @@ setMethod("addScenarioInfo",
               stop("'dea_name' must be a single character string!")
             }
 
-            dea_names <- DEANames(x)
-            existing_info <- DEAInfo(x)[[dea_name]][["scenario_info"]]
+            dea_names <- getDEANames(x)
+            existing_info <- getDEAInfo(x)[[dea_name]][["scenario_info"]]
 
             # checks on info
             if (!is.null(info) && !is.character(info)) {
@@ -915,7 +915,7 @@ setMethod("addScenarioInfo",
 
             # when both info and existing_info are null -> do nothing
 
-            DEAInfo(x)[[dea_name]][["scenario_info"]] <- info
+            getDEAInfo(x)[[dea_name]][["scenario_info"]] <- info
 
             # update object
             validObject(x)
@@ -929,22 +929,22 @@ setMethod("addScenarioInfo",
 
 # fea slot - get & set ---------------------------------------------------------
 
-## FEAInfo --------------------------------------------------------------------
+## getFEAInfo --------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("FEAInfo",
+setMethod("getFEAInfo",
           signature = "DeeDeeExperiment",
           definition = function(x) {
             x@fea
           }
 )
 
-## FEAInfo <- -----------------------------------------------------------------
+## getFEAInfo <- -----------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setReplaceMethod("FEAInfo",
+setReplaceMethod("getFEAInfo",
                  signature = c("DeeDeeExperiment", "ANY"),
                  definition = function(x, value) {
                    x@fea <- value
@@ -956,14 +956,14 @@ setReplaceMethod("FEAInfo",
 
 # fea info - add, remove, get --------------------------------------------------
 
-## FEANames -------------------------------------------------------------------
+## getFEANames -------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("FEANames",
+setMethod("getFEANames",
           signature = "DeeDeeExperiment",
           definition = function(x) {
-            names(FEAInfo(x))
+            names(getFEAInfo(x))
           }
 )
 
@@ -987,8 +987,8 @@ setMethod("renameFEA",
               stop("'new_name' must be a non empty character vector!")
             }
 
-            feas <- FEAInfo(x)
-            current_names <- FEANames(x)
+            feas <- getFEAInfo(x)
+            current_names <- getFEANames(x)
             if (length(current_names) == 0) {
               stop("No FEA results found")
             }
@@ -1083,7 +1083,7 @@ setMethod(
     # unless force is TRUE
 
     new_names <- names(fea_list)
-    existing_names <- names(FEAInfo(x))
+    existing_names <- names(getFEAInfo(x))
 
     overlapping_names <- intersect(new_names, existing_names)
 
@@ -1096,13 +1096,13 @@ setMethod(
     }
 
     # get existing results in the fea slot
-    fea_contrasts <- FEAInfo(x)
+    fea_contrasts <- getFEAInfo(x)
 
     for (fe in names(fea_list)) {
       res_enrich <- fea_list[[fe]]
-      if (!is.null(DEAInfo(x)) && length(DEAInfo(x)) > 0) {
+      if (!is.null(getDEAInfo(x)) && length(getDEAInfo(x)) > 0) {
         if (!is.na(de_name)) {
-          if (de_name %in% names(DEAInfo(x))) {
+          if (de_name %in% names(getDEAInfo(x))) {
             de_res_name <- de_name
           } else {
             warning(
@@ -1112,8 +1112,8 @@ setMethod(
             de_res_name <- NA_character_
           }
         } else {
-          matched_name <- .match_fe_to_de(fe, names(DEAInfo(x)))
-          if (!is.na(matched_name) && matched_name %in% names(DEAInfo(x))) {
+          matched_name <- .match_fe_to_de(fe, names(getDEAInfo(x)))
+          if (!is.na(matched_name) && matched_name %in% names(getDEAInfo(x))) {
             de_res_name <- matched_name
             if (fe != matched_name) {
               if (verbose) {
@@ -1133,7 +1133,7 @@ setMethod(
             de_res_name <- NA_character_
             warning(
               "Could not match FEA '", fe, "' to any DE contrast.\n",
-              "Available DE results: ", paste(names(DEAInfo(x)),
+              "Available DE results: ", paste(names(getDEAInfo(x)),
                                               collapse = ", "), "\n",
               "Consider naming your enrich_results starting with one of the",
               " following prefixes:",
@@ -1204,7 +1204,7 @@ setMethod(
       fea_contrasts[[fe]] <- fea_contrast
     }
     # update the fea slot
-    FEAInfo(x) <- fea_contrasts
+    getFEAInfo(x) <- fea_contrasts
     # check here the validity
     validObject(x)
     # return the object
@@ -1225,7 +1225,7 @@ setMethod("removeFEA",
               stop("'fea_name' must be a non empty character vector!")
             }
 
-            feas <- FEANames(x)
+            feas <- getFEANames(x)
 
             if (!all(fea_name %in% feas)) {
               stop(
@@ -1243,7 +1243,7 @@ setMethod("removeFEA",
 
             for (i in feas_to_remove) {
               # update the fea slot
-              FEAInfo(x)[[i]] <- NULL
+              getFEAInfo(x)[[i]] <- NULL
             }
 
             # here check some validity?
@@ -1255,11 +1255,11 @@ setMethod("removeFEA",
 )
 
 
-## FEA-------------------------------------------------------------------------
+## getFEA-------------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
-setMethod("FEA",
+setMethod("getFEA",
           signature = c("DeeDeeExperiment"),
           definition = function(x,
                                 fea_name = NULL,
@@ -1268,7 +1268,7 @@ setMethod("FEA",
 
             format <- match.arg(format)
 
-            fea_names <- FEANames(x)
+            fea_names <- getFEANames(x)
 
             if (is.null(fea_name)) {
               if (length(fea_names) == 0) {
@@ -1295,7 +1295,7 @@ setMethod("FEA",
             }
 
             if (format == "minimal") {
-              fea <- FEAInfo(x)[[fea_name]][["shaken_results"]]
+              fea <- getFEAInfo(x)[[fea_name]][["shaken_results"]]
 
               if (is.null(fea)) {
                 if (verbose) {
@@ -1304,10 +1304,10 @@ setMethod("FEA",
                     "'. Returning original enrichment results instead."
                   )
                 }
-                fea <- FEAInfo(x)[[fea_name]]$original_object
+                fea <- getFEAInfo(x)[[fea_name]]$original_object
               }
             } else if (format == "original") {
-              fea <- FEAInfo(x)[[fea_name]][["original_object"]]
+              fea <- getFEAInfo(x)[[fea_name]][["original_object"]]
             }
 
             return(fea)
@@ -1328,7 +1328,7 @@ setMethod("getFEAList",
 
             format <- match.arg(format)
 
-            all_fea_names <- FEANames(x)
+            all_fea_names <- getFEANames(x)
 
             if (length(all_fea_names) == 0) {
               stop("No FEA results found")
@@ -1343,7 +1343,7 @@ setMethod("getFEAList",
 
             for (i in all_fea_names) {
               # catch the corresponding dea
-              de_name <- FEAInfo(x)[[i]][["de_name"]]
+              de_name <- getFEAInfo(x)[[i]][["de_name"]]
 
               # if dea_name is not indicated, return all feas
               # otherwise return only the specific feas associated with
@@ -1352,7 +1352,7 @@ setMethod("getFEAList",
               if (is.null(dea_name) ||
                   (!is.na(de_name) && de_name == dea_name)) {
                 if (format == "minimal") {
-                  fe_res <- FEAInfo(x)[[i]][["shaken_results"]]
+                  fe_res <- getFEAInfo(x)[[i]][["shaken_results"]]
 
                   if (!is.null(fe_res)) {
                     matched_feas[[i]] <- fe_res
@@ -1365,10 +1365,10 @@ setMethod("getFEAList",
                       )
                     }
 
-                    matched_feas[[i]] <- FEAInfo(x)[[i]][["original_object"]]
+                    matched_feas[[i]] <- getFEAInfo(x)[[i]][["original_object"]]
                   }
                 } else if (format == "original") {
-                  matched_feas[[i]] <- FEAInfo(x)[[i]][["original_object"]]
+                  matched_feas[[i]] <- getFEAInfo(x)[[i]][["original_object"]]
                 }
               }
             }
@@ -1405,8 +1405,8 @@ setMethod("linkDEAandFEA",
               stop("'fea_name' must be a non empty character vector!")
             }
 
-            dea_names <- DEANames(x)
-            fea_names <- FEANames(x)
+            dea_names <- getDEANames(x)
+            fea_names <- getFEANames(x)
 
 
             if (!(dea_name %in% dea_names)) {
@@ -1419,7 +1419,7 @@ setMethod("linkDEAandFEA",
               }
 
               # do we have existing link?
-              current_de_name <- FEAInfo(x)[[fea]][["de_name"]]
+              current_de_name <- getFEAInfo(x)[[fea]][["de_name"]]
 
               if (!is.null(current_de_name) && !is.na(current_de_name) &&
                   current_de_name != dea_name) {
@@ -1442,7 +1442,7 @@ setMethod("linkDEAandFEA",
                 "Assigning DEA: {.val {dea_name}} to FEA {.val {fea}}"
               )
 
-              FEAInfo(x)[[fea]][["de_name"]] <- dea_name
+              getFEAInfo(x)[[fea]][["de_name"]] <- dea_name
             }
 
             validObject(x)
@@ -1501,7 +1501,7 @@ summary.DeeDeeExperiment <- function(object,
                                      FDR = 0.05,
                                      show_scenario_info = FALSE, ...) {
   # dea summary
-  dea <- DEAInfo(object)
+  dea <- getDEAInfo(object)
 
   if (length(dea) > 0) {
     cat("DE Results Summary:\n")
@@ -1539,7 +1539,7 @@ summary.DeeDeeExperiment <- function(object,
   }
   # fea summary
 
-  fea <- FEAInfo(object)
+  fea <- getFEAInfo(object)
   if (length(fea) > 0) {
     cat("FE Results Summary:\n")
     fea_table <- data.frame(
