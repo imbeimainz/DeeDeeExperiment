@@ -3,6 +3,7 @@
 \docType{class}
 \name{DeeDeeExperiment-class}
 \alias{DeeDeeExperiment-class}
+\alias{.DeeDeeExperiment}
 \alias{DeeDeeExperiment}
 \title{The DeeDeeExperiment class}
 \usage{

@@ -367,12 +367,3 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
   return(object)
 }
-
-
-.DeeDeeExperiment <- setClass("DeeDeeExperiment",
-                              contains = "SingleCellExperiment",
-                              slots = representation(
-                                dea = "list",
-                                fea = "list"
-                              )
-)
