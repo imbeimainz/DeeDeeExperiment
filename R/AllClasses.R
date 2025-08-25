@@ -8,10 +8,10 @@
 #' @slot fea This slot is designed to hold Functional Enrichment related
 #' information.
 #'
-setClass("DeeDeeExperiment",
-         contains = "SingleCellExperiment",
-         slots = representation(
-           dea = "list",
-           fea = "list"
-         )
+.DeeDeeExperiment <- setClass("DeeDeeExperiment",
+                              contains = "SingleCellExperiment",
+                              slots = representation(
+                                dea = "list",
+                                fea = "list"
+                              )
 )
