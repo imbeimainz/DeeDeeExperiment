@@ -38,4 +38,63 @@ test_that("misc", {
 
   expect_s3_class(supported_fea_formats(), "data.frame")
   expect_equal(nrow(supported_fea_formats()), 8)
+
+  ### testing helper functions
+
+ expect_true(is.list(limma_list_for_dde(de_limma)))
+
+ expect_true(is.list(muscat_list_for_dde(list(`stim-ctrl` = muscat_res))))
+
+ expect_length(limma_list_for_dde(de_limma), 4)
+
+ de_limma_list <- limma_list_for_dde(de_limma)
+
+ expect_true(all(vapply(de_limma_list, inherits, logical(1), "data.frame")))
+
+ expected_cols <- c("log2FoldChange", "pvalue", "padj")
+
+ expect_true(all(vapply(de_limma_list, function(x) {
+   all(expected_cols %in% colnames(x))
+ }, logical(1))))
+
+ expect_identical(attr(de_limma_list$IFNgNaive, "package"), "limma")
+ expect_true(!is.null(attr(de_limma_list$IFNgNaive, "package_version")))
+
+ expect_length(muscat_list_for_dde(list(`stim-ctrl` = muscat_res)), 3)
+
+ expect_error(
+   {
+     muscat_list_for_dde(muscat_res)
+   },
+   "No valid muscat results found to convert"
+ )
+
+ dde_muscat_list <- muscat_list_for_dde(list(`stim-ctrl` = muscat_res))
+
+ expect_true(all(vapply(dde_muscat_list, function(x) {
+   all(expected_cols %in% colnames(x))
+ }, logical(1))))
+
+
+ expect_true(all(vapply(dde_muscat_list, function(x){
+   !("table" %in% names(x))
+ }, logical(1)
+ )))
+
+ expect_identical(attr(dde_muscat_list$`stim-ctrl_B cells`,
+                       "package"), "muscat")
+ expect_true(!is.null(attr(dde_muscat_list$`stim-ctrl_B cells`,
+                           "package_version")))
+
+
+ expect_error(limma_list_for_dde(fit = topTable(de_limma,
+                                                coef = 2,
+                                                number = 10,
+                                                sort.by = "none")))
+
+ expect_identical(attr(de_limma_list$IFNgNaive,
+                       "package"), "limma")
+ expect_true(!is.null(attr(de_limma_list$IFNgNaive,
+                           "package_version")))
+
 })

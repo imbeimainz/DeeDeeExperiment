@@ -30,3 +30,5 @@ data("gost_res", package = "DeeDeeExperiment")
 data("fgseaRes", package = "DeeDeeExperiment")
 
 data("gsea_res", package = "DeeDeeExperiment")
+
+data("muscat_pbDS_res", package = "DeeDeeExperiment")

@@ -91,7 +91,32 @@ test_that("managing and retrieving", {
     row.names = gene_ids
   )
 
-  expect_warning(DeeDeeExperiment(se_macrophage_noassays, de_results = de_custom))
+  expect_warning(DeeDeeExperiment(se_macrophage_noassays,
+                                  de_results = de_custom))
+
+  dea_muscat_list <- muscat_list_for_dde(list(`stim-ctrl` = muscat_res))
+
+  dea_limma_list <- limma_list_for_dde(de_limma)
+
+  dde_muscat <- dde_overlap
+  expect_s4_class(addDEA(dde_muscat, dea = dea_muscat_list), "DeeDeeExperiment")
+
+  expect_s4_class(addDEA(dde_muscat, dea = dea_limma_list), "DeeDeeExperiment")
+
+  expect_length(metadata(dde_muscat)$singlecontrast, 5)
+
+  expect_setequal(names(metadata(dde_muscat)$singlecontrast),
+                  c("ifng_vs_naive", "ifngsalmo_vs_naive",
+                    "salmonella_vs_naive", "salmo_both", "res_de_df"))
+
+
+  contrast_list <- getDEAList(dde, "minimal")
+
+  contrast_1 <- contrast_list$ifng_vs_naive
+
+  colnames(contrast_1) <- c("log_fold_change","p_value","adjusted_p_value")
+
+  expect_error(addDEA(dde, contrast_1))
 
   ## removing DEA --------------------------------------------------------------
 
