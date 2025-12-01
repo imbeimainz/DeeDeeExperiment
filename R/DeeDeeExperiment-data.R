@@ -475,3 +475,21 @@ NULL
 #' @name gsea_res
 #' @docType data
 NULL
+
+#' `muscat_res`
+#'
+#' A small example object generated with `muscat::pbDS()` ona subset Kang et al.
+#' dataset. The results represent DE between stimulated vs control samples.
+#'
+#' @details The original data were obtained from Kang et al. dataset in
+#' `ExperimentHub` and processed using `muscat` workflows. Only a small
+#' subset of genes and clusters was retained to reduce object size.
+#'
+#' @return A named `list` of DE results tables compatible with `muscat_list_for_dde`
+#'
+#' @format A `list` structured as returned by `muscat::pbDS()`
+#'
+#'
+#' @name muscat_res
+#' @docType data
+NULL
