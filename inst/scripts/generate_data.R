@@ -366,3 +366,59 @@ gsea_res <- gseGO(
   )
 
 save(gsea_res, file = "data/gsea_res.RData", compress = "xz")
+
+# generate example data for single-cell RNAseq analysis ------------------------
+library("ExperimentHub")
+library("scater")
+library("sctransform")
+library("muscat")
+library("limma")
+# retrieve the data
+eh <- ExperimentHub()
+query(eh, "Kang")
+sce <- eh[["EH2259"]]
+# remove undetected genes
+sce <- sce[rowSums(counts(sce) > 0) > 0, ]
+qc <- perCellQCMetrics(sce)
+# remove cells with few or many detected genes
+ol <- isOutlier(metric = qc$detected, nmads = 2, log = TRUE)
+sce <- sce[, !ol]
+# remove lowly expressed genes
+sce <- sce[rowSums(counts(sce) > 1) >= 10, ]
+# compute sum-factors & normalize
+sce <- computeLibraryFactors(sce)
+sce <- logNormCounts(sce)
+assays(sce)$vstresiduals <- vst(counts(sce), verbosity = FALSE)$y
+sce$id <- paste0(sce$stim, sce$ind)
+(sce <- prepSCE(sce,
+                kid = "cell", # subpopulation assignments
+                gid = "stim",  # group IDs (ctrl/stim)
+                sid = "id",   # sample IDs (ctrl/stim.1234)
+                drop = TRUE))  # drop all other colData columns
+
+# reducing data size
+set.seed(42)
+keep_clusters <- sample(levels(sce$cluster_id), 3)  # keep 3 clusters
+sce <- sce[sample(seq_len(nrow(sce)), 100), sce$cluster_id %in% keep_clusters]
+sce$cluster_id <- droplevels(sce$cluster_id)
+# compute UMAP using 1st 20 PCs
+sce <- runUMAP(sce, pca = 20)
+
+pb <- aggregateData(
+  sce,
+  assay = "counts",
+  fun = "sum",
+  by = c("cluster_id", "sample_id")
+)
+# construct design & contrast matrix
+ei <- metadata(sce)$experiment_info
+mm <- model.matrix(~ 0 + ei$group_id)
+dimnames(mm) <- list(ei$sample_id, levels(ei$group_id))
+contrast <- makeContrasts("stim-ctrl", levels = mm)
+
+# run DS analysis
+muscat_res <- pbDS(pb, design = mm, contrast = contrast)
+
+save(muscat_res, file = "data/muscat_pbDS_res.RData", compress = "xz")
+
+
