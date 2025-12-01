@@ -1016,3 +1016,180 @@ supported_fea_formats <- function() {
   return(list(sce = sce, dea_contrast = dea_contrast))
 }
 
+
+
+#' Convert a `MArrayLM` object with multiple contrasts into a list of DE results
+#' tables compatible with DeeDeeExperiment
+#'
+#' This helper function extracts DE results for each contrast contained in a
+#' `limma::MArrayLM` object and reformats them into a list of standardized data
+#' frames suitable for integration in a `DeeDeeExperiment` object.
+#' Each resulting data frame includes renamed columns: `logFC` to `log2FoldChange`
+#' ,`P.Value` to `pvalue`, and `adj.P.Val` to `padj`.
+#'
+#' @details
+#' The function assumes that each column in `fit$coefficients` corresponds to
+#' a contrast of interest. The names of the resulting list elements are taken
+#' directly from `colnames(fit$coefficients)`. The names in the input object
+#' must therefore accurately reflect the intended contrast names.
+#'
+#'
+#' @param fit A `MArrayLM` object, as produced by the `limma` workflow
+#' @param number An integer specifying the maximum number of genes to extract
+#' per contrast
+#' @param sort.by A character string specifying which statistic to rank the
+#' genes by. It must be one of the values accepted by the `sort.by` argument in
+#' the `limma::topTable()` function. Defaults to "none".
+#'
+#' @returns A named list of DE results tables, one per contrast. Each table
+#' contains standardized columns and the list is annotated with metadata
+#' indicating its package origin (`limma`).
+#'
+#' @seealso [limma::topTable()]
+#'
+#' @export
+#'
+#' @examples
+#' data("de_limma", package = "DeeDeeExperiment")
+#' new_limma_list <- limma_list_for_dde(de_limma)
+limma_list_for_dde <- function(fit,
+                               number = nrow(fit),
+                               sort.by = "none") {
+  # check type
+  stopifnot(inherits(fit, "MArrayLM"))
+
+  coef_names <- colnames(fit$coefficients)
+
+  res_list <- setNames(lapply(coef_names, function(x) {
+    res <- topTable(fit,
+                    coef = x,
+                    number = number,
+                    sort.by = sort.by)
+
+    rename_cols <- c("logFC" = "log2FoldChange",
+                     "P.Value" = "pvalue",
+                     "adj.P.Val" = "padj")
+    intersect_cols <- intersect(names(rename_cols), colnames(res))
+    colnames(res)[match(intersect_cols, colnames(res))] <- rename_cols[intersect_cols]
+
+    # keep metadata
+    attr(res, "package") <- "limma"
+    attr(res, "package_version") <- as.character(packageVersion("limma"))
+    attr(res, "original_object") <- fit
+
+    res
+
+  }), coef_names)
+
+  attr(res_list, "package") <- "limma"
+  attr(res_list, "package_version") <- as.character(packageVersion("limma"))
+
+  cli::cli_alert_info(
+    "Returning {length(res_list)} limma contrasts formatted for DeeDeeExperiment"
+    )
+
+  return(res_list)
+}
+
+
+
+
+#' Convert `muscat::pbDS()` results into a flat list of data frames compatible
+#' with `DeeDeeExperiment`
+#'
+#' This helper function extracts and flattens the nested structure returned
+#' by `muscat::pbDS()`, returning one table per contrast–cluster combination.
+#' Each resulting data frame will have standardized column names
+#' (`log2FoldChange`, `pvalue`, `padj`).
+#'
+#' The function is intended to simplify the integration of muscat  results into
+#' a `DeeDeeExperiment` object. It automatically renames columns
+#' (`logFC` to `log2FoldChange`, `p_val` to `pvalue`, and the selected adjusted
+#' p-value column to `padj`) and annotates the resulting list with metadata
+#' about the originating package.
+#'
+#' @details
+#' The function checks that each contrast entry contains a valid `table`
+#' component as expected from `pbDS()` output. Invalid or empty contrasts are
+#' skipped with a warning message.
+#' The names of the list elements in `res` must match contrast names found in
+#' the `table` slot of each entry.
+#'
+#'
+#' @param res A list, typically the output of `muscat::pbDS()` function,
+#' containing one or more contrasts
+#' @param padj_col A character string specifying which adjusted p-value column
+#' to extract. It can be either "p_adj.loc" or "p_adj".
+#'
+#' @returns A named list of data frames
+#' @export
+#'
+#' @examples
+#' data("muscat_pbDS_res", package = "DeeDeeExperiment")
+#' new_muscat_list <- muscat_list_for_dde(list(`stim-ctrl` = muscat_res))
+muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj")){
+
+  padj_col <- match.arg(padj_col)
+
+  # check type
+  if (!is.list(res)) {
+    stop("muscat output should be a list")
+  }
+
+  flat_list <- lapply(names(res), function(contrast_name){
+    this_contrast <- res[[contrast_name]]
+
+    # check for the correct structure for pbDS outpubt
+    if (!("table" %in% names(this_contrast)) ||
+        !(contrast_name %in% names(this_contrast$table)) ||
+        !is.list(this_contrast$table[[contrast_name]])) {
+      cli::cli_alert_warning(
+        "Skipping contrast {.val {contrast_name}} . No valid  results tables found.")
+      return(NULL)
+    }
+
+    tbls <- this_contrast$table[[contrast_name]]
+
+    lapply(names(tbls), function(cell){
+      df <- tbls[[cell]]
+
+      stopifnot(is.data.frame(df))
+
+      rename_cols <- c("logFC" = "log2FoldChange",
+                       "p_val" = "pvalue")
+
+      rename_cols[padj_col] <- "padj"
+
+      intersect_cols <- intersect(names(rename_cols), colnames(df))
+      colnames(df)[match(intersect_cols, colnames(df))] <- rename_cols[intersect_cols]
+
+      # assign a unique name, combining the contrast and cluster name
+      entry_name <- paste(contrast_name, cell, sep = "_")
+
+      rownames(df) <- df$gene
+
+      # keep metadata
+      attr(df, "package") <- "muscat"
+      attr(df, "package_version") <- as.character(packageVersion("muscat"))
+
+      setNames(list(df), entry_name)
+
+    })
+  })
+
+  flat_list <- unlist(unlist(flat_list, recursive = FALSE), recursive = FALSE)
+
+  if (is.null(flat_list) || length(flat_list) == 0)
+    stop("No valid muscat results found to convert")
+
+
+  cli::cli_alert_info(
+    "Returning {length(flat_list)} muscat contrast-cluster tables formatted for DeeDeeExperiment"
+  )
+
+  return(flat_list)
+
+}
+
+
+
