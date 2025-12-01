@@ -149,6 +149,19 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
   dea_contrasts <- list()
 
+  if (is.list(de_results) && identical(attr(de_results, "package"), "limma")) {
+    cli::cli_alert_info(
+      "Detected a limma result list for entry, importing accordingly."
+    )
+
+    limma_res <- .handle_limma_list(sce_out, de_results, entry_name)
+    sce_out <- limma_res$sce
+    dea_contrasts <- c(dea_contrasts, limma_res$dea_contrasts)
+
+    # stop here the processing of dea?
+    de_results <- list()
+  }
+
   for (i in names(de_results)) {
     this_de <- de_results[[i]]
 
