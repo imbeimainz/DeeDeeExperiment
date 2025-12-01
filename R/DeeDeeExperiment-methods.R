@@ -366,11 +366,27 @@ setMethod("addDEA",
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(dea))
-
             # check and preocess dea
             dea <- .check_de_results(dea, entry_name)
 
             dea_contrasts <- getDEAInfo(x)
+
+            if (is.list(dea) && identical(attr(dea, "package"), "limma")) {
+
+              cli::cli_alert_info(
+                "Detected a limma result list for entry, importing accordingly."
+              )
+
+              limma_res <- .handle_limma_list(x, dea, entry_name)
+              x <- limma_res$sce
+              dea_contrasts <- c(dea_contrasts, limma_res$dea_contrasts)
+
+              # skip the rest
+              getDEAInfo(x) <- dea_contrasts
+              validObject(x)
+              return(x)
+
+              }
 
             # update rowData, naming them correctly
             for (i in names(dea)) {
@@ -415,13 +431,21 @@ setMethod("addDEA",
                                               valid_matches = valid_matches,
                                               matched_ids = matched_ids)
 
+                if (is.null(metadata(x)$singlecontrast)) {
+                  metadata(x)$singlecontrast <- list()
+                }
+                metadata(x)$singlecontrast[[i]] <- this_de
+
 
                 dea_contrasts[[i]] <- list(
                   alpha = metadata(this_de)$alpha,
                   lfcThreshold = metadata(this_de)$lfcThreshold,
                   metainfo_logFC = mcols(this_de)$description[colnames(this_de) == "log2FoldChange"],
                   metainfo_pvalue = mcols(this_de)$description[colnames(this_de) == "pvalue"],
-                  original_object = this_de,
+                  original_object = list(
+                    metadata_storage = "singlecontrast",
+                    key   = i,
+                    coef  = NULL),
                   package = "DESeq2",
                   package_version = packageVersion("DESeq2")
                 )
@@ -484,13 +508,21 @@ setMethod("addDEA",
                                                 matched_ids = matched_ids)
                 }
 
+                if (is.null(metadata(x)$singlecontrast)) {
+                  metadata(x)$singlecontrast <- list()
+                }
+                metadata(x)$singlecontrast[[i]] <- this_de
+
                 # store metadata
                 dea_contrasts[[i]] <- list(
                   alpha = NA,
                   lfcThreshold = NA,
                   metainfo_logFC = res_tbl$comparison,
                   metainfo_pvalue = NA,
-                  original_object = this_de,
+                  original_object = list(
+                    metadata_storage = "singlecontrast",
+                    key   = i,
+                    coef  = NULL),
                   package = "edgeR",
                   package_version = packageVersion("edgeR")
                 )
@@ -540,13 +572,21 @@ setMethod("addDEA",
                                               valid_matches = valid_matches,
                                               matched_ids = matched_ids)
 
+                if (is.null(metadata(x)$singlecontrast)) {
+                  metadata(x)$singlecontrast <- list()
+                }
+                metadata(x)$singlecontrast[[i]] <- this_de
+
                 # store metadata
                 dea_contrasts[[i]] <- list(
                   alpha = NA,
                   lfcThreshold = NA,
                   metainfo_logFC = NA,
                   metainfo_pvalue = NA,
-                  original_object = this_de,
+                  original_object = list(
+                    metadata_storage = "singlecontrast",
+                    key   = i,
+                    coef  = i),
                   package = "limma",
                   package_version = packageVersion("limma")
                 )
@@ -592,15 +632,33 @@ setMethod("addDEA",
                                             valid_matches = valid_matches,
                                             matched_ids = matched_ids)
 
+                pkg <- attr(this_de, "package")
+                pkg_ver <- attr(this_de, "package_version")
+
+                if (is.null(pkg)) pkg <- NA
+                if (is.null(pkg_ver)) pkg_ver <- NA
+
+                if (is.null(metadata(x)$singlecontrast)) {
+                  metadata(x)$singlecontrast <- list()
+                }
+                metadata(x)$singlecontrast[[i]] <- this_de
+
+                original_object <- list(
+                  metadata_storage = "singlecontrast",
+                  key   = i,
+                  coef  = NULL
+                )
+
+
                 # store metadata
                 dea_contrasts[[i]] <- list(
                   alpha = NA,
                   lfcThreshold = NA,
                   metainfo_logFC = NA,
                   metainfo_pvalue = NA,
-                  original_object = this_de,
-                  package = NA,
-                  package_version = NA
+                  original_object = original_object,
+                  package = pkg,
+                  package_version = pkg_ver
                 )
               } else {
                 stop(
@@ -717,13 +775,6 @@ setMethod("getDEA",
 
             format <- match.arg(format)
 
-            # if (!(format %in% c("minimal", "original"))) {
-            #   stop(
-            #     "'format' not supported. Please use 'minimal' to return the ",
-            #     "essential columns, or 'original' to return the original object"
-            #   )
-            # }
-
             if (is.null(dea_name)) {
               if (length(dea_names) == 0) {
                 stop("No DEA results found")
@@ -736,7 +787,6 @@ setMethod("getDEA",
 
               dea_name <- dea_names[1]
             }
-
 
             if (!is.character(dea_name) || length(dea_name) != 1) {
               stop("'dea_name' must be a single character string!")
@@ -752,12 +802,41 @@ setMethod("getDEA",
             type <- match.arg(type)
 
             if (!is.character(type) || length(type) != 1) {
-              "'type' must be a single character string!"
+              stop("'type' must be a single character string!")
             }
 
-            # if (!type %in% c("DFrame", "data.frame")) {
-            #   stop("'type' must be 'DFrame' or 'data.frame'!")
-            # }
+            dea_info <- getDEAInfo(x)[[dea_name]]
+
+            original_object <- NULL
+
+            if (!is.null(dea_info$original_object)) {
+              metadata_storage <- dea_info$original_object$metadata_storage
+              key <- dea_info$original_object$key
+
+              if (metadata_storage == "singlecontrast") {
+                if (!is.null(metadata(x)$singlecontrast)) {
+                  original_object <- metadata(x)$singlecontrast[[key]]
+                }
+
+              } else if (metadata_storage == "multicontrast") {
+                if (!is.null(metadata(x)$multicontrast)) {
+                  original_object <- metadata(x)$multicontrast[[key]]
+                }
+              }
+
+            } else {
+              # stop if the original_object element in dea wasnt populated
+              stop("Could not find original_object pointer in dea slot.")
+            }
+
+
+            if (is.null(original_object)) {
+              # stop if the actual original object wasnt retrieved
+              stop(
+                "Original object for DEA '", dea_name,
+                "' could not be found in metadata(x)."
+              )
+            }
 
 
             if (format == "minimal") {
@@ -794,8 +873,8 @@ setMethod("getDEA",
 
               # maybe check for rowname mismatches potential gene version issue?
               rownames_x <- rownames(rowData(x))
-              rownames_y <-
-                rownames(getDEAInfo(x)[[dea_name]][["original_object"]])
+              rownames_y <- rownames(original_object)
+                #rownames(getDEAInfo(x)[[dea_name]][["original_object"]])
               mismatched_rows <- sum(!rownames_x %in% rownames_y)
 
               affected_deas <- character()
@@ -825,7 +904,8 @@ setMethod("getDEA",
                 out <- as.data.frame(out)
               }
             } else if (format == "original") {
-              out <- getDEAInfo(x)[[dea_name]][["original_object"]]
+              #out <- getDEAInfo(x)[[dea_name]][["original_object"]]
+              out <- original_object
             }
             return(out)
           }

@@ -36,12 +36,20 @@
                                 valid_matches = valid_matches,
                                 matched_ids = matched_ids)
 
+  if (is.null(metadata(sce)$singlecontrast)) {
+    metadata(sce)$singlecontrast <- list()
+  }
+  metadata(sce)$singlecontrast[[de_name]] <- res_de
+
   dea_contrast <- list(
     alpha = metadata(res_de)$alpha,
     lfcThreshold = metadata(res_de)$lfcThreshold,
     metainfo_logFC = mcols(res_de)$description[colnames(res_de) == "log2FoldChange"],
     metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
-    original_object = res_de,
+    original_object = list(
+      metadata_storage = "singlecontrast",
+      key   = de_name,
+      coef  = NULL),
     package = "DESeq2",
     package_version = packageVersion("DESeq2")
   )
@@ -96,12 +104,20 @@
                                   matched_ids = matched_ids)
   }
 
+  if (is.null(metadata(sce)$singlecontrast)) {
+    metadata(sce)$singlecontrast <- list()
+  }
+  metadata(sce)$singlecontrast[[de_name]] <- res_de
+
   dea_contrast <- list(
     alpha = NA,
     lfcThreshold = NA,
     metainfo_logFC = res_tbl$comparison,
     metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
-    original_object = res_de,
+    original_object = list(
+      metadata_storage = "singlecontrast",
+      key   = de_name,
+      coef  = NULL),
     package = "edgeR",
     package_version = packageVersion("edgeR")
   )
@@ -134,7 +150,15 @@
     stop(
       "The provided MArrayLM object has only ",
       ncol(res_de$coefficients),
-      " coefficient(s). At least 2 are required."
+      " coefficient(s). At least 2 (intercept + 1 contrast) are required."
+    )
+  } else if (ncol(res_de$coefficients) > 2) {
+    warning(
+      "The provided MArrayLM object has ", ncol(res_de$coefficients) ,
+      " coefficients. ",
+      "Only coefficient 2 is being used for contrast '", de_name, "'.\n",
+      "For proper handling of multiple contrasts, please use ",
+      "`limma_list_for_dde()` and pass its output to a DeeDeeExperiment object."
     )
   }
 
@@ -164,12 +188,20 @@
                                 valid_matches = valid_matches,
                                 matched_ids = matched_ids)
 
+  if (is.null(metadata(sce)$singlecontrast)) {
+    metadata(sce)$singlecontrast <- list()
+  }
+  metadata(sce)$singlecontrast[[de_name]] <- res_de
+
   dea_contrast <- list(
     alpha = NA,
     lfcThreshold = NA,
     metainfo_logFC = NA,
     metainfo_pvalue = NA,
-    original_object = res_de,
+    original_object = list(
+      metadata_storage = "singlecontrast",
+      key   = de_name,
+      coef  = de_name),
     package = "limma",
     package_version = packageVersion("limma")
   )
@@ -1003,14 +1035,40 @@ supported_fea_formats <- function() {
                                 valid_matches = valid_matches,
                                 matched_ids = matched_ids)
 
+  pkg <- attr(res_de, "package")
+  pkg_ver <- attr(res_de, "package_version")
+
+  if (is.null(pkg)) pkg <- NA
+  if (is.null(pkg_ver)) pkg_ver <- NA
+
+
+  is_limma_multicontrast <- identical(pkg, "limma") &&
+    !is.null(attr(res_de, "original_object"))
+
+  if (!is_limma_multicontrast) {
+    if (is.null(metadata(sce)$singlecontrast)) {
+      metadata(sce)$singlecontrast <- list()
+    }
+    metadata(sce)$singlecontrast[[de_name]] <- res_de
+
+    original_object <- list(
+      metadata_storage = "singlecontrast",
+      key   = de_name,
+      coef  = NULL
+    )
+  } else {
+    original_object <- NULL # the other case is handled by constructor/method
+  }
+
+
   dea_contrast <- list(
     alpha = NA,
     lfcThreshold = NA,
     metainfo_logFC = NA,
     metainfo_pvalue = NA,
-    original_object = res_de,
-    package = NA,
-    package_version = NA
+    original_object = original_object,
+    package = pkg,
+    package_version = pkg_ver
   )
 
   return(list(sce = sce, dea_contrast = dea_contrast))
@@ -1192,4 +1250,76 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj")){
 }
 
 
+
+#' Handle limma multi-contrast results formatted for DeeDeeExperiment
+#'
+#'This internal helper takes the list of contrast-wise `data.frame`s produced by
+#' `limma_list_for_dde()` and:
+#'
+#' * stores the original `MArrayLM` fit in `metadata(sce)$multicontrast`
+#'   under the user-supplied `entry_name`, and
+#' * imports each contrast table into `rowData(sce)` via `.importDE_df()`,
+#'   assembling a named list of DEA contrast metadata to populate the `dea` slot.
+#'
+#' The function assumes that `de_list` already has standardized column names
+#' (`log2FoldChange`, `pvalue`, `padj`) and carries the attributes
+#' `"package" = "limma"`, `"package_version"`, and `"original_object"` as set
+#' by `limma_list_for_dde()`.
+#'
+#' @param sce A `singleCellExperiment` object in which the DE results will be
+#' integrated
+#'
+#' @param de_list A named list of contrast-specific DE result tables, typically
+#' the output of `limma_list_for_dde()`
+#' @param entry_name A character string indicating the name under which the original
+#' `MArrayLM` fit will be stored in `metadata(sce)$multicontrast`. This is
+#' usually the object name as supplied by the user.
+#'
+#' @return A list containing the update `SingleCellExperiment` object, and
+#' a named list of DEA contrasts ready to be merged into the dea slot of a dde object
+#'
+#' @noRd
+.handle_limma_list <- function(sce, de_list, entry_name) {
+  #checks
+  stopifnot(is.list(de_list))
+  stopifnot(identical(attr(de_list, "package"), "limma"))
+
+  first_de <- de_list[[1L]]
+  fit <- attr(first_de, "original_object")
+
+  if (is.null(metadata(sce)$multicontrast)) {
+    metadata(sce)$multicontrast <- list()
+  }
+
+  if (!is.null(names(metadata(sce)$multicontrast)) &&
+      entry_name %in% names(metadata(sce)$multicontrast)) {
+    stop(
+      "A limma multicontrast object named '", entry_name,
+      "' already exists in metadata(sce)$multicontrast."
+    )
+  }
+
+  metadata(sce)$multicontrast[[entry_name]] <- fit
+
+  dea_contrasts <- list()
+
+  for (i in names(de_list)) {
+    sub_de <- de_list[[i]]
+
+    imported <- .importDE_df(sce, sub_de, i)
+    sce <- imported$sce
+
+    dea_contrasts[[i]] <- imported$dea_contrast
+    dea_contrasts[[i]]$package <- "limma"
+    dea_contrasts[[i]]$package_version <- attr(sub_de, "package_version")
+
+    dea_contrasts[[i]]$original_object <- list(
+      metadata_storage = "multicontrast",
+      key   = entry_name,  # name in metadata(sce)$multicontrast
+      coef  = i          # which contrast inside the fit
+    )
+  }
+
+  list(sce = sce, dea_contrasts = dea_contrasts)
+}
 
