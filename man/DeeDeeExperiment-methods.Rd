@@ -181,7 +181,7 @@ information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{addDEA} and \code{removeDEA} are used to respectively add or remove
 DE-results items. These methods also return \code{DeeDeeExperiment} objects, with
 updated content in the \code{dea} slot.
-\item \code{dea} and \code{getDEAList} retrieve the DEA information, as well as some
+\item \code{getDEA} and \code{getDEAList} retrieve the DEA information, as well as some
 extra rowData information and provide this as a \code{DataFrame} object
 (for a specific analysis) or as a list, with one element for each reported
 analysis.
@@ -190,7 +190,7 @@ information for a specific DE analysis.
 It allows users to attach free-text notes to a specific DEA results that
 stored in a \code{DeeDeeExperiment} object. This information can include any other
 relevant information to help document that DEA scenario.
-This context is stored in the \code{dea} slot under the name \code{scenario_info},
+This context is stored in the \code{dea} slot under the name \code{addScenarioInfo},
 which is not a default element in \code{dea}.
 }
 
@@ -205,7 +205,7 @@ information as a whole. These methods return \code{DeeDeeExperiment} objects.
 \item \code{addFEA} and \code{removeFEA} are used to respectively add or remove
 functional enrichment results items. These methods also return
 \code{DeeDeeExperiment} objects, with updated content in the \code{fea} slot.
-\item \code{fea} is the method to retrieve FE results stored in a \code{DeeDeeExperiment}
+\item \code{getFEA} is the method to retrieve FE results stored in a \code{DeeDeeExperiment}
 object for a specific contrast, as a standardized format similar to the
 output of \code{GeneTonic} shakers.
 \item \code{getFEAList} is the method that retrieves FEA results as a list. if the

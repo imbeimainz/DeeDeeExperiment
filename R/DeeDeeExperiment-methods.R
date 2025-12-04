@@ -89,7 +89,7 @@
 #' * `addDEA` and `removeDEA` are used to respectively add or remove
 #' DE-results items. These methods also return `DeeDeeExperiment` objects, with
 #' updated content in the `dea` slot.
-#' * `dea` and `getDEAList` retrieve the DEA information, as well as some
+#' * `getDEA` and `getDEAList` retrieve the DEA information, as well as some
 #' extra rowData information and provide this as a `DataFrame` object
 #' (for a specific analysis) or as a list, with one element for each reported
 #' analysis.
@@ -98,7 +98,7 @@
 #' It allows users to attach free-text notes to a specific DEA results that
 #' stored in a `DeeDeeExperiment` object. This information can include any other
 #' relevant information to help document that DEA scenario.
-#' This context is stored in the `dea` slot under the name `scenario_info`,
+#' This context is stored in the `dea` slot under the name `addScenarioInfo`,
 #' which is not a default element in `dea`.
 #'
 #' FEAs
@@ -112,7 +112,7 @@
 #' * `addFEA` and `removeFEA` are used to respectively add or remove
 #' functional enrichment results items. These methods also return
 #' `DeeDeeExperiment` objects, with updated content in the `fea` slot.
-#' * `fea` is the method to retrieve FE results stored in a `DeeDeeExperiment`
+#' * `getFEA` is the method to retrieve FE results stored in a `DeeDeeExperiment`
 #' object for a specific contrast, as a standardized format similar to the
 #' output of `GeneTonic` shakers.
 #' * `getFEAList` is the method that retrieves FEA results as a list. if the
@@ -366,7 +366,7 @@ setMethod("addDEA",
 
             # capture name inside the env where the func is called
             entry_name <- deparse(substitute(dea))
-            # check and preocess dea
+            # check and preprocess dea
             dea <- .check_de_results(dea, entry_name)
 
             dea_contrasts <- getDEAInfo(x)

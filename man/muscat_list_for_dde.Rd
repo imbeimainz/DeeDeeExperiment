@@ -5,14 +5,14 @@
 \title{Convert \code{muscat::pbDS()} results into a flat list of data frames compatible
 with \code{DeeDeeExperiment}}
 \usage{
-muscat_list_for_dde(res, padj_col = c("p_adj.loc", "p_adj"))
+muscat_list_for_dde(res, padj_col = c("p_adj.loc", "p_adj.glb"))
 }
 \arguments{
 \item{res}{A list, typically the output of \code{muscat::pbDS()} function,
 containing one or more contrasts}
 
 \item{padj_col}{A character string specifying which adjusted p-value column
-to extract. It can be either "p_adj.loc" or "p_adj".}
+to extract. It can be either "p_adj.loc" or "p_adj.glb".}
 }
 \value{
 A named list of data frames

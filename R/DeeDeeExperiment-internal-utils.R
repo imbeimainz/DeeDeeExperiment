@@ -48,7 +48,7 @@
     metainfo_pvalue = mcols(res_de)$description[colnames(res_de) == "pvalue"],
     original_object = list(
       metadata_storage = "singlecontrast",
-      key   = de_name,
+      key   = de_name, #contrast name
       coef  = NULL),
     package = "DESeq2",
     package_version = packageVersion("DESeq2")
@@ -68,7 +68,7 @@
 #'
 #' @return A list, containing the updated `SingleCellExperiment` object, and the
 #' standardized information on the DE analysis, as these are to be used in the
-#' DeeDee framework.
+#' `DeeDee` framework.
 #'
 #' @noRd
 .importDE_edgeR <- function(sce, res_de, de_name) {
@@ -116,7 +116,7 @@
     metainfo_pvalue = paste0("p-value adjusted using ", res_tbl$adjust.method),
     original_object = list(
       metadata_storage = "singlecontrast",
-      key   = de_name,
+      key   = de_name, #contrast name
       coef  = NULL),
     package = "edgeR",
     package_version = packageVersion("edgeR")
@@ -200,7 +200,7 @@
     metainfo_pvalue = NA,
     original_object = list(
       metadata_storage = "singlecontrast",
-      key   = de_name,
+      key   = de_name, #contrast name
       coef  = de_name),
     package = "limma",
     package_version = packageVersion("limma")
@@ -1053,7 +1053,7 @@ supported_fea_formats <- function() {
 
     original_object <- list(
       metadata_storage = "singlecontrast",
-      key   = de_name,
+      key   = de_name, #contrast name
       coef  = NULL
     )
   } else {
@@ -1177,7 +1177,7 @@ limma_list_for_dde <- function(fit,
 #' @param res A list, typically the output of `muscat::pbDS()` function,
 #' containing one or more contrasts
 #' @param padj_col A character string specifying which adjusted p-value column
-#' to extract. It can be either "p_adj.loc" or "p_adj".
+#' to extract. It can be either "p_adj.loc" or "p_adj.glb".
 #'
 #' @returns A named list of data frames
 #' @export
@@ -1185,7 +1185,7 @@ limma_list_for_dde <- function(fit,
 #' @examples
 #' data("muscat_pbDS_res", package = "DeeDeeExperiment")
 #' new_muscat_list <- muscat_list_for_dde(list(`stim-ctrl` = muscat_res))
-muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj")){
+muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 
   padj_col <- match.arg(padj_col)
 
