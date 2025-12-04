@@ -9,6 +9,8 @@ and `MArrayLM` object with multiple contrast into a `dde` object
 
 * Improved warning messages
 
+* A new vignette showcasing how to apply `DeeDeeExperiment` to a single-cell
+dataset
 
 # DeeDeeExperiment 1.0.0
 
