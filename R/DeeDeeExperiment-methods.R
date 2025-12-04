@@ -547,6 +547,22 @@ setMethod("addDEA",
                   )
                 }
 
+                if (ncol(this_de$coefficients) < 2) {
+                  stop(
+                    "The provided MArrayLM object has only ",
+                    ncol(this_de$coefficients),
+                    " coefficient(s). At least 2 (intercept + 1 contrast) are required."
+                  )
+                } else if (ncol(this_de$coefficients) > 2) {
+                  warning(
+                    "The provided MArrayLM object has ", ncol(this_de$coefficients) ,
+                    " coefficients. ",
+                    "Only coefficient 2 is being used for contrast '", i, "'.\n",
+                    "For proper handling of multiple contrasts, please use ",
+                    "`limma_list_for_dde()` and pass its output to a DeeDeeExperiment object."
+                  )
+                }
+
                 res_tbl <- topTable(
                   this_de,
                   coef    = 2,
