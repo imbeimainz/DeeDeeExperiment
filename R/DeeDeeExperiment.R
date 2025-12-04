@@ -15,7 +15,7 @@
 #' @param sce A `SingleCellExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported
-#' by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
+#' by the package (currently: results from `DESeq2`, `edgeR`, `limma`, `muscat`).
 #' @param enrich_results A named list of functional enrichment results. Each
 #' element can be either a data.frame (currently supports results from `topGO`,
 #' `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic`
