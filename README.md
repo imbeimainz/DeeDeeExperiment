@@ -26,7 +26,7 @@ In addition, it introduces new components designed to simplify and enhance downs
 Specifically, `DeeDeeExperiment` has two new slots:
 
 - `dea` : A slot that stores results from differential expression analysis (DEA),
-along with relevant metadata (currently supports results from `DESeq2`, `edgeR`, `limma`)
+along with relevant metadata (currently supports results from `DESeq2`, `edgeR`, `limma`, `muscat`)
 
 * `fea` : A slot that stores results from functional enrichment analysis (FEA),
 along with relevant metadata (currently supports results from `topGO`, `clusterProfiler`,
