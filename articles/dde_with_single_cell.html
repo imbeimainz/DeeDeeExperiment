@@ -70,11 +70,12 @@ Abassi</h4>
 (IMBEI), Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:abassina@uni-mainz.de" class="email">abassina@uni-mainz.de</a>
       </address>
                               <h4 data-toc-skip class="author">Lea
-Rothörl</h4>
+Schwarz</h4>
             <address class="author_afil">
       Institute of Medical Biostatistics, Epidemiology and Informatics
-(IMBEI),
-Mainz<br><h4 data-toc-skip class="author">Federico
+(IMBEI), Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:lea.schwarz@uni-mainz.de" class="email">lea.schwarz@uni-mainz.de</a>
+      </address>
+                              <h4 data-toc-skip class="author">Federico
 Marini</h4>
             <address class="author_afil">
       Institute of Medical Biostatistics, Epidemiology and Informatics
@@ -86,8 +87,7 @@ Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:marinif@uni
       
       <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/vignettes/dde_with_single_cell.Rmd" class="external-link"><code>vignettes/dde_with_single_cell.Rmd</code></a></small>
       <div class="d-none name"><code>dde_with_single_cell.Rmd</code></div>
-    </address>
-</div>
+    </div>
 
     
     
@@ -225,9 +225,9 @@ obtain pseudobulk data</p>
 <p>And construct the contrast matrix</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># construct design &amp; contrast matrix</span></span>
-<span><span class="va">ei</span> <span class="op">&lt;-</span> <span class="fu">metadata</span><span class="op">(</span><span class="va">sce</span><span class="op">)</span><span class="op">$</span><span class="va">experiment_info</span></span>
+<span><span class="va">ei</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Annotated-class.html" class="external-link">metadata</a></span><span class="op">(</span><span class="va">sce</span><span class="op">)</span><span class="op">$</span><span class="va">experiment_info</span></span>
 <span><span class="va">mm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html" class="external-link">model.matrix</a></span><span class="op">(</span><span class="op">~</span> <span class="fl">0</span> <span class="op">+</span> <span class="va">ei</span><span class="op">$</span><span class="va">group_id</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">mm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ei</span><span class="op">$</span><span class="va">sample_id</span>, <span class="fu"><a href="https://rdrr.io/r/base/levels.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">ei</span><span class="op">$</span><span class="va">group_id</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">mm</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">ei</span><span class="op">$</span><span class="va">sample_id</span>, <span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Factor-class.html" class="external-link">levels</a></span><span class="op">(</span><span class="va">ei</span><span class="op">$</span><span class="va">group_id</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">contrast</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/limma/man/makeContrasts.html" class="external-link">makeContrasts</a></span><span class="op">(</span><span class="st">"stim-ctrl"</span>, levels <span class="op">=</span> <span class="va">mm</span><span class="op">)</span></span></code></pre></div>
 <p>With the pseudobulk data assembled, we can now test for differential
 state (DS) using <code>pbDS</code></p>
@@ -244,7 +244,7 @@ state (DS) using <code>pbDS</code></p>
 <code><a href="../reference/muscat_list_for_dde.html">muscat_list_for_dde()</a></code> to transform it into a format
 accepted by <code>DeeDeeExperiment</code></p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
+<code class="sourceCode R"><span><span class="co"># preparing the results as muscat list</span></span>
 <span><span class="va">muscat_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/muscat_list_for_dde.html">muscat_list_for_dde</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>`stim-ctrl` <span class="op">=</span> <span class="va">muscat_res</span><span class="op">)</span>,</span>
 <span>                                   padj_col <span class="op">=</span> <span class="st">"p_adj.loc"</span><span class="op">)</span></span></code></pre></div>
 <p>Finally the results can be directly added to a new <code>dde</code>
@@ -269,13 +269,19 @@ object, or to an existing one.</p>
 <span><span class="co">#&gt; altExpNames(0):</span></span>
 <span><span class="co">#&gt; dea(8): stim-ctrl_B cells, stim-ctrl_CD14+ Monocytes, stim-ctrl_CD4 T cells, stim-ctrl_CD8 T cells, stim-ctrl_Dendritic cells, stim-ctrl_FCGR3A+ Monocytes, stim-ctrl_Megakaryocytes, stim-ctrl_NK cells </span></span>
 <span><span class="co">#&gt; fea(0):</span></span></code></pre></div>
+<p>As for the other <code>DeeDeeExperiment</code> objects, we can call
+some specific methods to extract/retrieve/integrate some
+information.<br>
+We can extract the names of the DEA included:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">#check DEAs</span></span>
+<code class="sourceCode R"><span><span class="co"># check DEAs</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEANames</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "stim-ctrl_B cells"           "stim-ctrl_CD14+ Monocytes"  </span></span>
 <span><span class="co">#&gt; [3] "stim-ctrl_CD4 T cells"       "stim-ctrl_CD8 T cells"      </span></span>
 <span><span class="co">#&gt; [5] "stim-ctrl_Dendritic cells"   "stim-ctrl_FCGR3A+ Monocytes"</span></span>
 <span><span class="co">#&gt; [7] "stim-ctrl_Megakaryocytes"    "stim-ctrl_NK cells"</span></span></code></pre></div>
+<p>Also, we can directly retrieve the content itself of each DEA by
+typing</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># retrieve results</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEA</a></span><span class="op">(</span><span class="va">dde</span>,</span>
@@ -299,9 +305,8 @@ object, or to an existing one.</p>
 <span><span class="co">#&gt; SDF4                 6.29608e-02</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEA</a></span><span class="op">(</span><span class="va">dde</span>,</span>
-<span>    dea_name <span class="op">=</span> <span class="st">"stim-ctrl_CD14+ Monocytes"</span>,</span>
-<span>    format <span class="op">=</span> <span class="st">"original"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>       dea_name <span class="op">=</span> <span class="st">"stim-ctrl_CD14+ Monocytes"</span>,</span>
+<span>       format <span class="op">=</span> <span class="st">"original"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              gene      cluster_id log2FoldChange    logCPM          F</span></span>
 <span><span class="co">#&gt; HES4         HES4 CD14+ Monocytes      6.4921975  7.975074 305.569411</span></span>
 <span><span class="co">#&gt; ISG15       ISG15 CD14+ Monocytes      7.0240366 14.751515 232.635530</span></span>
@@ -316,16 +321,26 @@ object, or to an existing one.</p>
 <span><span class="co">#&gt; UBE2J2   8.502381e-05 2.510891e-04 4.817526e-04 stim-ctrl</span></span>
 <span><span class="co">#&gt; CPSF3L   1.187149e-02 2.083016e-02 3.426077e-02 stim-ctrl</span></span>
 <span><span class="co">#&gt; AURKAIP1 7.378159e-06 2.880451e-05 5.506716e-05 stim-ctrl</span></span></code></pre></div>
+<p>General info on the DEA performed can be shown with
+<code><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo()</a></code></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dea_name</span> <span class="op">&lt;-</span> <span class="st">"stim-ctrl_B cells"</span></span>
+<code class="sourceCode R"><span><span class="co"># retrieving the DEA information</span></span>
+<span><span class="va">dea_name</span> <span class="op">&lt;-</span> <span class="st">"stim-ctrl_B cells"</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="va">dea_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"package"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "muscat"</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="va">dea_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"package_version"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "1.24.0"</span></span></code></pre></div>
+<p>To add some information on the scenario under investigation, we can
+use <code><a href="../reference/DeeDeeExperiment-methods.html">addScenarioInfo()</a></code>. This can be e.g. later processed as
+a contextually relevant bit if a Large Language Model is used to
+interact with this object.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">addScenarioInfo</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<code class="sourceCode R"><span><span class="co"># adding info on the scenario under investigation</span></span>
+<span><span class="va">dde</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">addScenarioInfo</a></span><span class="op">(</span><span class="va">dde</span>,</span>
 <span>                       dea_name <span class="op">=</span> <span class="st">"stim-ctrl_Dendritic cells"</span>,</span>
 <span>                       info <span class="op">=</span> <span class="st">"This result contains the output of pseudobulk DE analysis performed on dendritic cells, comparing untreated samples to those stimulated with IFNβ"</span><span class="op">)</span></span></code></pre></div>
+<p>As usual, the <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> method can be called to obtain a
+quick overview on all performed analyses.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dde</span>, show_scenario_info <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DE Results Summary:</span></span>
@@ -465,7 +480,7 @@ Genetic Variation.”</span> <em>Nature Biotechnology</em> 36 (1): 89–94.
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://najlaabassi.github.io/" class="external-link">Najla Abassi</a>, <a href="https://github.com/lea-rothoerl" class="external-link">Lea Rothörl</a>, <a href="https://federicomarini.github.io" class="external-link">Federico Marini</a>.</p>
+  <p>Developed by <a href="https://najlaabassi.github.io/" class="external-link">Najla Abassi</a>, <a href="https://github.com/lea-rothoerl" class="external-link">Lea Schwarz</a>, <a href="https://federicomarini.github.io" class="external-link">Federico Marini</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">

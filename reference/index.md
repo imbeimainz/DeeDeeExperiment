@@ -20,7 +20,11 @@
   [`getFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
   [`getFEAList(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
   [`linkDEAandFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
-  : Methods for DeeDeeExperiment objects
+  :
+
+  Methods for
+  [DeeDeeExperiment](https://rdrr.io/pkg/DeeDeeExperiment/man/DeeDeeExperiment.html)
+  objects
 
 - [`show(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-misc.md)
   [`summary(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-misc.md) :

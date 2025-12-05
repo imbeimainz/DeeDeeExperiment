@@ -178,7 +178,7 @@ Now we integrate the output of muscat in
 transform it into a format accepted by `DeeDeeExperiment`
 
 ``` r
-
+# preparing the results as muscat list
 muscat_list <- muscat_list_for_dde(res = list(`stim-ctrl` = muscat_res),
                                    padj_col = "p_adj.loc")
 ```
@@ -208,14 +208,20 @@ dde
 #> fea(0):
 ```
 
+As for the other `DeeDeeExperiment` objects, we can call some specific
+methods to extract/retrieve/integrate some information.  
+We can extract the names of the DEA included:
+
 ``` r
-#check DEAs
+# check DEAs
 getDEANames(dde)
 #> [1] "stim-ctrl_B cells"           "stim-ctrl_CD14+ Monocytes"  
 #> [3] "stim-ctrl_CD4 T cells"       "stim-ctrl_CD8 T cells"      
 #> [5] "stim-ctrl_Dendritic cells"   "stim-ctrl_FCGR3A+ Monocytes"
 #> [7] "stim-ctrl_Megakaryocytes"    "stim-ctrl_NK cells"
 ```
+
+Also, we can directly retrieve the content itself of each DEA by typing
 
 ``` r
 # retrieve results
@@ -240,9 +246,8 @@ getDEA(dde,
 #> SDF4                 6.29608e-02
 
 getDEA(dde,
-    dea_name = "stim-ctrl_CD14+ Monocytes",
-    format = "original"
-) |> head()
+       dea_name = "stim-ctrl_CD14+ Monocytes",
+       format = "original") |> head()
 #>              gene      cluster_id log2FoldChange    logCPM          F
 #> HES4         HES4 CD14+ Monocytes      6.4921975  7.975074 305.569411
 #> ISG15       ISG15 CD14+ Monocytes      7.0240366 14.751515 232.635530
@@ -259,7 +264,11 @@ getDEA(dde,
 #> AURKAIP1 7.378159e-06 2.880451e-05 5.506716e-05 stim-ctrl
 ```
 
+General info on the DEA performed can be shown with
+[`getDEAInfo()`](../reference/DeeDeeExperiment-methods.md)
+
 ``` r
+# retrieving the DEA information
 dea_name <- "stim-ctrl_B cells"
 getDEAInfo(dde)[[dea_name]][["package"]]
 #> [1] "muscat"
@@ -267,11 +276,20 @@ getDEAInfo(dde)[[dea_name]][["package_version"]]
 #> [1] "1.24.0"
 ```
 
+To add some information on the scenario under investigation, we can use
+[`addScenarioInfo()`](../reference/DeeDeeExperiment-methods.md). This
+can be e.g. later processed as a contextually relevant bit if a Large
+Language Model is used to interact with this object.
+
 ``` r
+# adding info on the scenario under investigation
 dde <- addScenarioInfo(dde,
                        dea_name = "stim-ctrl_Dendritic cells",
                        info = "This result contains the output of pseudobulk DE analysis performed on dendritic cells, comparing untreated samples to those stimulated with IFNβ")
 ```
+
+As usual, the [`summary()`](https://rdrr.io/r/base/summary.html) method
+can be called to obtain a quick overview on all performed analyses.
 
 ``` r
 summary(dde, show_scenario_info = TRUE)

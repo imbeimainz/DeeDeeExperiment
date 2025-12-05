@@ -1,6 +1,6 @@
 # Changelog
 
-## DeeDeeExperiment 1.1.1
+## DeeDeeExperiment 1.2.0
 
 - The DEA original objects are no longer stored in the `dea` slot. They
   are now stored under `metadata(dde)$singlecontrast` or
@@ -33,7 +33,7 @@
 
 - Addressed the points raised in the Bioc review
 
-- Expended the supported DEAs (as simple `data.frame` object that
+- Expanded the supported DEAs (as simple `data.frame` object that
   contains at least three columns named `log2FoldChange`, `pvalue`, and
   `padj`)
 
@@ -66,7 +66,7 @@
 - Method dispatch is now only base on x being `DeeDeeExperiment`, other
   arguments are no longer part of the method signature
 
-- Expended supported FEAs: now takes results from `topGO`,
+- Expanded supported FEAs: now takes results from `topGO`,
   `clusterProfiler`, `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`,
   and output of `GeneTonic` shakers
 

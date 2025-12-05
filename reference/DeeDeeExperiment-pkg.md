@@ -27,7 +27,7 @@ Useful links:
 
 Authors:
 
-- Lea Rothörl <lea.rothoerl@posteo.de>
+- Lea Schwarz <lea.schwarz@uni-mainz.de>
   ([ORCID](https://orcid.org/0000-0003-2554-0583))
 
 - Federico Marini <marinif@uni-mainz.de>

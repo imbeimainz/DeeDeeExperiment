@@ -83,7 +83,7 @@ exploration to packages such as `iSEE` or similar.
 
 ## Author
 
-Najla Abassi, Lea Rothörl, and Federico Marini
+Najla Abassi, Lea Schwarz, and Federico Marini
 
 ## Examples
 
