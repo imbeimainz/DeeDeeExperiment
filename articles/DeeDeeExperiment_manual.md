@@ -13,7 +13,10 @@ of these analyses across multiple contrasts becomes increasingly
 overwhelming. This challenge is further amplified in single-cell
 RNA-seq, where pseudo-bulk analyses generate numerous results tables
 across cell types and contrasts, making it challenging to organize,
-explore, and reproduce findings, even for experienced users.
+explore, and reproduce findings, even for experienced users - we invite
+you to see this more in detail in the [dedicated companion vignette for
+single cell
+data](https://bioconductor.org/packages/3.23/DeeDeeExperiment/vignettes/dde_with_single_cell.html).
 
 To address these issues, we introduce the
 *[DeeDeeExperiment](https://bioconductor.org/packages/3.23/DeeDeeExperiment)*
