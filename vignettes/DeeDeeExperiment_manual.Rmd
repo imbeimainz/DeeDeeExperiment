@@ -6,9 +6,10 @@ author:
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
   email: abassina@uni-mainz.de
-- name: Lea Rothörl
+- name: Lea Schwarz
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  email: lea.schwarz@uni-mainz.de
 - name: Federico Marini
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
