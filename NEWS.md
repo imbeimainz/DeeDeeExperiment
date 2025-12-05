@@ -29,7 +29,7 @@ naming for generics & methods
 
 * Addressed the points raised in the Bioc review
 
-* Expended the supported DEAs (as simple `data.frame` object that contains
+* Expanded the supported DEAs (as simple `data.frame` object that contains
 at least three columns named `log2FoldChange`, `pvalue`, and `padj`)
 
 # DeeDeeExperiment 0.99.1
@@ -60,7 +60,7 @@ a specific DEA, assign DEA to FEA
 * Method dispatch is now only base on x being `DeeDeeExperiment`, other arguments
 are no longer part of the method signature
 
-* Expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
+* Expanded supported FEAs: now takes results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers
 
 # DeeDeeExperiment 0.3.0
