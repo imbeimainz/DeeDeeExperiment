@@ -30,7 +30,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Lea Rothörl \email{lea.rothoerl@posteo.de} (\href{https://orcid.org/0000-0003-2554-0583}{ORCID})
+  \item Lea Schwarz \email{lea.schwarz@uni-mainz.de} (\href{https://orcid.org/0000-0003-2554-0583}{ORCID})
   \item Federico Marini \email{marinif@uni-mainz.de} (\href{https://orcid.org/0000-0003-3252-7758}{ORCID})
 }
 

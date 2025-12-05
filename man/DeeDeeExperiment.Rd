@@ -96,5 +96,5 @@ dde <- DeeDeeExperiment(
 )
 }
 \author{
-Najla Abassi, Lea Rothörl, and Federico Marini
+Najla Abassi, Lea Schwarz, and Federico Marini
 }
