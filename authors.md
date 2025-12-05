@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/DESCRIPTION)
 
 Abassi N, Schwarz L, Marini F (2025). *DeeDeeExperiment:
 DeeDeeExperiment: An S4 Class for managing and exploring omics analysis

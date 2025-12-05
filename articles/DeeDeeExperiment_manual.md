@@ -16,7 +16,7 @@ across cell types and contrasts, making it challenging to organize,
 explore, and reproduce findings, even for experienced users.
 
 To address these issues, we introduce the
-*[DeeDeeExperiment](https://bioconductor.org/packages/3.22/DeeDeeExperiment)*
+*[DeeDeeExperiment](https://bioconductor.org/packages/3.23/DeeDeeExperiment)*
 class, an S4 object that extends the widely adopted
 `SingleCellExperiment` class in Bioconductor.
 
@@ -49,9 +49,9 @@ Specifically, `DeeDeeExperiment` has two new slots:
     thresholds (if specified).
   - Meta info related to both the LFC and p-value.
   - The package used to generate the DE results
-    (e.g. *[DEseq2](https://bioconductor.org/packages/3.22/DEseq2)*,
-    *[edgeR](https://bioconductor.org/packages/3.22/edgeR)* or
-    *[limma](https://bioconductor.org/packages/3.22/limma)*…).
+    (e.g. *[DEseq2](https://bioconductor.org/packages/3.23/DEseq2)*,
+    *[edgeR](https://bioconductor.org/packages/3.23/edgeR)* or
+    *[limma](https://bioconductor.org/packages/3.23/limma)*…).
   - A pointer to the original DE result object, which is kept in the
     `metadata` of the `DeeDeeExperiment` object.
 
@@ -66,7 +66,7 @@ The main columns to use in DEA in addition to the feature identifier
   - The FEA name.
   - A `GeneTonicList`-compatible set of `shaken_results` (ready to be
     used in
-    *[GeneTonic](https://bioconductor.org/packages/3.22/GeneTonic)*).
+    *[GeneTonic](https://bioconductor.org/packages/3.23/GeneTonic)*).
   - The enrichment tool used to generate the results (e.g. `topGO`,
     `clusterProfiler...`).
   - A copy of the original enrichment result object.
@@ -120,7 +120,7 @@ library("DeeDeeExperiment")
 
 In the remainder of this vignette, we will illustrate the main features
 of
-*[DeeDeeExperiment](https://bioconductor.org/packages/3.22/DeeDeeExperiment)*
+*[DeeDeeExperiment](https://bioconductor.org/packages/3.23/DeeDeeExperiment)*
 on a publicly available dataset from Alasoo, et al. “Shared genetic
 effects on chromatin and gene expression indicate a role for enhancer
 priming in immune response”, published in Nature Genetics, January 2018
@@ -128,7 +128,7 @@ priming in immune response”, published in Nature Genetics, January 2018
 [doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
 
 The data is made available via the
-*[macrophage](https://bioconductor.org/packages/3.22/macrophage)*
+*[macrophage](https://bioconductor.org/packages/3.23/macrophage)*
 Bioconductor package, which contains the files output from the Salmon
 quantification (version 0.12.0, with GENCODE v29 reference), as well as
 the values summarized at the gene level, which we will use to exemplify.
@@ -1457,15 +1457,15 @@ getDEA(dde,
 #> ENSG00000204257 HLA-DMA 1922.02562 3.556107e+06   FALSE 0.050271572
 #>                 dispGeneIter    dispFit dispersion dispIter dispOutlier
 #> ENSG00000164741            8 0.07822483 0.16262236       10       FALSE
-#> ENSG00000078808            8 0.07420142 0.00763372        9       FALSE
-#> ENSG00000251034           13 0.42671548 0.19197295        8       FALSE
-#> ENSG00000162676           30 0.49242763 0.14920745        6       FALSE
+#> ENSG00000078808            8 0.07420141 0.00763372        9       FALSE
+#> ENSG00000251034           13 0.42671549 0.19197295        8       FALSE
+#> ENSG00000162676           30 0.49242764 0.14920745        6       FALSE
 #> ENSG00000170356            8 0.35754499 0.15108319        8       FALSE
 #> ENSG00000204257            8 0.07578856 0.05282007        7       FALSE
 #>                    dispMAP Intercept line_eiwy_1_vs_diku_1
 #> ENSG00000164741 0.16262236  7.770353           0.970022375
 #> ENSG00000078808 0.00763372 12.251844           0.005781728
-#> ENSG00000251034 0.19197295  1.755162           0.175340689
+#> ENSG00000251034 0.19197295  1.755162           0.175340688
 #> ENSG00000162676 0.14920745  2.136581           0.480446534
 #> ENSG00000170356 0.15108319  4.233279           1.056913201
 #> ENSG00000204257 0.05282007  7.540662           0.089423375
@@ -1474,7 +1474,7 @@ getDEA(dde,
 #> ENSG00000078808           -0.05342186            0.31633010
 #> ENSG00000251034            1.05452572            0.33475856
 #> ENSG00000162676            0.58406093           -0.47081704
-#> ENSG00000170356           -5.53704332           -1.66265291
+#> ENSG00000170356           -5.53704332           -1.66265292
 #> ENSG00000204257            0.79727382            0.58138974
 #>                 line_podx_1_vs_diku_1 line_qaqx_1_vs_diku_1
 #> ENSG00000164741            1.87146580             3.8188294
@@ -1526,11 +1526,11 @@ getDEA(dde,
 #> ENSG00000170356                   0.44708740               10.347861
 #> ENSG00000204257                   0.20193856               36.027147
 #>                 WaldStatistic_line_eiwy_1_vs_diku_1
-#> ENSG00000164741                          2.33876251
+#> ENSG00000164741                          2.33876252
 #> ENSG00000078808                          0.06424094
 #> ENSG00000251034                          0.30362451
 #> ENSG00000162676                          0.93433451
-#> ENSG00000170356                          2.41212350
+#> ENSG00000170356                          2.41212349
 #> ENSG00000204257                          0.37089814
 #>                 WaldStatistic_line_fikt_3_vs_diku_1
 #> ENSG00000164741                          -0.1819876
@@ -1541,13 +1541,13 @@ getDEA(dde,
 #> ENSG00000204257                           3.3190221
 #>                 WaldStatistic_line_ieki_2_vs_diku_1
 #> ENSG00000164741                         -0.04627211
-#> ENSG00000078808                          3.51416315
+#> ENSG00000078808                          3.51416316
 #> ENSG00000251034                          0.56649887
 #> ENSG00000162676                         -0.80967846
-#> ENSG00000170356                         -2.99602717
-#> ENSG00000204257                          2.41171465
+#> ENSG00000170356                         -2.99602716
+#> ENSG00000204257                          2.41171466
 #>                 WaldStatistic_line_podx_1_vs_diku_1
-#> ENSG00000164741                          4.51757371
+#> ENSG00000164741                          4.51757372
 #> ENSG00000078808                          1.88404851
 #> ENSG00000251034                          0.08537831
 #> ENSG00000162676                          1.27433458
@@ -1558,7 +1558,7 @@ getDEA(dde,
 #> ENSG00000078808                          -2.2825484
 #> ENSG00000251034                          -2.1936493
 #> ENSG00000162676                          -0.5146599
-#> ENSG00000170356                          -3.4666800
+#> ENSG00000170356                          -3.4666799
 #> ENSG00000204257                          -1.3561926
 #>                 WaldStatistic_condition_IFNg_vs_naive
 #> ENSG00000164741                             0.8937464
@@ -1575,12 +1575,12 @@ getDEA(dde,
 #> ENSG00000170356                                    1.0298387
 #> ENSG00000204257                                   21.0416218
 #>                 WaldStatistic_condition_SL1344_vs_naive WaldPvalue_Intercept
-#> ENSG00000164741                              0.03592521        1.261921e-103
-#> ENSG00000078808                             10.80754515         0.000000e+00
+#> ENSG00000164741                              0.03592521        1.261920e-103
+#> ENSG00000078808                             10.80754517         0.000000e+00
 #> ENSG00000251034                              2.76214304         8.596573e-04
 #> ENSG00000162676                              1.17893863         5.703738e-06
-#> ENSG00000170356                             -1.63318139         4.279380e-25
-#> ENSG00000204257                             -3.75735039        3.144538e-284
+#> ENSG00000170356                             -1.63318139         4.279381e-25
+#> ENSG00000204257                             -3.75735039        3.144534e-284
 #>                 WaldPvalue_line_eiwy_1_vs_diku_1
 #> ENSG00000164741                       0.01934773
 #> ENSG00000078808                       0.94877838
@@ -1596,21 +1596,21 @@ getDEA(dde,
 #> ENSG00000170356                     3.035699e-07
 #> ENSG00000204257                     9.033327e-04
 #>                 WaldPvalue_line_ieki_2_vs_diku_1
-#> ENSG00000164741                     0.9630933700
+#> ENSG00000164741                     0.9630933699
 #> ENSG00000078808                     0.0004411418
-#> ENSG00000251034                     0.5710546989
-#> ENSG00000162676                     0.4181250013
-#> ENSG00000170356                     0.0027352206
-#> ENSG00000204257                     0.0158777025
+#> ENSG00000251034                     0.5710546998
+#> ENSG00000162676                     0.4181250017
+#> ENSG00000170356                     0.0027352207
+#> ENSG00000204257                     0.0158777024
 #>                 WaldPvalue_line_podx_1_vs_diku_1
-#> ENSG00000164741                     6.255226e-06
+#> ENSG00000164741                     6.255225e-06
 #> ENSG00000078808                     5.955841e-02
 #> ENSG00000251034                     9.319606e-01
 #> ENSG00000162676                     2.025449e-01
 #> ENSG00000170356                     4.651468e-01
 #> ENSG00000204257                     8.742264e-01
 #>                 WaldPvalue_line_qaqx_1_vs_diku_1
-#> ENSG00000164741                     2.616515e-20
+#> ENSG00000164741                     2.616514e-20
 #> ENSG00000078808                     2.245698e-02
 #> ENSG00000251034                     2.826063e-02
 #> ENSG00000162676                     6.067907e-01
@@ -1622,18 +1622,18 @@ getDEA(dde,
 #> ENSG00000251034                       6.866557e-01
 #> ENSG00000162676                       3.502229e-01
 #> ENSG00000170356                       6.452673e-01
-#> ENSG00000204257                       2.783307e-97
+#> ENSG00000204257                       2.783305e-97
 #>                 WaldPvalue_condition_IFNg_SL1344_vs_naive
 #> ENSG00000164741                              3.723476e-01
-#> ENSG00000078808                              8.971459e-19
+#> ENSG00000078808                              8.971458e-19
 #> ENSG00000251034                              1.904239e-10
 #> ENSG00000162676                              3.980407e-06
 #> ENSG00000170356                              3.030857e-01
-#> ENSG00000204257                              2.728836e-98
+#> ENSG00000204257                              2.728835e-98
 #>                 WaldPvalue_condition_SL1344_vs_naive betaConv betaIter deviance
 #> ENSG00000164741                         9.713420e-01     TRUE        5 315.9203
 #> ENSG00000078808                         3.170407e-27     TRUE        3 358.9627
-#> ENSG00000251034                         5.742331e-03     TRUE        5 124.7960
+#> ENSG00000251034                         5.742332e-03     TRUE        5 124.7960
 #> ENSG00000162676                         2.384226e-01     TRUE        5 124.1491
 #> ENSG00000170356                         1.024309e-01     TRUE        9 129.6075
 #> ENSG00000204257                         1.717220e-04     TRUE        4 307.6203
@@ -1694,13 +1694,13 @@ available DEAs stored in a dde object as a list.
 # get dea results as a list, (default: minimal format)
 lapply(getDEAList(dde), head)
 #> $IFNg_vs_naive
-#>                 log2FoldChange       pvalue        padj
-#> ENSG00000164741     0.22914867 9.805414e-01 1.00000e+00
-#> ENSG00000078808    -0.01153364 1.000000e+00 1.00000e+00
-#> ENSG00000251034    -0.11670132 9.338990e-01 1.00000e+00
-#> ENSG00000162676     0.26914813 9.008170e-01 1.00000e+00
-#> ENSG00000170356    -0.12786371 9.728148e-01 1.00000e+00
-#> ENSG00000204257     4.05502439 1.672976e-56 8.36488e-54
+#>                 log2FoldChange       pvalue         padj
+#> ENSG00000164741     0.22914868 9.805414e-01 1.000000e+00
+#> ENSG00000078808    -0.01153365 1.000000e+00 1.000000e+00
+#> ENSG00000251034    -0.11670132 9.338990e-01 1.000000e+00
+#> ENSG00000162676     0.26914813 9.008170e-01 1.000000e+00
+#> ENSG00000170356    -0.12786371 9.728148e-01 1.000000e+00
+#> ENSG00000204257     4.05502438 1.672976e-56 8.364878e-54
 #> 
 #> $Salm_vs_naive
 #>                 log2FoldChange    pvalue      padj
@@ -1708,8 +1708,8 @@ lapply(getDEAList(dde), head)
 #> ENSG00000078808     0.78936007 0.9975592 1.0000000
 #> ENSG00000251034     1.18814968 0.2269175 0.9820422
 #> ENSG00000162676     0.44208213 0.8432117 1.0000000
-#> ENSG00000170356    -0.62492008 0.7269723 1.0000000
-#> ENSG00000204257    -0.72938102 0.8838883 1.0000000
+#> ENSG00000170356    -0.62492010 0.7269723 1.0000000
+#> ENSG00000204257    -0.72938104 0.8838883 1.0000000
 #> 
 #> $lrt_IFNg_vs_naive
 #>                 log2FoldChange       pvalue         padj
@@ -2195,18 +2195,18 @@ submit a pull request within the `DeeDeeExperiment` Github repository
 
 ``` r
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
+#> R Under development (unstable) (2025-11-24 r89053)
 #> Platform: aarch64-apple-darwin20
-#> Running under: macOS Ventura 13.6
+#> Running under: macOS Sequoia 15.7.2
 #> 
 #> Matrix products: default
 #> BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-#> LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+#> LAPACK: /Library/Frameworks/R.framework/Versions/4.6-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 #> 
 #> locale:
 #> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 #> 
-#> time zone: Europe/Berlin
+#> time zone: UTC
 #> tzcode source: internal
 #> 
 #> attached base packages:
@@ -2214,50 +2214,49 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#>  [1] DEFormats_1.38.0            edgeR_4.8.0                
-#>  [3] limma_3.66.0                DESeq2_1.50.2              
-#>  [5] macrophage_1.26.0           DeeDeeExperiment_1.1.0     
-#>  [7] SingleCellExperiment_1.32.0 SummarizedExperiment_1.40.0
-#>  [9] Biobase_2.70.0              GenomicRanges_1.62.0       
-#> [11] Seqinfo_1.0.0               IRanges_2.44.0             
-#> [13] S4Vectors_0.48.0            BiocGenerics_0.56.0        
-#> [15] generics_0.1.4              MatrixGenerics_1.22.0      
-#> [17] matrixStats_1.5.0           BiocStyle_2.38.0           
+#>  [1] DEFormats_1.39.0            edgeR_4.9.0                
+#>  [3] limma_3.67.0                DESeq2_1.51.6              
+#>  [5] macrophage_1.27.0           DeeDeeExperiment_1.1.1     
+#>  [7] SingleCellExperiment_1.33.0 SummarizedExperiment_1.41.0
+#>  [9] Biobase_2.71.0              GenomicRanges_1.63.0       
+#> [11] Seqinfo_1.1.0               IRanges_2.45.0             
+#> [13] S4Vectors_0.49.0            BiocGenerics_0.57.0        
+#> [15] generics_0.1.4              MatrixGenerics_1.23.0      
+#> [17] matrixStats_1.5.0           BiocStyle_2.39.0           
 #> 
 #> loaded via a namespace (and not attached):
 #>  [1] DBI_1.2.3            rlang_1.1.6          magrittr_2.0.4      
-#>  [4] DOSE_4.4.0           compiler_4.5.2       RSQLite_2.4.5       
+#>  [4] DOSE_4.5.0           compiler_4.6.0       RSQLite_2.4.5       
 #>  [7] reshape2_1.4.5       png_0.1-8            systemfonts_1.3.1   
-#> [10] vctrs_0.6.5          stringr_1.6.0        crayon_1.5.3        
-#> [13] pkgconfig_2.0.3      fastmap_1.2.0        backports_1.5.0     
-#> [16] XVector_0.50.0       rmarkdown_2.30       ragg_1.5.0          
+#> [10] vctrs_0.6.5          stringr_1.6.0        pkgconfig_2.0.3     
+#> [13] crayon_1.5.3         fastmap_1.2.0        backports_1.5.0     
+#> [16] XVector_0.51.0       rmarkdown_2.30       ragg_1.5.0          
 #> [19] bit_4.6.0            xfun_0.54            cachem_1.1.0        
-#> [22] jsonlite_2.0.0       blob_1.2.4           DelayedArray_0.36.0 
-#> [25] BiocParallel_1.44.0  parallel_4.5.2       R6_2.6.1            
+#> [22] jsonlite_2.0.0       blob_1.2.4           DelayedArray_0.37.0 
+#> [25] BiocParallel_1.45.0  parallel_4.6.0       R6_2.6.1            
 #> [28] stringi_1.8.7        bslib_0.9.0          RColorBrewer_1.1-3  
-#> [31] jquerylib_0.1.4      GOSemSim_2.36.0      numDeriv_2016.8-1.1 
-#> [34] Rcpp_1.1.0           bookdown_0.45        knitr_1.50          
-#> [37] R.utils_2.13.0       Matrix_1.7-4         splines_4.5.2       
-#> [40] tidyselect_1.2.1     qvalue_2.42.0        rstudioapi_0.17.1   
-#> [43] dichromat_2.0-0.1    abind_1.4-8          yaml_2.3.11         
-#> [46] codetools_0.2-20     lattice_0.22-7       tibble_3.3.0        
-#> [49] plyr_1.8.9           KEGGREST_1.50.0      S7_0.2.1            
-#> [52] coda_0.19-4.1        evaluate_1.0.5       desc_1.4.3          
-#> [55] Biostrings_2.78.0    pillar_1.11.1        BiocManager_1.30.27 
-#> [58] checkmate_2.3.3      emdbook_1.3.14       ggplot2_4.0.1       
-#> [61] scales_1.4.0         glue_1.8.0           tools_4.5.2         
-#> [64] apeglm_1.32.0        data.table_1.17.8    fgsea_1.36.0        
-#> [67] locfit_1.5-9.12      fs_1.6.6             mvtnorm_1.3-3       
-#> [70] fastmatch_1.1-6      cowplot_1.2.0        grid_4.5.2          
-#> [73] bbmle_1.0.25.1       bdsmatrix_1.3-7      AnnotationDbi_1.72.0
-#> [76] cli_3.6.5            rappdirs_0.3.3       textshaping_1.0.4   
-#> [79] S4Arrays_1.10.0      dplyr_1.1.4          gtable_0.3.6        
-#> [82] yulab.utils_0.2.2    R.methodsS3_1.8.2    sass_0.4.10         
-#> [85] digest_0.6.39        SparseArray_1.10.3   htmlwidgets_1.6.4   
-#> [88] farver_2.1.2         R.oo_1.27.1          memoise_2.0.1       
-#> [91] htmltools_0.5.8.1    pkgdown_2.2.0        lifecycle_1.0.4     
-#> [94] httr_1.4.7           GO.db_3.22.0         statmod_1.5.1       
-#> [97] bit64_4.6.0-1        MASS_7.3-65
+#> [31] jquerylib_0.1.4      GOSemSim_2.37.0      numDeriv_2016.8-1.1 
+#> [34] Rcpp_1.1.0           bookdown_0.46        knitr_1.50          
+#> [37] R.utils_2.13.0       Matrix_1.7-4         splines_4.6.0       
+#> [40] tidyselect_1.2.1     qvalue_2.43.0        abind_1.4-8         
+#> [43] yaml_2.3.11          codetools_0.2-20     lattice_0.22-7      
+#> [46] tibble_3.3.0         plyr_1.8.9           KEGGREST_1.51.1     
+#> [49] S7_0.2.1             coda_0.19-4.1        evaluate_1.0.5      
+#> [52] desc_1.4.3           Biostrings_2.79.2    pillar_1.11.1       
+#> [55] BiocManager_1.30.26  checkmate_2.3.3      emdbook_1.3.14      
+#> [58] ggplot2_4.0.1        scales_1.4.0         glue_1.8.0          
+#> [61] tools_4.6.0          apeglm_1.33.0        data.table_1.17.8   
+#> [64] fgsea_1.37.0         locfit_1.5-9.12      fs_1.6.6            
+#> [67] mvtnorm_1.3-3        fastmatch_1.1-6      cowplot_1.2.0       
+#> [70] grid_4.6.0           bbmle_1.0.25.1       bdsmatrix_1.3-7     
+#> [73] AnnotationDbi_1.73.0 cli_3.6.5            rappdirs_0.3.3      
+#> [76] textshaping_1.0.4    S4Arrays_1.11.1      dplyr_1.1.4         
+#> [79] gtable_0.3.6         yulab.utils_0.2.2    R.methodsS3_1.8.2   
+#> [82] sass_0.4.10          digest_0.6.39        SparseArray_1.11.8  
+#> [85] htmlwidgets_1.6.4    farver_2.1.2         R.oo_1.27.1         
+#> [88] memoise_2.0.1        htmltools_0.5.9      pkgdown_2.2.0.9000  
+#> [91] lifecycle_1.0.4      httr_1.4.7           GO.db_3.22.0        
+#> [94] statmod_1.5.1        bit64_4.6.0-1        MASS_7.3-65
 ```
 
 ## References

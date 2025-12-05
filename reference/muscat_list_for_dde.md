@@ -38,11 +38,9 @@ adjusted p-value column to `padj`) and annotates the resulting list with
 metadata about the originating package.
 
 The function checks that each contrast entry contains a valid `table`
-component as expected from
-[`pbDS()`](https://rdrr.io/pkg/muscat/man/pbDS.html) output. Invalid or
-empty contrasts are skipped with a warning message. The names of the
-list elements in `res` must match contrast names found in the `table`
-slot of each entry.
+component as expected from `pbDS()` output. Invalid or empty contrasts
+are skipped with a warning message. The names of the list elements in
+`res` must match contrast names found in the `table` slot of each entry.
 
 ## Examples
 
