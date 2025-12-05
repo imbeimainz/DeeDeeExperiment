@@ -1,0 +1,131 @@
+# Package index
+
+## All functions
+
+- [`getDEAInfo(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`` `getDEAInfo<-`( ``*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getDEANames(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`renameDEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`addDEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`removeDEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getDEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getDEAList(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`addScenarioInfo(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getFEAInfo(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`` `getFEAInfo<-`( ``*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getFEANames(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`renameFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`addFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`removeFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`getFEAList(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  [`linkDEAandFEA(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-methods.md)
+  : Methods for DeeDeeExperiment objects
+
+- [`show(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-misc.md)
+  [`summary(`*`<DeeDeeExperiment>`*`)`](DeeDeeExperiment-misc.md) :
+  Miscellaneous DeeDeeExperiment methods
+
+- [`DeeDeeExperiment-package`](DeeDeeExperiment-pkg.md)
+  [`DeeDeeExperiment-pkg`](DeeDeeExperiment-pkg.md) : DeeDeeExperiment
+
+- [`DeeDeeExperiment()`](DeeDeeExperiment.md) : The DeeDeeExperiment
+  class
+
+- [`IFNg_both`](IFNg_both.md) :
+
+  A sample `DESeqResults` object
+
+- [`IFNg_naive`](IFNg_naive.md) :
+
+  A sample `DESeqResults` object
+
+- [`Salm_both`](Salm_both.md) :
+
+  A sample `DESeqResults` object
+
+- [`Salm_naive`](Salm_naive.md) :
+
+  A sample `DESeqResults` object
+
+- [`clusterPro_res`](clusterPro_res.md) :
+
+  `clusterPro_res`
+
+- [`dd_list_original`](dd_list_original.md) : dd_list_original
+
+- [`de_limma`](de_limma.md) :
+
+  A sample `MArrayLM` object
+
+- [`de_named_list`](de_named_list.md) : de_named_list
+
+- [`dge_exact_IFNg_both`](dge_exact_IFNg_both.md) :
+
+  A sample `DGEExact` object
+
+- [`dge_exact_IFNg_naive`](dge_exact_IFNg_naive.md) :
+
+  A sample `DGEExact` object
+
+- [`dge_exact_Salm_both`](dge_exact_Salm_both.md) :
+
+  A sample `DGEExact` object
+
+- [`dge_exact_Salm_naive`](dge_exact_Salm_naive.md) :
+
+  A sample `DGEExact` object
+
+- [`dge_lrt_IFNg_both`](dge_lrt_IFNg_both.md) :
+
+  A sample `DGELRT` object
+
+- [`dge_lrt_IFNg_naive`](dge_lrt_IFNg_naive.md) :
+
+  A sample `DGELRT` object
+
+- [`dge_lrt_Salm_both`](dge_lrt_Salm_both.md) :
+
+  A sample `DGELRT` object
+
+- [`dge_lrt_Salm_naive`](dge_lrt_Salm_naive.md) :
+
+  A sample `DGELRT` object
+
+- [`enrichr_res`](enrichr_res.md) :
+
+  `enrichr_res`
+
+- [`fgseaRes`](fgseaRes.md) :
+
+  `fgseaRes`
+
+- [`gost_res`](gost_res.md) :
+
+  `gost_res`
+
+- [`gsea_res`](gsea_res.md) :
+
+  `gsea_res`
+
+- [`limma_list_for_dde()`](limma_list_for_dde.md) :
+
+  Convert a `MArrayLM` object with multiple contrasts into a list of DE
+  results tables compatible with DeeDeeExperiment
+
+- [`muscat_list_for_dde()`](muscat_list_for_dde.md) :
+
+  Convert [`muscat::pbDS()`](https://rdrr.io/pkg/muscat/man/pbDS.html)
+  results into a flat list of data frames compatible with
+  `DeeDeeExperiment`
+
+- [`muscat_res`](muscat_res.md) :
+
+  `muscat_res`
+
+- [`supported_fea_formats()`](supported_fea_formats.md) : Display
+  available FEA formats
+
+- [`topGO_results_list`](topGO_results_list.md) :
+
+  `topGO_results_list`

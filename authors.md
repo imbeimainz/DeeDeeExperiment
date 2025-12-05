@@ -1,0 +1,30 @@
+# Authors and Citation
+
+## Authors
+
+- **[Najla Abassi](https://najlaabassi.github.io/)**. Author,
+  maintainer. [](https://orcid.org/0000-0001-8357-0938)
+
+- **[Lea Rothörl](https://github.com/lea-rothoerl)**. Author.
+  [](https://orcid.org/0000-0003-2554-0583)
+
+- **[Federico Marini](https://federicomarini.github.io)**. Author.
+  [](https://orcid.org/0000-0003-3252-7758)
+
+## Citation
+
+Source:
+[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/DESCRIPTION)
+
+Abassi N, Rothörl L, Marini F (2025). *DeeDeeExperiment:
+DeeDeeExperiment: An S4 Class for managing and exploring omics analysis
+results*. R package version 1.1.1,
+<https://github.com/imbeimainz/DeeDeeExperiment>.
+
+    @Manual{,
+      title = {DeeDeeExperiment: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results},
+      author = {Najla Abassi and Lea Rothörl and Federico Marini},
+      year = {2025},
+      note = {R package version 1.1.1},
+      url = {https://github.com/imbeimainz/DeeDeeExperiment},
+    }

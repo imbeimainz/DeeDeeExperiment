@@ -11,7 +11,7 @@ DeeDeeExperiment objects."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,7 +22,9 @@ DeeDeeExperiment objects."></head><body>
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/DeeDeeExperiment_manual.html">The `DeeDeeExperiment` User's Guide
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/dde_with_single_cell.html">How to use DeeDeeExperiment with single-cell data
+    </a></li>
+    <li><a class="dropdown-item" href="../articles/DeeDeeExperiment_manual.html">The `DeeDeeExperiment` User's Guide
     </a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -38,7 +40,7 @@ DeeDeeExperiment objects."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Methods for <a href="DeeDeeExperiment.html">DeeDeeExperiment</a> objects</h1>
-      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/R/DeeDeeExperiment-methods.R" class="external-link"><code>R/DeeDeeExperiment-methods.R</code></a></small>
       <div class="d-none name"><code>DeeDeeExperiment-methods.Rd</code></div>
     </div>
 
@@ -244,7 +246,7 @@ information as a whole. These methods return <code>DeeDeeExperiment</code> objec
 <li><p><code>addDEA</code> and <code>removeDEA</code> are used to respectively add or remove
 DE-results items. These methods also return <code>DeeDeeExperiment</code> objects, with
 updated content in the <code>dea</code> slot.</p></li>
-<li><p><code>dea</code> and <code>getDEAList</code> retrieve the DEA information, as well as some
+<li><p><code>getDEA</code> and <code>getDEAList</code> retrieve the DEA information, as well as some
 extra rowData information and provide this as a <code>DataFrame</code> object
 (for a specific analysis) or as a list, with one element for each reported
 analysis.</p></li>
@@ -253,7 +255,7 @@ information for a specific DE analysis.
 It allows users to attach free-text notes to a specific DEA results that
 stored in a <code>DeeDeeExperiment</code> object. This information can include any other
 relevant information to help document that DEA scenario.
-This context is stored in the <code>dea</code> slot under the name <code>scenario_info</code>,
+This context is stored in the <code>dea</code> slot under the name <code>addScenarioInfo</code>,
 which is not a default element in <code>dea</code>.</p></li>
 </ul><p>FEAs</p><ul><li><p><code>getFEAInfo</code> and <code>getFEAInfo&lt;-</code> are the methods to get and set the <code>fea</code>
 information as a whole. These methods return <code>DeeDeeExperiment</code> objects.</p></li>
@@ -264,7 +266,7 @@ information as a whole. These methods return <code>DeeDeeExperiment</code> objec
 <li><p><code>addFEA</code> and <code>removeFEA</code> are used to respectively add or remove
 functional enrichment results items. These methods also return
 <code>DeeDeeExperiment</code> objects, with updated content in the <code>fea</code> slot.</p></li>
-<li><p><code>fea</code> is the method to retrieve FE results stored in a <code>DeeDeeExperiment</code>
+<li><p><code>getFEA</code> is the method to retrieve FE results stored in a <code>DeeDeeExperiment</code>
 object for a specific contrast, as a standardized format similar to the
 output of <code>GeneTonic</code> shakers.</p></li>
 <li><p><code>getFEAList</code> is the method that retrieves FEA results as a list. if the
@@ -301,7 +303,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span><span class="va">dde</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: DeeDeeExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 1000 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): singlecontrast version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> assays(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rownames(1000): ENSG00000164741 ENSG00000078808 ... ENSG00000273680</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000073536</span>
@@ -325,7 +327,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span><span class="va">dde_new</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: DeeDeeExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 1000 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): singlecontrast version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> assays(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rownames(1000): ENSG00000164741 ENSG00000078808 ... ENSG00000273680</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000073536</span>
@@ -344,7 +346,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span><span class="va">dde_removed</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> class: DeeDeeExperiment </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dim: 1000 0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(1): version</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> metadata(2): singlecontrast version</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> assays(0):</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> rownames(1000): ENSG00000164741 ENSG00000078808 ... ENSG00000273680</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ENSG00000073536</span>
@@ -383,7 +385,14 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># print a summary of the available DEAs and FEAs</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dde</span>, FDR <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in .Vector_summary(object, ...):</span> unused argument (FDR = 0.01)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> DE Results Summary:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             DEA_name  Up Down  FDR</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        ifng_vs_naive  30   15 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ifngsalmo_vs_naive 104   29 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  salmonella_vs_naive  80   29 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           salmo_both  37   20 0.01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> No FEA results stored.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename DEA</span></span></span>
 <span class="r-in"><span><span class="va">dde_new</span> <span class="op">&lt;-</span> <span class="fu">renameDEA</span><span class="op">(</span><span class="va">dde_new</span>,</span></span>
@@ -411,7 +420,7 @@ results in a <code>DeeDeeExperiment</code> object.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

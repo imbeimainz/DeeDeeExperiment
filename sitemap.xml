@@ -3,6 +3,7 @@
 <url><loc>/LICENSE-text.html</loc></url>
 <url><loc>/LICENSE.html</loc></url>
 <url><loc>/articles/DeeDeeExperiment_manual.html</loc></url>
+<url><loc>/articles/dde_with_single_cell.html</loc></url>
 <url><loc>/articles/index.html</loc></url>
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
@@ -32,6 +33,9 @@
 <url><loc>/reference/gost_res.html</loc></url>
 <url><loc>/reference/gsea_res.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/limma_list_for_dde.html</loc></url>
+<url><loc>/reference/muscat_list_for_dde.html</loc></url>
+<url><loc>/reference/muscat_res.html</loc></url>
 <url><loc>/reference/supported_fea_formats.html</loc></url>
 <url><loc>/reference/topGO_results_list.html</loc></url>
 </urlset>
