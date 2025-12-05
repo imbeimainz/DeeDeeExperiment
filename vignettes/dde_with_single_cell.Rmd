@@ -6,9 +6,10 @@ author:
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
   email: abassina@uni-mainz.de
-- name: Lea Rothörl
+- name: Lea Schwarz
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  email: lea.schwarz@uni-mainz.de
 - name: Federico Marini
   affiliation: 
   - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
@@ -183,7 +184,7 @@ Now we integrate the output of muscat in `muscat_list_for_dde()` to transform it
 into a format accepted by `DeeDeeExperiment`
 
 ```{r create_muscat_list}
-
+# preparing the results as muscat list
 muscat_list <- muscat_list_for_dde(res = list(`stim-ctrl` = muscat_res),
                                    padj_col = "p_adj.loc")
 ```
@@ -198,32 +199,46 @@ dde <- DeeDeeExperiment(sce = sce,
 dde
 ```
 
+As for the other `DeeDeeExperiment` objects, we can call some specific methods to extract/retrieve/integrate some information.  
+We can extract the names of the DEA included:
+
 ```{r get_DEA_names}
-#check DEAs
+# check DEAs
 getDEANames(dde)
 ```
+
+Also, we can directly retrieve the content itself of each DEA by typing
+
 ```{r get_DEAs}
 # retrieve results
 getDEA(dde,
        dea_name = "stim-ctrl_NK cells")|> head()
 
 getDEA(dde,
-    dea_name = "stim-ctrl_CD14+ Monocytes",
-    format = "original"
-) |> head()
+       dea_name = "stim-ctrl_CD14+ Monocytes",
+       format = "original") |> head()
 ```
 
+General info on the DEA performed can be shown with `getDEAInfo()`
+
 ```{r get_DEA_info}
+# retrieving the DEA information
 dea_name <- "stim-ctrl_B cells"
 getDEAInfo(dde)[[dea_name]][["package"]]
 getDEAInfo(dde)[[dea_name]][["package_version"]]
 ```
 
+To add some information on the scenario under investigation, we can use `addScenarioInfo()`.
+This can be e.g. later processed as a contextually relevant bit if a Large Language Model is used to interact with this object.
+
 ```{r add_scenario}
+# adding info on the scenario under investigation
 dde <- addScenarioInfo(dde,
                        dea_name = "stim-ctrl_Dendritic cells",
                        info = "This result contains the output of pseudobulk DE analysis performed on dendritic cells, comparing untreated samples to those stimulated with IFNβ")
 ```
+
+As usual, the `summary()` method can be called to obtain a quick overview on all performed analyses.
 
 ```{r get_summary}
 summary(dde, show_scenario_info = TRUE)
