@@ -52,7 +52,7 @@
 #' @return A `DeeDeeExperiment` object.
 #' @export
 #'
-#' @author Najla Abassi, Lea Rothörl, and Federico Marini
+#' @author Najla Abassi, Lea Schwarz, and Federico Marini
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDeeExperiment")
