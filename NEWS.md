@@ -1,4 +1,4 @@
-# DeeDeeExperiment 1.1.0
+# DeeDeeExperiment 1.2.0
 
 * The DEA original objects are no longer stored in the `dea` slot. They are now
 stored under `metadata(dde)$singlecontrast` or `metadata(dde)$multicontrast`, and
