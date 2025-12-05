@@ -2219,7 +2219,7 @@ sessionInfo()
 #> other attached packages:
 #>  [1] DEFormats_1.39.0            edgeR_4.9.0                
 #>  [3] limma_3.67.0                DESeq2_1.51.6              
-#>  [5] macrophage_1.27.0           DeeDeeExperiment_1.1.1     
+#>  [5] macrophage_1.27.0           DeeDeeExperiment_1.1.2     
 #>  [7] SingleCellExperiment_1.33.0 SummarizedExperiment_1.41.0
 #>  [9] Biobase_2.71.0              GenomicRanges_1.63.0       
 #> [11] Seqinfo_1.1.0               IRanges_2.45.0             

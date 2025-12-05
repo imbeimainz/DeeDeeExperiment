@@ -18,13 +18,13 @@ Source:
 
 Abassi N, Schwarz L, Marini F (2025). *DeeDeeExperiment:
 DeeDeeExperiment: An S4 Class for managing and exploring omics analysis
-results*. R package version 1.1.1,
+results*. R package version 1.1.2,
 <https://github.com/imbeimainz/DeeDeeExperiment>.
 
     @Manual{,
       title = {DeeDeeExperiment: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results},
       author = {Najla Abassi and Lea Schwarz and Federico Marini},
       year = {2025},
-      note = {R package version 1.1.1},
+      note = {R package version 1.1.2},
       url = {https://github.com/imbeimainz/DeeDeeExperiment},
     }

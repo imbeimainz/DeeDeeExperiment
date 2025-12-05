@@ -342,7 +342,7 @@ sessionInfo()
 #>  [3] scater_1.39.0               ggplot2_4.0.1              
 #>  [5] scuttle_1.21.0              ExperimentHub_3.1.0        
 #>  [7] AnnotationHub_4.1.0         BiocFileCache_3.1.0        
-#>  [9] dbplyr_2.5.1                DeeDeeExperiment_1.1.1     
+#>  [9] dbplyr_2.5.1                DeeDeeExperiment_1.1.2     
 #> [11] SingleCellExperiment_1.33.0 SummarizedExperiment_1.41.0
 #> [13] Biobase_2.71.0              GenomicRanges_1.63.0       
 #> [15] Seqinfo_1.1.0               IRanges_2.45.0             
