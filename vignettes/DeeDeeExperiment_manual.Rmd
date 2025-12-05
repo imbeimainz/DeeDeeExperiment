@@ -63,7 +63,8 @@ increases, managing the outputs of these analyses across multiple contrasts
 becomes increasingly overwhelming. This challenge is further amplified in
 single-cell RNA-seq, where pseudo-bulk analyses generate numerous results tables
 across cell types and contrasts, making it challenging to organize, explore, and
-reproduce findings, even for experienced users.
+reproduce findings, even for experienced users - we invite you to see this more 
+in detail in the `r Biocpkg("DeeDeeExperiment", vignette="dde_with_single_cell.html", label="dedicated companion vignette for single cell data")`.
 
 To address these issues, we introduce the `r BiocStyle::Biocpkg("DeeDeeExperiment")`
 class, an S4 object that extends the widely adopted `SingleCellExperiment` class
