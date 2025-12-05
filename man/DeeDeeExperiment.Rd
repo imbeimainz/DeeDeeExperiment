@@ -18,7 +18,7 @@ DeeDeeExperiment(
 store the DE related information.}
 
 \item{de_results}{A named list of DE results, in any of the formats supported
-by the package (currently: results from \code{DESeq2}, \code{edgeR}, \code{limma}).}
+by the package (currently: results from \code{DESeq2}, \code{edgeR}, \code{limma}, \code{muscat}).}
 
 \item{enrich_results}{A named list of functional enrichment results. Each
 element can be either a data.frame (currently supports results from \code{topGO},
@@ -96,5 +96,5 @@ dde <- DeeDeeExperiment(
 )
 }
 \author{
-Najla Abassi, Lea Rothörl, and Federico Marini
+Najla Abassi, Lea Schwarz, and Federico Marini
 }

@@ -87,6 +87,8 @@ test_that("creating", {
     )
   )
 
+  expect_warning(DeeDeeExperiment(de_results = de_limma))
+
   broken_de_res <- salmo_both
   rownames(broken_de_res) <- NULL
 
@@ -115,6 +117,8 @@ test_that("creating", {
 
   dde_list <- DeeDeeExperiment(de_results = de_res_list)
 
+  expect_length(getDEAInfo(dde_list), 2)
+
   expect_warning(getDEAList(dde_list, verbose = TRUE), regexp = NULL)
 
   expect_warning(getDEA(dde_list, dea_name = "dge_lrt", verbose = TRUE),
@@ -124,6 +128,10 @@ test_that("creating", {
     sce = se_macrophage_noassays,
     de_results = dea1
   ))
+
+  new_expanded_list <- limma_list_for_dde(dea1)
+
+  expect_length(getDEAInfo(DeeDeeExperiment(de_results = new_expanded_list)), 4)
 
   dea2 <- dge_exact_IFNg_both
   expect_warning(DeeDeeExperiment(
@@ -298,5 +306,41 @@ test_that("creating", {
   )
 
   expect_warning(addDEA(dde, dea = de_custom))
+
+
+  dea_muscat_list <- muscat_list_for_dde(list(`stim-ctrl` = muscat_res))
+  dea_limma_list <- limma_list_for_dde(de_limma)
+
+  expect_s4_class(DeeDeeExperiment(de_results = dea_limma_list),
+                  "DeeDeeExperiment")
+
+  expect_s4_class(DeeDeeExperiment(de_results = dea_muscat_list),
+                  "DeeDeeExperiment")
+
+  dde_muscat <- DeeDeeExperiment(de_results = dea_muscat_list)
+
+  expect_length(getDEAInfo(dde_muscat), 3)
+
+  expect_identical(getDEAInfo(dde_muscat)$`stim-ctrl_NK cells`$package,
+                   "muscat")
+
+  expect_length(metadata(dde_muscat)$singlecontrast, 3)
+
+  expect_setequal(names(metadata(dde_muscat)$singlecontrast),
+                  c("stim-ctrl_B cells", "stim-ctrl_Dendritic cells",
+                    "stim-ctrl_NK cells"))
+
+  dde_limma_list <- DeeDeeExperiment(de_results = dea_limma_list)
+
+  expect_length(metadata(dde_limma_list)$multicontrast, 1)
+
+  expect_s4_class(metadata(dde_limma_list)$multicontrast$dea_limma_list,
+                  "MArrayLM")
+
+  expect_equal(getDEAInfo(dde_limma_list)$Salm_both$original_object,
+                  list(metadata_storage = "multicontrast",
+                       key = "dea_limma_list",
+                       coef = "Salm_both"))
+
 
 })

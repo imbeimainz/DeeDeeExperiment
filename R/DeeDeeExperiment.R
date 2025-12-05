@@ -15,7 +15,7 @@
 #' @param sce A `SingleCellExperiment` object, that will be used as a scaffold to
 #' store the DE related information.
 #' @param de_results A named list of DE results, in any of the formats supported
-#' by the package (currently: results from `DESeq2`, `edgeR`, `limma`).
+#' by the package (currently: results from `DESeq2`, `edgeR`, `limma`, `muscat`).
 #' @param enrich_results A named list of functional enrichment results. Each
 #' element can be either a data.frame (currently supports results from `topGO`,
 #' `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic`
@@ -52,7 +52,7 @@
 #' @return A `DeeDeeExperiment` object.
 #' @export
 #'
-#' @author Najla Abassi, Lea Rothörl, and Federico Marini
+#' @author Najla Abassi, Lea Schwarz, and Federico Marini
 #'
 #' @examples
 #' data("de_named_list", package = "DeeDeeExperiment")
@@ -148,6 +148,19 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
   sce_out <- sce
 
   dea_contrasts <- list()
+
+  if (is.list(de_results) && identical(attr(de_results, "package"), "limma")) {
+    cli::cli_alert_info(
+      "Detected a limma result list for entry, importing accordingly."
+    )
+
+    limma_res <- .handle_limma_list(sce_out, de_results, entry_name)
+    sce_out <- limma_res$sce
+    dea_contrasts <- c(dea_contrasts, limma_res$dea_contrasts)
+
+    # stop here the processing of dea?
+    de_results <- list()
+  }
 
   for (i in names(de_results)) {
     this_de <- de_results[[i]]

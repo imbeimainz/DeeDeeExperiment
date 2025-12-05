@@ -1,0 +1,253 @@
+---
+title: >
+  How to use DeeDeeExperiment with single-cell data
+author:
+- name: Najla Abassi
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  email: abassina@uni-mainz.de
+- name: Lea Schwarz
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  email: lea.schwarz@uni-mainz.de
+- name: Federico Marini
+  affiliation: 
+  - Institute of Medical Biostatistics, Epidemiology and Informatics (IMBEI), Mainz
+  - Research Center for Immunotherapy (FZI), Mainz
+  email: marinif@uni-mainz.de
+date: "`r BiocStyle::doc_date()`"
+package: "`r BiocStyle::pkg_ver('DeeDeeExperiment')`"
+output: 
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+    code_download: yes
+vignette: >
+  %\VignetteIndexEntry{2. How to use DeeDeeExperiment with single-cell data}
+  %\VignetteEncoding{UTF-8}  
+  %\VignettePackage{DeeDeeExperiment}
+  %\VignetteKeywords{GeneExpression, RNASeq, Sequencing, Pathways, Infrastructure}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+bibliography: DeeDeeExperiment_bibliography.bib
+---
+
+<style type="text/css">
+.smaller {
+  font-size: 10px
+}
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  error    = FALSE,
+  warning  = FALSE,
+  eval     = TRUE,
+  message  = FALSE
+)
+```
+
+# Differential State (DS) analysis with `muscat` & `DeeDeeExperiment`
+
+## `DeeDeeExperiment` on the `Kang` dataset
+
+In this vignette, we illustrate how to integrate Differential Expression
+Analysis (DEA) results generated with the `r BiocStyle::Biocpkg("muscat")`
+framework into a `r BiocStyle::Biocpkg("DeeDeeExperiment")` object. As an example,
+we use a publicly available dataset from Kang, et al. "Multiplexed droplet single-cell RNA-sequencing using natural genetic variation", published in Nature
+Biotechnology, December 2017
+[@Kang2017](https://doi.org/10.1038/nbt.4042)
+
+The data is made available via the `r BiocStyle::Biocpkg("ExperimentHub")`
+Bioconductor package as a `r BiocStyle::Biocpkg("SingleCellExperiment")` object
+containing scRNA-seq data from PBMCs obtained from 8 lupus patients before and
+after IFNβ stimulation.
+
+For demonstration purposes we adapt parts of the code from the original `r BiocStyle::Biocpkg("muscat")` [vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/muscat/inst/doc/analysis.html#differential-state-ds-analysis))
+
+```{r loadlib}
+library("DeeDeeExperiment")
+library("ExperimentHub")
+library("scater")
+library("muscat")
+library("limma")
+```
+
+We begin by creating an `ExperimentHub` instance, which provides access to
+curated datasets stored in the Bioconductor cloud. Using `query()`, we filter
+available records for entries matching the keyword "Kang", and then load the
+dataset of interest using its accession ID "EH2259".
+
+```{r load_sce}
+# retrieve the data
+eh <- ExperimentHub()
+query(eh, "Kang")
+sce <- eh[["EH2259"]]
+```
+
+Before running muscat, we perform standard single-cell preprocessing steps:
+removing undetected genes, filtering low-quality cells using `r BiocStyle::Biocpkg("scater")`,
+and removing lowly expressed genes.
+
+```{r rm_undetected_genes}
+# remove undetected genes
+sce <- sce[rowSums(counts(sce) > 0) > 0, ]
+```
+
+```{r qc}
+# calculate per-cell quality control (QC) metrics
+qc <- perCellQCMetrics(sce)
+# remove cells with few or many detected genes
+ol <- isOutlier(metric = qc$detected, nmads = 2, log = TRUE)
+sce <- sce[, !ol]
+dim(sce)
+```
+
+```{r rm_low_exp_genes}
+# remove lowly expressed genes
+sce <- sce[rowSums(counts(sce) > 1) >= 10, ]
+dim(sce)
+```
+
+```{r normalization}
+# compute sum-factors & normalize
+sce <- computeLibraryFactors(sce)
+sce <- logNormCounts(sce)
+```
+
+We then prepare the data for `muscat`. The package expects a certain format of
+the input SCE. Specifically, the following cell metadata (colData) columns have
+to be provided:
+
+* `sample_id` : unique sample identifiers
+* `cluster_id` : subpopulation (cluster) assignments
+* `group_id` : experimental group/condition
+
+
+```{r prep}
+# data preparation
+sce$id <- paste0(sce$stim, sce$ind)
+(sce <- prepSCE(sce,
+                kid = "cell", # subpopulation assignments
+                gid = "stim",  # group IDs (ctrl/stim)
+                sid = "id",   # sample IDs (ctrl/stim.1234)
+                drop = TRUE))  # drop all other colData columns
+```
+
+We compute UMAP for visualization. The dataset already includes precomputed TSNE
+coordinates, so we only run UMAP here.
+
+```{r reddim}
+# compute UMAP using 1st 20 PCs
+sce <- runUMAP(sce, pca = 20)
+```
+
+Then we aggregate measurements for each sample (in each cluster) to obtain pseudobulk data
+
+```{r aggregate_by_cell_type}
+# aggregate by cell type
+pb <- aggregateData(
+  sce,
+  assay = "counts",
+  fun = "sum",
+  by = c("cluster_id", "sample_id")
+)
+
+assayNames(pb)
+```
+
+And construct the contrast matrix
+
+```{r design}
+# construct design & contrast matrix
+ei <- metadata(sce)$experiment_info
+mm <- model.matrix(~ 0 + ei$group_id)
+dimnames(mm) <- list(ei$sample_id, levels(ei$group_id))
+contrast <- makeContrasts("stim-ctrl", levels = mm)
+```
+
+With the pseudobulk data assembled, we can now test for differential state (DS)
+using `pbDS`
+
+```{r pbDS}
+# run DS analysis
+muscat_res <- pbDS(pb, design = mm, contrast = contrast)
+
+names(muscat_res$table[["stim-ctrl"]])
+```
+
+Now we integrate the output of muscat in `muscat_list_for_dde()` to transform it
+into a format accepted by `DeeDeeExperiment`
+
+```{r create_muscat_list}
+# preparing the results as muscat list
+muscat_list <- muscat_list_for_dde(res = list(`stim-ctrl` = muscat_res),
+                                   padj_col = "p_adj.loc")
+```
+
+Finally the results can be directly added to a new `dde` object, or to an
+existing one.
+
+```{r create_dde}
+# create dde
+dde <- DeeDeeExperiment(sce = sce,
+                        de_results = muscat_list)
+dde
+```
+
+As for the other `DeeDeeExperiment` objects, we can call some specific methods to extract/retrieve/integrate some information.  
+We can extract the names of the DEA included:
+
+```{r get_DEA_names}
+# check DEAs
+getDEANames(dde)
+```
+
+Also, we can directly retrieve the content itself of each DEA by typing
+
+```{r get_DEAs}
+# retrieve results
+getDEA(dde,
+       dea_name = "stim-ctrl_NK cells")|> head()
+
+getDEA(dde,
+       dea_name = "stim-ctrl_CD14+ Monocytes",
+       format = "original") |> head()
+```
+
+General info on the DEA performed can be shown with `getDEAInfo()`
+
+```{r get_DEA_info}
+# retrieving the DEA information
+dea_name <- "stim-ctrl_B cells"
+getDEAInfo(dde)[[dea_name]][["package"]]
+getDEAInfo(dde)[[dea_name]][["package_version"]]
+```
+
+To add some information on the scenario under investigation, we can use `addScenarioInfo()`.
+This can be e.g. later processed as a contextually relevant bit if a Large Language Model is used to interact with this object.
+
+```{r add_scenario}
+# adding info on the scenario under investigation
+dde <- addScenarioInfo(dde,
+                       dea_name = "stim-ctrl_Dendritic cells",
+                       info = "This result contains the output of pseudobulk DE analysis performed on dendritic cells, comparing untreated samples to those stimulated with IFNβ")
+```
+
+As usual, the `summary()` method can be called to obtain a quick overview on all performed analyses.
+
+```{r get_summary}
+summary(dde, show_scenario_info = TRUE)
+```
+
+# Session info {.unnumbered .smaller}
+
+```{r sessioinfo}
+sessionInfo()
+```
+
+# References {.unnumbered}

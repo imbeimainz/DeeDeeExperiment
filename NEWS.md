@@ -1,13 +1,35 @@
+# DeeDeeExperiment 1.1.0
+
+* The DEA original objects are no longer stored in the `dea` slot. They are now
+stored under `metadata(dde)$singlecontrast` or `metadata(dde)$multicontrast`, and
+each contrast entry in the dea slot contains a pointer to its original object
+
+* Added helper functions to simplify inserting DE results from `muscat::pbDS()`
+and `MArrayLM` object with multiple contrast into a `dde` object
+
+* Improved warning messages
+
+* A new vignette showcasing how to apply `DeeDeeExperiment` to a single-cell
+dataset
+
+# DeeDeeExperiment 1.0.0
+
+`DeeDeeExperiment` is now on Bioconductor!
+
+# DeeDeeExperiment 0.99.5
+
+* Addressing final comments for the Bioc review
+
 # DeeDeeExperiment 0.99.4
 
-* Addressing more points related t the Bioc review, mainly adopting camelCase
+* Addressing more points related to the Bioc review, mainly adopting camelCase
 naming for generics & methods
 
 # DeeDeeExperiment 0.99.2
 
 * Addressed the points raised in the Bioc review
 
-* Expended the supported DEAs (as simple `data.frame` object that contains
+* Expanded the supported DEAs (as simple `data.frame` object that contains
 at least three columns named `log2FoldChange`, `pvalue`, and `padj`)
 
 # DeeDeeExperiment 0.99.1
@@ -38,7 +60,7 @@ a specific DEA, assign DEA to FEA
 * Method dispatch is now only base on x being `DeeDeeExperiment`, other arguments
 are no longer part of the method signature
 
-* expended supported FEAs: now takes results from `topGO`, `clusterProfiler`,
+* Expanded supported FEAs: now takes results from `topGO`, `clusterProfiler`,
 `enrichR`, `gProfiler`, `fgsea`, `gsea`, `DAVID`, and output of `GeneTonic` shakers
 
 # DeeDeeExperiment 0.3.0

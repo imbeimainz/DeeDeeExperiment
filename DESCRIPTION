@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: 
     c(
         person(
@@ -8,9 +8,10 @@ Authors@R:
             email = "abassi.nejla96@gmail.com",
             comment = c(ORCID = "0000-0001-8357-0938")
         ),
-        person(given = "Lea", family = "Rothörl", role = c("aut"),
-           email = "lea.rothoerl@posteo.de",
-           comment = c(ORCID = "0000-0003-2554-0583")
+        person(
+            given = "Lea", family = "Schwarz", role = c("aut"),
+            email = "lea.schwarz@uni-mainz.de",
+            comment = c(ORCID = "0000-0003-2554-0583")
         ),
         person(
             given = "Federico", family = "Marini", role = c("aut"), 
@@ -26,7 +27,7 @@ Description: DeeDeeExperiment is an S4 class extending the SingleCellExperiment
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Depends:
     R (>= 4.5.0),
     SingleCellExperiment
@@ -49,6 +50,9 @@ Suggests:
     topGO,
     clusterProfiler,
     DEFormats,
+    ExperimentHub,
+    scater,
+    muscat,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
