@@ -414,6 +414,10 @@ setMethod("addDEA",
                   )
                 }
 
+                # p value different from NA respect the 0-1 interval
+                stopifnot(all(na.omit(this_de$pvalue <= 1)) &
+                            all(na.omit(this_de$pvalue >= 0)))
+
                 # we align de res with se
                 matched_ids <- match(rownames(x), rownames(this_de))
                 # only valid indices
