@@ -414,6 +414,10 @@ setMethod("addDEA",
                   )
                 }
 
+                # p value different from NA respect the 0-1 interval
+                stopifnot(all(na.omit(this_de$pvalue <= 1)) &
+                            all(na.omit(this_de$pvalue >= 0)))
+
                 # we align de res with se
                 matched_ids <- match(rownames(x), rownames(this_de))
                 # only valid indices
@@ -478,7 +482,7 @@ setMethod("addDEA",
 
                 # p value different from NA respect the 0-1 interval
                 stopifnot(all(na.omit(res_tbl$PValue <= 1)) &
-                            all(na.omit(res_tbl$PValue > 0)))
+                            all(na.omit(res_tbl$PValue >= 0)))
 
                 # identify the logFC cols
                 logFC_cols <- grep("^logFC", colnames(res_tbl), value = TRUE)
@@ -572,7 +576,7 @@ setMethod("addDEA",
 
                 # p value different from NA respect the 0-1 interval
                 stopifnot(all(na.omit(res_tbl$P.Value <= 1)) &
-                            all(na.omit(res_tbl$P.Value > 0)))
+                            all(na.omit(res_tbl$P.Value >= 0)))
 
                 # we align de res with se
                 matched_ids <- match(rownames(x), rownames(res_tbl))
@@ -632,7 +636,7 @@ setMethod("addDEA",
 
                 # p value different from NA respect the 0-1 interval
                 stopifnot(all(na.omit(this_de$pvalue <= 1)) &
-                            all(na.omit(this_de$pvalue > 0)))
+                            all(na.omit(this_de$pvalue >= 0)))
 
                 # we align de res with se
                 matched_ids <- match(rownames(x), rownames(this_de))
