@@ -113,8 +113,8 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
       #               fea = list())
 
       object <- .DeeDeeExperiment(sce,
-                                  dea = list(),
-                                  fea = list())
+                                  dea = SimpleList(),
+                                  fea = SimpleList())
 
       # stash the package version
       metadata(object)[["version"]] <- packageVersion("DeeDeeExperiment")
@@ -147,7 +147,7 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
   sce_out <- sce
 
-  dea_contrasts <- list()
+  dea_contrasts <- SimpleList()
 
   if (is.list(de_results) && identical(attr(de_results, "package"), "limma")) {
     cli::cli_alert_info(
@@ -281,7 +281,7 @@ DeeDeeExperiment <- function(sce = SingleCellExperiment(),
 
   ## handle fea results
 
-  fea_contrasts <- list()
+  fea_contrasts <- SimpleList()
 
   if (!is.null(enrich_results)) {
     # first check content

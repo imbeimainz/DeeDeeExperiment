@@ -761,7 +761,8 @@ setMethod("removeDEA",
                 fea[["de_name"]] <- NULL
               }
               fea
-            })
+            }) |> SimpleList()
+
             getFEAInfo(x) <- feas
 
             # here check some validity?
@@ -1067,7 +1068,7 @@ setMethod("getFEANames",
           }
 )
 
-## renameFEA ------------------------------------------------------------------
+## renameFEA -------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -1132,7 +1133,7 @@ setMethod("renameFEA",
           }
 )
 
-## addFEA ---------------------------------------------------------------------
+## addFEA ----------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export

@@ -67,7 +67,9 @@ test_that("creating", {
 
   expect_s4_class(salmo_both, "DESeqResults")
 
-  expect_type(getDEAInfo(dde_one), "list")
+  isS4(getDEAInfo(dde_one))
+
+  expect_s4_class(getDEAInfo(dde_one), "SimpleList")
 
   expect_length(getDEAInfo(dde_one), 1)
 
@@ -190,6 +192,8 @@ test_that("creating", {
   expect_s3_class(getFEA(dde5, "enrichr_salmo_vs_naive", verbose = TRUE), "data.frame")
 
   expect_length(getFEAInfo(dde5), 1)
+
+  expect_s4_class(getFEAInfo(dde5), "SimpleList")
 
 
   expect_error(DeeDeeExperiment(

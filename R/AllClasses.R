@@ -11,7 +11,7 @@
 .DeeDeeExperiment <- setClass("DeeDeeExperiment",
                               contains = "SingleCellExperiment",
                               slots = representation(
-                                dea = "list",
-                                fea = "list"
+                                dea = "SimpleList",
+                                fea = "SimpleList"
                               )
 )

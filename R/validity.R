@@ -2,8 +2,8 @@ validDeeDeeExperiment <- function(object) {
   msg <- NULL
 
   ## check dea validity
-  if (!is(getDEAInfo(object), "list")) {
-    msg <- c(msg, "`dea` must be a list")
+  if (!is(getDEAInfo(object), "SimpleList")) {
+    msg <- c(msg, "`dea` slot must be a SimpleList")
   }
 
   if (length(getDEAInfo(object)) > 0) {
@@ -32,8 +32,8 @@ validDeeDeeExperiment <- function(object) {
   }
 
   ## check fea validity
-  if (!is(getFEAInfo(object), "list")) {
-    msg <- c(msg, "`fea` must be a list")
+  if (!is(getFEAInfo(object), "SimpleList")) {
+    msg <- c(msg, "`fea` must be a SimpleList")
   }
 
   if (length(getFEAInfo(object)) > 0) {
@@ -43,7 +43,8 @@ validDeeDeeExperiment <- function(object) {
   }
 
   if (length(getFEAInfo(object)) > 0) {
-    for (entry in getFEAInfo(object)) {
+    for (i in seq_len(length(getFEAInfo(object)))) {
+      entry <- getFEAInfo(object)[[i]]
       if (!is(entry$original_object, "data.frame") &&
           !is(entry$original_object, "enrichResult") &&
           !is(entry$original_object, "gseaResult")) {
