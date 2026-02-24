@@ -1323,3 +1323,186 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
   list(sce = sce, dea_contrasts = dea_contrasts)
 }
 
+
+#' Export DEA/FEA results from a `DeeDeeExperiment` to excel files
+#'
+#' Extracts DEA and/or FEA results stored in a `DeeDeeExperiment` and writes
+#' them to excel files. Each contrast/result is written to a separate sheet.
+#' DEA and FEA are written to separate files.
+#'
+#' @param x A `DeeDeeExperiment` object containing DEA/FEA results to be extracted
+#' @param res_type A character string indicating the result to extract
+#' (i.e. `"dea"` or `"fea"`) to fetch results from the corresponding slot. If set
+#' to `"both"`, both DEAs and FEAs are extracted into separate excel files.
+#' @param res_format A character string specifying the DEA/FEAs output format
+#' to be exported (i.e. `"minimal"` or `"original"`). FEA is currently exported
+#' in `minimal` format to ensure all objects are writable to excel
+#' @param output_dir A character string specifying the directory where the excel
+#' file will be written
+#' @param file_name Optional character string specifying a file name. If `NULL`,
+#' a default name is generated
+#' @param force Logical. If `TRUE`, an existing file with the same name will be
+#' overwritten
+#'
+#' @return An (invisible) character vector of file paths to the exported excel
+#' files. The vector may contain one path `res_type = "dea"` or
+#' `res_type = "fea" `or two paths `res_type = "both"`
+#'
+#' @export
+#'
+#' @examples
+#'
+#' \dontrun{
+#' export_result_for_dde(dde, res_type = "dea", res_format = "minimal")
+#'
+#' export_result_for_dde(dde, res_type = "both", res_format = "original", output_dir = "./dde_export")
+#' }
+#'
+export_result_for_dde <- function(x,
+                          res_type = c("dea", "fea", "both"),
+                          res_format = c("minimal", "original"),
+                          output_dir = getwd(),
+                          file_name = NULL,
+                          force = FALSE) {
+  # checks on the args
+  if (!is(x, "DeeDeeExperiment")) {
+    stop("`x` must be a `DeeDeeExperiment` object!")
+  }
+
+  if (!is.character(output_dir) || length(output_dir) != 1 ||
+      output_dir == "") {
+    stop("`output_dir` must be a non empty character string!")
+  }
+
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+  if (!is.null(file_name) && (!is.character(file_name) ||
+                              length(file_name) != 1 || file_name == "")) {
+    stop("`file_name` must be a non empty character string!")
+  }
+
+  if (!is.logical(force)) {
+    stop("`force` must be logical!")
+  }
+
+
+  res_type <- match.arg(res_type)
+  res_format <- match.arg(res_format)
+
+  out_paths <- character()
+
+  # export results
+  if (res_type %in% c("dea", "both")) {
+    # get all deas
+    deas <- getDEAList(x, format = res_format)
+    out_paths <- c(out_paths, .write_res(list = deas,
+                                         result_type = "DEA",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+  }
+
+  if (res_type %in% c("fea", "both")) {
+    # get all feas
+    feas <- getFEAList(x, format = res_format)
+    out_paths <- c(out_paths, .write_res(list = feas,
+                                         result_type = "FEA",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+  }
+
+
+  if (length(out_paths) == 0) {
+    stop("No results were exported!")
+  }
+
+  invisible(out_paths)
+
+}
+
+
+#' Write DEA/FEA results to an excel file
+#'
+#' @param list A named list of data frames (or coercible objects), where each
+#' element represents one contrast/result and will be written to a separate sheet
+#' @param result_type A character string indicating the result to extract
+#' (i.e. `"DEA"` or `"FEA"`). It is used in the output file name
+#' @param res_format A character string, specifying the DEA/FEAs output format
+#' to export (i.e. `"minimal"` or `"original"`). It is used in the output file name
+#' @param output_dir A character string specifying the directory where the excel
+#' file will be written
+#' @param file_name Optional character string specifying a file name. If `NULL`,
+#' a default name is generated
+#' @param force Logical. If `TRUE`, an existing file with the same name will be
+#' overwritten
+#'
+#' @return A character string giving the path to the written excel file,
+#' or `NULL` if there were no results to export
+#'
+#' @noRd
+.write_res <- function(list,
+                       result_type,
+                       res_format,
+                       output_dir,
+                       file_name,
+                       force) {
+  message(paste("Found", length(list), result_type, "results"))
+
+  if (length(list) == 0) {
+    warning(paste("No", result_type, "results to export."), call. = FALSE)
+    return(NULL)
+  }
+
+  # add rownames as a column
+  list <- lapply(list, function(df){
+    rn <- rownames(df)
+    if(!is.null(rn)){
+      col_name <- "id"
+      col_name <- make.unique(c(names(df), col_name))[length(names(df)) + 1]
+      df <- cbind(
+        setNames(data.frame(rn, stringsAsFactors = FALSE), col_name),
+        df)
+    }
+    df
+  })
+
+  sheet_name <- names(list)
+  sheet_name <- make.unique(.clean_sheet_names(sheet_name))
+  names(list) <- sheet_name
+
+  prefix <- if (is.null(file_name)) {paste("dde", res_format, sep = "_")
+  } else {
+    file_name
+  }
+
+  base <- paste(prefix, result_type, sep = "_")
+  out_file <- file.path(output_dir, paste0(base, ".xlsx"))
+
+  if (file.exists(out_file) && !isTRUE(force)) {
+    stop("File already exists: ", out_file,
+         "\nSet `force = TRUE` to replace it.")
+  }
+
+  message("Writing results to: ", out_file)
+  writexl::write_xlsx(list, path = out_file)
+
+  out_file
+}
+
+
+
+#' Clean excel sheet names
+#'
+#' @param x A character vector of proposed Excel sheet names
+#'
+#' @return A character vector of excel-safe sheet names
+#'
+#' @noRd
+.clean_sheet_names <- function(x) {
+  # excel sheet name rules: max 31 chars; cannot contain : \ / ? * [ ]
+  x <- gsub("[:\\\\/\\?\\*\\[\\]]", "_", x)
+  substr(x, 1, 31)
+}

@@ -97,4 +97,38 @@ test_that("misc", {
  expect_true(!is.null(attr(de_limma_list$IFNgNaive,
                            "package_version")))
 
+
+ ### testing export function
+
+ expect_error(export_result_for_dde(dde_w_david,res_type = "guiga"))
+
+ expect_error(export_result_for_dde(dde_w_david,res_format = "guiga"))
+
+ expect_error(export_result_for_dde(dde_w_david, output_dir = character()))
+
+ expect_error(export_result_for_dde(dde_w_david, file_name = character()))
+
+ expect_error(export_result_for_dde(dde_w_david,
+                                    output_dir = c("chico", "guiga")))
+
+ expect_error(export_result_for_dde(dde_w_david,
+                                    force = "yes"))
+
+ outdir <- withr::local_tempdir()
+
+ path <- export_result_for_dde(dde_w_david,
+                               res_type = "dea",
+                               output_dir = outdir)
+ expect_true(file.exists(path))
+ expect_length(path, 1)
+
+ paths <- export_result_for_dde(dde_w_david,
+                                res_type = "both",
+                                res_format = "original",
+                                output_dir = outdir,
+                                force = TRUE)
+
+ expect_length(paths, 2)
+
+
 })
