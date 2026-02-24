@@ -834,6 +834,25 @@ Yet, specific set of information, such as the `fe_tool` used for a specific
 getFEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
 ```
 
+It is possible to export DEA and FEA results that are stored in a
+`DeeDeeExperiment` object using `export_result_for_dde`
+
+```{r export_res, eval=FALSE}
+# export only DEAs
+export_result_for_dde(dde,
+                      res_type = "dea",
+                      res_format = "minimal",
+                      output_dir = "./output",
+                      file_name = "macrophage_dataset")
+
+# export both DEAs and FEAs
+export_result_for_dde(dde,
+                      res_type = "both",
+                      res_format = "minimal",
+                      output_dir = "./output",
+                      file_name = "macrophage_dataset")
+```
+
 # Downstream operations with `DeeDeeExperiment` objects
 
 Since `DeeDeeExperiment` inherits from the `SingleCellExperiment` class, it can
