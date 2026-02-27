@@ -50,10 +50,13 @@ DEA and FEA are written to separate files.
 }
 \examples{
 
-\dontrun{
-export_result_for_dde(dde, res_type = "dea", res_format = "minimal")
+export_result_for_dde(dde,
+res_type = "dea",
+res_format = "minimal", output_dir = tempdir(), force = TRUE)
 
-export_result_for_dde(dde, res_type = "both", res_format = "original", output_dir = "./dde_export")
-}
+export_result_for_dde(dde,
+res_type = c("dea", "fea"),
+res_format = "original", output_dir = tempdir(), force = TRUE)
+
 
 }
