@@ -124,7 +124,7 @@ test_that("misc", {
  expect_length(path, 1)
 
  paths <- export_result_for_dde(dde_w_david,
-                                res_type = "both",
+                                res_type = c("dea","fea"),
                                 res_format = "original",
                                 output_dir = outdir,
                                 force = TRUE)
