@@ -1324,29 +1324,32 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 }
 
 
-#' Export DEA/FEA results from a `DeeDeeExperiment` to excel files
+#' Export DEA/FEA/ASSAY results from a `DeeDeeExperiment` to excel files
 #'
 #' Extracts DEA and/or FEA results stored in a `DeeDeeExperiment` and writes
 #' them to excel files. Each contrast/result is written to a separate sheet.
 #' DEA and FEA are written to separate files.
 #'
-#' @param x A `DeeDeeExperiment` object containing DEA/FEA results to be extracted
-#' @param res_type A character string indicating the result to extract
-#' (i.e. `"dea"` or `"fea"`) to fetch results from the corresponding slot. If set
-#' to `"both"`, both DEAs and FEAs are extracted into separate excel files.
+#' @param x A `DeeDeeExperiment` object containing DEA/FEA results to be
+#' extracted
+#' @param res_type A character vector indicating the result to extract
+#' (i.e. `"dea"`, `"fea"`, `"assay"`) from the corresponding slot
+#' If set to `"all"`, DEAs, FEAs, as well as the specified assays are extracted
+#' into separate excel files
 #' @param res_format A character string specifying the DEA/FEAs output format
-#' to be exported (i.e. `"minimal"` or `"original"`). FEA is currently exported
-#' in `minimal` format to ensure all objects are writable to excel
+#' to be exported (i.e. `"minimal"` or `"original"`)
 #' @param output_dir A character string specifying the directory where the excel
 #' file will be written
 #' @param file_name Optional character string specifying a file name. If `NULL`,
 #' a default name is generated
+#' @param assay_type Optional character vector specifying the assays to export.
+#' It defaults to `"counts"`
 #' @param force Logical. If `TRUE`, an existing file with the same name will be
 #' overwritten
 #'
 #' @return An (invisible) character vector of file paths to the exported excel
 #' files. The vector may contain one path `res_type = "dea"` or
-#' `res_type = "fea" `or two paths `res_type = "both"`
+#' `res_type = "fea" `or three paths `res_type = "all"`
 #'
 #' @export
 #'
@@ -1359,10 +1362,11 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #' }
 #'
 export_result_for_dde <- function(x,
-                          res_type = c("dea", "fea", "both"),
+                          res_type = c("assay","dea", "fea", "all"),
                           res_format = c("minimal", "original"),
                           output_dir = getwd(),
                           file_name = NULL,
+                          assay_type = c("counts"),
                           force = FALSE) {
   # checks on the args
   if (!is(x, "DeeDeeExperiment")) {
@@ -1385,14 +1389,17 @@ export_result_for_dde <- function(x,
     stop("`force` must be logical!")
   }
 
+  if(!is.character(assay_type)) {
+    stop("`assay_type` must be a character vector!")
+  }
 
-  res_type <- match.arg(res_type)
+  res_type <- match.arg(res_type, several.ok = TRUE)
   res_format <- match.arg(res_format)
 
   out_paths <- character()
 
   # export results
-  if (res_type %in% c("dea", "both")) {
+  if (any(res_type %in% c("dea", "all"))) {
     # get all deas
     deas <- getDEAList(x, format = res_format)
     out_paths <- c(out_paths, .write_res(list = deas,
@@ -1403,7 +1410,7 @@ export_result_for_dde <- function(x,
                                          force = force))
   }
 
-  if (res_type %in% c("fea", "both")) {
+  if (any(res_type %in% c("fea", "all"))) {
     # get all feas
     feas <- getFEAList(x, format = res_format)
     out_paths <- c(out_paths, .write_res(list = feas,
@@ -1412,6 +1419,28 @@ export_result_for_dde <- function(x,
                                          output_dir = output_dir,
                                          file_name = file_name,
                                          force = force))
+  }
+
+
+  if (any(res_type %in% c("assay", "all"))) {
+
+    if (!all(assay_type %in% assayNames(x))) {
+      missing <- setdiff(assay_type, assayNames(x))
+      stop("assay not found in `x`: ", paste(missing, collapse = ", "))
+    }
+
+    assays <- setNames(
+      lapply(assay_type, function(i){
+      assay(x, i)}),
+      assay_type)
+
+    out_paths <- c(out_paths, .write_res(list = assays,
+                                         result_type = "ASSAY",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+
   }
 
 
@@ -1424,14 +1453,16 @@ export_result_for_dde <- function(x,
 }
 
 
-#' Write DEA/FEA results to an excel file
+#' Write DEA/FEA/ASSAY results to an excel file
 #'
 #' @param list A named list of data frames (or coercible objects), where each
-#' element represents one contrast/result and will be written to a separate sheet
-#' @param result_type A character string indicating the result to extract
-#' (i.e. `"DEA"` or `"FEA"`). It is used in the output file name
+#' element represents one contrast/result/assay and will be written to a
+#' separate sheet
+#' @param result_type A character vector indicating the result to extract
+#' (i.e. `"DEA"`, `"FEA"`, or `"ASSAY"`). It is used in the output file name
 #' @param res_format A character string, specifying the DEA/FEAs output format
-#' to export (i.e. `"minimal"` or `"original"`). It is used in the output file name
+#' to export (i.e. `"minimal"` or `"original"`). It is used in the output file
+#' name
 #' @param output_dir A character string specifying the directory where the excel
 #' file will be written
 #' @param file_name Optional character string specifying a file name. If `NULL`,
@@ -1459,7 +1490,7 @@ export_result_for_dde <- function(x,
   # add rownames as a column
   list <- lapply(list, function(df){
     rn <- rownames(df)
-    if(!is.null(rn)){
+    if (!is.null(rn)) {
       col_name <- "id"
       col_name <- make.unique(c(names(df), col_name))[length(names(df)) + 1]
       df <- cbind(
@@ -1486,7 +1517,9 @@ export_result_for_dde <- function(x,
          "\nSet `force = TRUE` to replace it.")
   }
 
-  message("Writing results to: ", out_file)
+  cli::cli_alert_success(
+    "Writing results to:  {out_file} "
+  )
   writexl::write_xlsx(list, path = out_file)
 
   out_file

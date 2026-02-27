@@ -2,27 +2,29 @@
 % Please edit documentation in R/DeeDeeExperiment-internal-utils.R
 \name{export_result_for_dde}
 \alias{export_result_for_dde}
-\title{Export DEA/FEA results from a \code{DeeDeeExperiment} to excel files}
+\title{Export DEA/FEA/ASSAY results from a \code{DeeDeeExperiment} to excel files}
 \usage{
 export_result_for_dde(
   x,
-  res_type = c("dea", "fea", "both"),
+  res_type = c("assay", "dea", "fea", "all"),
   res_format = c("minimal", "original"),
   output_dir = getwd(),
   file_name = NULL,
+  assay_type = c("counts"),
   force = FALSE
 )
 }
 \arguments{
-\item{x}{A \code{DeeDeeExperiment} object containing DEA/FEA results to be extracted}
+\item{x}{A \code{DeeDeeExperiment} object containing DEA/FEA results to be
+extracted}
 
-\item{res_type}{A character string indicating the result to extract
-(i.e. \code{"dea"} or \code{"fea"}) to fetch results from the corresponding slot. If set
-to \code{"both"}, both DEAs and FEAs are extracted into separate excel files.}
+\item{res_type}{A character vector indicating the result to extract
+(i.e. \code{"dea"}, \code{"fea"}, \code{"assay"}) from the corresponding slot
+If set to \code{"all"}, DEAs, FEAs, as well as the specified assays are extracted
+into separate excel files}
 
 \item{res_format}{A character string specifying the DEA/FEAs output format
-to be exported (i.e. \code{"minimal"} or \code{"original"}). FEA is currently exported
-in \code{minimal} format to ensure all objects are writable to excel}
+to be exported (i.e. \code{"minimal"} or \code{"original"})}
 
 \item{output_dir}{A character string specifying the directory where the excel
 file will be written}
@@ -30,13 +32,16 @@ file will be written}
 \item{file_name}{Optional character string specifying a file name. If \code{NULL},
 a default name is generated}
 
+\item{assay_type}{Optional character vector specifying the assays to export.
+It defaults to \code{"counts"}}
+
 \item{force}{Logical. If \code{TRUE}, an existing file with the same name will be
 overwritten}
 }
 \value{
 An (invisible) character vector of file paths to the exported excel
 files. The vector may contain one path \code{res_type = "dea"} or
-\code{res_type = "fea" }or two paths \code{res_type = "both"}
+\code{res_type = "fea" }or three paths \code{res_type = "all"}
 }
 \description{
 Extracts DEA and/or FEA results stored in a \code{DeeDeeExperiment} and writes
