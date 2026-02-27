@@ -49,6 +49,9 @@ them to excel files. Each contrast/result is written to a separate sheet.
 DEA and FEA are written to separate files.
 }
 \examples{
+data("de_named_list", package = "DeeDeeExperiment")
+data("topGO_results_list", package = "DeeDeeExperiment")
+dde <- DeeDeeExperiment(de_results = de_named_list, enrich_results = topGO_results_list)
 
 export_result_for_dde(dde,
 res_type = "dea",

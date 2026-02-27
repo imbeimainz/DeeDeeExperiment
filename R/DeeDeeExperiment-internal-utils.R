@@ -1357,6 +1357,9 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #' @export
 #'
 #' @examples
+#' data("de_named_list", package = "DeeDeeExperiment")
+#' data("topGO_results_list", package = "DeeDeeExperiment")
+#' dde <- DeeDeeExperiment(de_results = de_named_list, enrich_results = topGO_results_list)
 #'
 #' export_result_for_dde(dde,
 #' res_type = "dea",
@@ -1430,8 +1433,8 @@ export_result_for_dde <- function(x,
 
   if (any(res_type %in% c("assay", "all"))) {
 
-    if (!all(assay_type %in% assayNames(x))) {
-      missing <- setdiff(assay_type, assayNames(x))
+    if (!all(assay_type %in% SummarizedExperiment::assayNames(x))) {
+      missing <- setdiff(assay_type, SummarizedExperiment::assayNames(x))
       stop("assay not found in `x`: ", paste(missing, collapse = ", "))
     }
 
