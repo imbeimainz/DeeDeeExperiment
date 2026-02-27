@@ -14,17 +14,17 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/DESCRIPTION)
 
-Abassi N, Schwarz L, Marini F (2025). *DeeDeeExperiment:
+Abassi N, Schwarz L, Marini F (2026). *DeeDeeExperiment:
 DeeDeeExperiment: An S4 Class for managing and exploring omics analysis
-results*. R package version 1.1.2,
+results*. R package version 1.1.3,
 <https://github.com/imbeimainz/DeeDeeExperiment>.
 
     @Manual{,
       title = {DeeDeeExperiment: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results},
       author = {Najla Abassi and Lea Schwarz and Federico Marini},
-      year = {2025},
-      note = {R package version 1.1.2},
+      year = {2026},
+      note = {R package version 1.1.3},
       url = {https://github.com/imbeimainz/DeeDeeExperiment},
     }

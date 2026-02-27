@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,9 +83,9 @@ Marini</h4>
 Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:marinif@uni-mainz.de" class="email">marinif@uni-mainz.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">5 December 2025</h4>
+            <h4 data-toc-skip class="date">27 February 2026</h4>
       
-      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/vignettes/DeeDeeExperiment_manual.Rmd" class="external-link"><code>vignettes/DeeDeeExperiment_manual.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/vignettes/DeeDeeExperiment_manual.Rmd" class="external-link"><code>vignettes/DeeDeeExperiment_manual.Rmd</code></a></small>
       <div class="d-none name"><code>DeeDeeExperiment_manual.Rmd</code></div>
     </div>
 
@@ -112,9 +112,9 @@ overwhelming. This challenge is further amplified in single-cell
 RNA-seq, where pseudo-bulk analyses generate numerous results tables
 across cell types and contrasts, making it challenging to organize,
 explore, and reproduce findings, even for experienced users - we invite
-you to see this more in detail in the <a href="https://bioconductor.org/packages/3.23/DeeDeeExperiment/vignettes/dde_with_single_cell.html" class="external-link">dedicated
+you to see this more in detail in the <a href="https://bioconductor.org/packages/3.22/DeeDeeExperiment/vignettes/dde_with_single_cell.html" class="external-link">dedicated
 companion vignette for single cell data</a>.</p>
-<p>To address these issues, we introduce the <em><a href="https://bioconductor.org/packages/3.23/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
+<p>To address these issues, we introduce the <em><a href="https://bioconductor.org/packages/3.22/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
 class, an S4 object that extends the widely adopted
 <code>SingleCellExperiment</code> class in Bioconductor.</p>
 <p><code>DeeDeeExperiment</code> provides a structured and consistent
@@ -146,9 +146,9 @@ includes:</p>
 <li>The used False Discovery Rate (FDR) and log2 fold change (LFC)
 thresholds (if specified).</li>
 <li>Meta info related to both the LFC and p-value.</li>
-<li>The package used to generate the DE results (e.g. <em><a href="https://bioconductor.org/packages/3.23/DEseq2" class="external-link">DEseq2</a></em>,
-<em><a href="https://bioconductor.org/packages/3.23/edgeR" class="external-link">edgeR</a></em> or
-<em><a href="https://bioconductor.org/packages/3.23/limma" class="external-link">limma</a></em>…).</li>
+<li>The package used to generate the DE results (e.g. <em><a href="https://bioconductor.org/packages/3.22/DEseq2" class="external-link">DEseq2</a></em>,
+<em><a href="https://bioconductor.org/packages/3.22/edgeR" class="external-link">edgeR</a></em> or
+<em><a href="https://bioconductor.org/packages/3.22/limma" class="external-link">limma</a></em>…).</li>
 <li>A pointer to the original DE result object, which is kept in the
 <code>metadata</code> of the <code>DeeDeeExperiment</code> object.</li>
 </ul>
@@ -167,7 +167,7 @@ includes:</p>
 <li>The name of the associated DEA contrast.</li>
 <li>The FEA name.</li>
 <li>A <code>GeneTonicList</code>-compatible set of
-<code>shaken_results</code> (ready to be used in <em><a href="https://bioconductor.org/packages/3.23/GeneTonic" class="external-link">GeneTonic</a></em>).</li>
+<code>shaken_results</code> (ready to be used in <em><a href="https://bioconductor.org/packages/3.22/GeneTonic" class="external-link">GeneTonic</a></em>).</li>
 <li>The enrichment tool used to generate the results
 (e.g. <code>topGO</code>, <code>clusterProfiler...</code>).</li>
 <li>A copy of the original enrichment result object.</li>
@@ -229,12 +229,12 @@ current workspace as follows:</p>
 dataset<a class="anchor" aria-label="anchor" href="#deedeeexperiment-on-the-macrophage-dataset"></a>
 </h2>
 <p>In the remainder of this vignette, we will illustrate the main
-features of <em><a href="https://bioconductor.org/packages/3.23/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
+features of <em><a href="https://bioconductor.org/packages/3.22/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
 on a publicly available dataset from Alasoo, et al. “Shared genetic
 effects on chromatin and gene expression indicate a role for enhancer
 priming in immune response”, published in Nature Genetics, January 2018
 <span class="citation">(Alasoo et al. 2018)</span> <a href="https://doi.org/10.1038/s41588-018-0046-7" class="external-link">doi:10.1038/s41588-018-0046-7</a>.</p>
-<p>The data is made available via the <em><a href="https://bioconductor.org/packages/3.23/macrophage" class="external-link">macrophage</a></em>
+<p>The data is made available via the <em><a href="https://bioconductor.org/packages/3.22/macrophage" class="external-link">macrophage</a></em>
 Bioconductor package, which contains the files output from the Salmon
 quantification (version 0.12.0, with GENCODE v29 reference), as well as
 the values summarized at the gene level, which we will use to
@@ -1467,15 +1467,15 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000204257 HLA-DMA 1922.02562 3.556107e+06   FALSE 0.050271572</span></span>
 <span><span class="co">#&gt;                 dispGeneIter    dispFit dispersion dispIter dispOutlier</span></span>
 <span><span class="co">#&gt; ENSG00000164741            8 0.07822483 0.16262236       10       FALSE</span></span>
-<span><span class="co">#&gt; ENSG00000078808            8 0.07420141 0.00763372        9       FALSE</span></span>
-<span><span class="co">#&gt; ENSG00000251034           13 0.42671549 0.19197295        8       FALSE</span></span>
-<span><span class="co">#&gt; ENSG00000162676           30 0.49242764 0.14920745        6       FALSE</span></span>
+<span><span class="co">#&gt; ENSG00000078808            8 0.07420142 0.00763372        9       FALSE</span></span>
+<span><span class="co">#&gt; ENSG00000251034           13 0.42671548 0.19197295        8       FALSE</span></span>
+<span><span class="co">#&gt; ENSG00000162676           30 0.49242763 0.14920745        6       FALSE</span></span>
 <span><span class="co">#&gt; ENSG00000170356            8 0.35754499 0.15108319        8       FALSE</span></span>
 <span><span class="co">#&gt; ENSG00000204257            8 0.07578856 0.05282007        7       FALSE</span></span>
 <span><span class="co">#&gt;                    dispMAP Intercept line_eiwy_1_vs_diku_1</span></span>
 <span><span class="co">#&gt; ENSG00000164741 0.16262236  7.770353           0.970022375</span></span>
 <span><span class="co">#&gt; ENSG00000078808 0.00763372 12.251844           0.005781728</span></span>
-<span><span class="co">#&gt; ENSG00000251034 0.19197295  1.755162           0.175340688</span></span>
+<span><span class="co">#&gt; ENSG00000251034 0.19197295  1.755162           0.175340689</span></span>
 <span><span class="co">#&gt; ENSG00000162676 0.14920745  2.136581           0.480446534</span></span>
 <span><span class="co">#&gt; ENSG00000170356 0.15108319  4.233279           1.056913201</span></span>
 <span><span class="co">#&gt; ENSG00000204257 0.05282007  7.540662           0.089423375</span></span>
@@ -1484,7 +1484,7 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000078808           -0.05342186            0.31633010</span></span>
 <span><span class="co">#&gt; ENSG00000251034            1.05452572            0.33475856</span></span>
 <span><span class="co">#&gt; ENSG00000162676            0.58406093           -0.47081704</span></span>
-<span><span class="co">#&gt; ENSG00000170356           -5.53704332           -1.66265292</span></span>
+<span><span class="co">#&gt; ENSG00000170356           -5.53704332           -1.66265291</span></span>
 <span><span class="co">#&gt; ENSG00000204257            0.79727382            0.58138974</span></span>
 <span><span class="co">#&gt;                 line_podx_1_vs_diku_1 line_qaqx_1_vs_diku_1</span></span>
 <span><span class="co">#&gt; ENSG00000164741            1.87146580             3.8188294</span></span>
@@ -1536,11 +1536,11 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000170356                   0.44708740               10.347861</span></span>
 <span><span class="co">#&gt; ENSG00000204257                   0.20193856               36.027147</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_line_eiwy_1_vs_diku_1</span></span>
-<span><span class="co">#&gt; ENSG00000164741                          2.33876252</span></span>
+<span><span class="co">#&gt; ENSG00000164741                          2.33876251</span></span>
 <span><span class="co">#&gt; ENSG00000078808                          0.06424094</span></span>
 <span><span class="co">#&gt; ENSG00000251034                          0.30362451</span></span>
 <span><span class="co">#&gt; ENSG00000162676                          0.93433451</span></span>
-<span><span class="co">#&gt; ENSG00000170356                          2.41212349</span></span>
+<span><span class="co">#&gt; ENSG00000170356                          2.41212350</span></span>
 <span><span class="co">#&gt; ENSG00000204257                          0.37089814</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_line_fikt_3_vs_diku_1</span></span>
 <span><span class="co">#&gt; ENSG00000164741                          -0.1819876</span></span>
@@ -1551,13 +1551,13 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000204257                           3.3190221</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_line_ieki_2_vs_diku_1</span></span>
 <span><span class="co">#&gt; ENSG00000164741                         -0.04627211</span></span>
-<span><span class="co">#&gt; ENSG00000078808                          3.51416316</span></span>
+<span><span class="co">#&gt; ENSG00000078808                          3.51416315</span></span>
 <span><span class="co">#&gt; ENSG00000251034                          0.56649887</span></span>
 <span><span class="co">#&gt; ENSG00000162676                         -0.80967846</span></span>
-<span><span class="co">#&gt; ENSG00000170356                         -2.99602716</span></span>
-<span><span class="co">#&gt; ENSG00000204257                          2.41171466</span></span>
+<span><span class="co">#&gt; ENSG00000170356                         -2.99602717</span></span>
+<span><span class="co">#&gt; ENSG00000204257                          2.41171465</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_line_podx_1_vs_diku_1</span></span>
-<span><span class="co">#&gt; ENSG00000164741                          4.51757372</span></span>
+<span><span class="co">#&gt; ENSG00000164741                          4.51757371</span></span>
 <span><span class="co">#&gt; ENSG00000078808                          1.88404851</span></span>
 <span><span class="co">#&gt; ENSG00000251034                          0.08537831</span></span>
 <span><span class="co">#&gt; ENSG00000162676                          1.27433458</span></span>
@@ -1568,7 +1568,7 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000078808                          -2.2825484</span></span>
 <span><span class="co">#&gt; ENSG00000251034                          -2.1936493</span></span>
 <span><span class="co">#&gt; ENSG00000162676                          -0.5146599</span></span>
-<span><span class="co">#&gt; ENSG00000170356                          -3.4666799</span></span>
+<span><span class="co">#&gt; ENSG00000170356                          -3.4666800</span></span>
 <span><span class="co">#&gt; ENSG00000204257                          -1.3561926</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_condition_IFNg_vs_naive</span></span>
 <span><span class="co">#&gt; ENSG00000164741                             0.8937464</span></span>
@@ -1585,12 +1585,12 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000170356                                    1.0298387</span></span>
 <span><span class="co">#&gt; ENSG00000204257                                   21.0416218</span></span>
 <span><span class="co">#&gt;                 WaldStatistic_condition_SL1344_vs_naive WaldPvalue_Intercept</span></span>
-<span><span class="co">#&gt; ENSG00000164741                              0.03592521        1.261920e-103</span></span>
-<span><span class="co">#&gt; ENSG00000078808                             10.80754517         0.000000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000164741                              0.03592521        1.261921e-103</span></span>
+<span><span class="co">#&gt; ENSG00000078808                             10.80754515         0.000000e+00</span></span>
 <span><span class="co">#&gt; ENSG00000251034                              2.76214304         8.596573e-04</span></span>
 <span><span class="co">#&gt; ENSG00000162676                              1.17893863         5.703738e-06</span></span>
-<span><span class="co">#&gt; ENSG00000170356                             -1.63318139         4.279381e-25</span></span>
-<span><span class="co">#&gt; ENSG00000204257                             -3.75735039        3.144534e-284</span></span>
+<span><span class="co">#&gt; ENSG00000170356                             -1.63318139         4.279380e-25</span></span>
+<span><span class="co">#&gt; ENSG00000204257                             -3.75735039        3.144538e-284</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_line_eiwy_1_vs_diku_1</span></span>
 <span><span class="co">#&gt; ENSG00000164741                       0.01934773</span></span>
 <span><span class="co">#&gt; ENSG00000078808                       0.94877838</span></span>
@@ -1606,21 +1606,21 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000170356                     3.035699e-07</span></span>
 <span><span class="co">#&gt; ENSG00000204257                     9.033327e-04</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_line_ieki_2_vs_diku_1</span></span>
-<span><span class="co">#&gt; ENSG00000164741                     0.9630933699</span></span>
+<span><span class="co">#&gt; ENSG00000164741                     0.9630933700</span></span>
 <span><span class="co">#&gt; ENSG00000078808                     0.0004411418</span></span>
-<span><span class="co">#&gt; ENSG00000251034                     0.5710546998</span></span>
-<span><span class="co">#&gt; ENSG00000162676                     0.4181250017</span></span>
-<span><span class="co">#&gt; ENSG00000170356                     0.0027352207</span></span>
-<span><span class="co">#&gt; ENSG00000204257                     0.0158777024</span></span>
+<span><span class="co">#&gt; ENSG00000251034                     0.5710546989</span></span>
+<span><span class="co">#&gt; ENSG00000162676                     0.4181250013</span></span>
+<span><span class="co">#&gt; ENSG00000170356                     0.0027352206</span></span>
+<span><span class="co">#&gt; ENSG00000204257                     0.0158777025</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_line_podx_1_vs_diku_1</span></span>
-<span><span class="co">#&gt; ENSG00000164741                     6.255225e-06</span></span>
+<span><span class="co">#&gt; ENSG00000164741                     6.255226e-06</span></span>
 <span><span class="co">#&gt; ENSG00000078808                     5.955841e-02</span></span>
 <span><span class="co">#&gt; ENSG00000251034                     9.319606e-01</span></span>
 <span><span class="co">#&gt; ENSG00000162676                     2.025449e-01</span></span>
 <span><span class="co">#&gt; ENSG00000170356                     4.651468e-01</span></span>
 <span><span class="co">#&gt; ENSG00000204257                     8.742264e-01</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_line_qaqx_1_vs_diku_1</span></span>
-<span><span class="co">#&gt; ENSG00000164741                     2.616514e-20</span></span>
+<span><span class="co">#&gt; ENSG00000164741                     2.616515e-20</span></span>
 <span><span class="co">#&gt; ENSG00000078808                     2.245698e-02</span></span>
 <span><span class="co">#&gt; ENSG00000251034                     2.826063e-02</span></span>
 <span><span class="co">#&gt; ENSG00000162676                     6.067907e-01</span></span>
@@ -1632,18 +1632,18 @@ as originally provided (e.g., <code>DESeqResults</code>,
 <span><span class="co">#&gt; ENSG00000251034                       6.866557e-01</span></span>
 <span><span class="co">#&gt; ENSG00000162676                       3.502229e-01</span></span>
 <span><span class="co">#&gt; ENSG00000170356                       6.452673e-01</span></span>
-<span><span class="co">#&gt; ENSG00000204257                       2.783305e-97</span></span>
+<span><span class="co">#&gt; ENSG00000204257                       2.783307e-97</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_condition_IFNg_SL1344_vs_naive</span></span>
 <span><span class="co">#&gt; ENSG00000164741                              3.723476e-01</span></span>
-<span><span class="co">#&gt; ENSG00000078808                              8.971458e-19</span></span>
+<span><span class="co">#&gt; ENSG00000078808                              8.971459e-19</span></span>
 <span><span class="co">#&gt; ENSG00000251034                              1.904239e-10</span></span>
 <span><span class="co">#&gt; ENSG00000162676                              3.980407e-06</span></span>
 <span><span class="co">#&gt; ENSG00000170356                              3.030857e-01</span></span>
-<span><span class="co">#&gt; ENSG00000204257                              2.728835e-98</span></span>
+<span><span class="co">#&gt; ENSG00000204257                              2.728836e-98</span></span>
 <span><span class="co">#&gt;                 WaldPvalue_condition_SL1344_vs_naive betaConv betaIter deviance</span></span>
 <span><span class="co">#&gt; ENSG00000164741                         9.713420e-01     TRUE        5 315.9203</span></span>
 <span><span class="co">#&gt; ENSG00000078808                         3.170407e-27     TRUE        3 358.9627</span></span>
-<span><span class="co">#&gt; ENSG00000251034                         5.742332e-03     TRUE        5 124.7960</span></span>
+<span><span class="co">#&gt; ENSG00000251034                         5.742331e-03     TRUE        5 124.7960</span></span>
 <span><span class="co">#&gt; ENSG00000162676                         2.384226e-01     TRUE        5 124.1491</span></span>
 <span><span class="co">#&gt; ENSG00000170356                         1.024309e-01     TRUE        9 129.6075</span></span>
 <span><span class="co">#&gt; ENSG00000204257                         1.717220e-04     TRUE        4 307.6203</span></span>
@@ -1701,13 +1701,13 @@ dde object as a list.</p>
 <code class="sourceCode R"><span><span class="co"># get dea results as a list, (default: minimal format)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEAList</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span>, <span class="va">head</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $IFNg_vs_naive</span></span>
-<span><span class="co">#&gt;                 log2FoldChange       pvalue         padj</span></span>
-<span><span class="co">#&gt; ENSG00000164741     0.22914868 9.805414e-01 1.000000e+00</span></span>
-<span><span class="co">#&gt; ENSG00000078808    -0.01153365 1.000000e+00 1.000000e+00</span></span>
-<span><span class="co">#&gt; ENSG00000251034    -0.11670132 9.338990e-01 1.000000e+00</span></span>
-<span><span class="co">#&gt; ENSG00000162676     0.26914813 9.008170e-01 1.000000e+00</span></span>
-<span><span class="co">#&gt; ENSG00000170356    -0.12786371 9.728148e-01 1.000000e+00</span></span>
-<span><span class="co">#&gt; ENSG00000204257     4.05502438 1.672976e-56 8.364878e-54</span></span>
+<span><span class="co">#&gt;                 log2FoldChange       pvalue        padj</span></span>
+<span><span class="co">#&gt; ENSG00000164741     0.22914867 9.805414e-01 1.00000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000078808    -0.01153364 1.000000e+00 1.00000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000251034    -0.11670132 9.338990e-01 1.00000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000162676     0.26914813 9.008170e-01 1.00000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000170356    -0.12786371 9.728148e-01 1.00000e+00</span></span>
+<span><span class="co">#&gt; ENSG00000204257     4.05502439 1.672976e-56 8.36488e-54</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $Salm_vs_naive</span></span>
 <span><span class="co">#&gt;                 log2FoldChange    pvalue      padj</span></span>
@@ -1715,8 +1715,8 @@ dde object as a list.</p>
 <span><span class="co">#&gt; ENSG00000078808     0.78936007 0.9975592 1.0000000</span></span>
 <span><span class="co">#&gt; ENSG00000251034     1.18814968 0.2269175 0.9820422</span></span>
 <span><span class="co">#&gt; ENSG00000162676     0.44208213 0.8432117 1.0000000</span></span>
-<span><span class="co">#&gt; ENSG00000170356    -0.62492010 0.7269723 1.0000000</span></span>
-<span><span class="co">#&gt; ENSG00000204257    -0.72938104 0.8838883 1.0000000</span></span>
+<span><span class="co">#&gt; ENSG00000170356    -0.62492008 0.7269723 1.0000000</span></span>
+<span><span class="co">#&gt; ENSG00000204257    -0.72938102 0.8838883 1.0000000</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $lrt_IFNg_vs_naive</span></span>
 <span><span class="co">#&gt;                 log2FoldChange       pvalue         padj</span></span>
@@ -2099,6 +2099,31 @@ easily retrieved with:</p>
 <code class="sourceCode R"><span><span class="co"># the tool used to perform the FEA</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getFEAInfo</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="st">"ifng_vs_naive"</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"fe_tool"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "clusterProfiler"</span></span></code></pre></div>
+<p>It is possible to export DEA and FEA results, as well as the
+available assay that are stored in a <code>DeeDeeExperiment</code>
+object using <code>export_result_for_dde</code></p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># export only DEAs</span></span>
+<span><span class="fu"><a href="../reference/export_result_for_dde.html">export_result_for_dde</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span>                      res_type <span class="op">=</span> <span class="st">"dea"</span>,</span>
+<span>                      res_format <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>                      output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"res_output"</span><span class="op">)</span>,</span>
+<span>                      file_name <span class="op">=</span> <span class="st">"macrophage_dataset"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># export both DEAs and FEAs</span></span>
+<span><span class="fu"><a href="../reference/export_result_for_dde.html">export_result_for_dde</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span>                      res_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"dea"</span>,<span class="st">"fea"</span><span class="op">)</span>,</span>
+<span>                      res_format <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>                      output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"res_output"</span><span class="op">)</span>,</span>
+<span>                      file_name <span class="op">=</span> <span class="st">"macrophage_dataset"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># export DEAs, FEAs, and assays</span></span>
+<span><span class="fu"><a href="../reference/export_result_for_dde.html">export_result_for_dde</a></span><span class="op">(</span><span class="va">dde</span>,</span>
+<span>                      res_type <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>                      res_format <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>                      output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,<span class="st">"res_output"</span><span class="op">)</span>,</span>
+<span>                      file_name <span class="op">=</span> <span class="st">"macrophage_dataset"</span>,</span>
+<span>                      force <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -2113,17 +2138,17 @@ other Bioconductor tools such as <code>iSEE</code> or
 your analysis, from the counts to enrichment results, metadata, and
 scenario details, you can save it and plug it into these tools for
 interactive exploration and visualization.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/saveRDS.html" class="external-link">saveRDS</a></span><span class="op">(</span><span class="va">dde</span>, <span class="st">"dde_macrophage.RDS"</span><span class="op">)</span></span></code></pre></div>
 <p>To explore the <code>dde</code> object within <code>iSEE</code>,
 simply run these lines of code:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"iSEE"</span><span class="op">)</span></span>
-<span><span class="fu">iSEE</span><span class="fu">::</span><span class="fu">iSEE</span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://isee.github.io/iSEE/" class="external-link">"iSEE"</a></span><span class="op">)</span></span>
+<span><span class="fu">iSEE</span><span class="fu">::</span><span class="fu"><a href="https://isee.github.io/iSEE/reference/iSEE.html" class="external-link">iSEE</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span></span></code></pre></div>
 <p>Similarly, to see more on <code>dde</code> within
 <code>GeneTonic</code>, you can run the following chunk:</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st">"GeneTonic"</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/federicomarini/GeneTonic" class="external-link">"GeneTonic"</a></span><span class="op">)</span></span>
 <span><span class="va">my_dde</span> <span class="op">&lt;-</span> <span class="va">dde</span></span>
 <span></span>
 <span><span class="va">res_de</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEA</a></span><span class="op">(</span><span class="va">my_dde</span>, dea_name <span class="op">=</span> <span class="st">"IFNg_vs_naive"</span>, format <span class="op">=</span> <span class="st">"original"</span><span class="op">)</span></span>
@@ -2132,7 +2157,7 @@ simply run these lines of code:</p>
 <span>                                                  <span class="st">"org.Hs.eg.db"</span>,</span>
 <span>                                                  <span class="st">"ENSEMBL"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">GeneTonic</span><span class="fu">::</span><span class="fu">GeneTonic</span><span class="op">(</span></span>
+<span><span class="fu">GeneTonic</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GeneTonic/man/GeneTonic.html" class="external-link">GeneTonic</a></span><span class="op">(</span></span>
 <span>  dds <span class="op">=</span> <span class="va">dds_macrophage</span>,</span>
 <span>  res_de <span class="op">=</span> <span class="va">res_de</span>,</span>
 <span>  res_enrich <span class="op">=</span> <span class="va">res_enrich</span>,</span>
@@ -2169,20 +2194,20 @@ request within the <code>DeeDeeExperiment</code> Github repository (<a href="htt
 <div class="section level2">
 <h2 class="unnumbered smaller" id="session-info">Session info<a class="anchor" aria-label="anchor" href="#session-info"></a>
 </h2>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R Under development (unstable) (2025-11-24 r89053)</span></span>
+<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
 <span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.7.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
 <span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; time zone: UTC</span></span>
+<span><span class="co">#&gt; time zone: Europe/Berlin</span></span>
 <span><span class="co">#&gt; tzcode source: internal</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; attached base packages:</span></span>
@@ -2190,49 +2215,50 @@ request within the <code>DeeDeeExperiment</code> Github repository (<a href="htt
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] DEFormats_1.39.0            edgeR_4.9.0                </span></span>
-<span><span class="co">#&gt;  [3] limma_3.67.0                DESeq2_1.51.6              </span></span>
-<span><span class="co">#&gt;  [5] macrophage_1.27.0           DeeDeeExperiment_1.1.2     </span></span>
-<span><span class="co">#&gt;  [7] SingleCellExperiment_1.33.0 SummarizedExperiment_1.41.0</span></span>
-<span><span class="co">#&gt;  [9] Biobase_2.71.0              GenomicRanges_1.63.0       </span></span>
-<span><span class="co">#&gt; [11] Seqinfo_1.1.0               IRanges_2.45.0             </span></span>
-<span><span class="co">#&gt; [13] S4Vectors_0.49.0            BiocGenerics_0.57.0        </span></span>
-<span><span class="co">#&gt; [15] generics_0.1.4              MatrixGenerics_1.23.0      </span></span>
-<span><span class="co">#&gt; [17] matrixStats_1.5.0           BiocStyle_2.39.0           </span></span>
+<span><span class="co">#&gt;  [1] DEFormats_1.38.0            edgeR_4.8.0                </span></span>
+<span><span class="co">#&gt;  [3] limma_3.66.0                DESeq2_1.50.2              </span></span>
+<span><span class="co">#&gt;  [5] macrophage_1.26.0           DeeDeeExperiment_1.1.3     </span></span>
+<span><span class="co">#&gt;  [7] SingleCellExperiment_1.32.0 SummarizedExperiment_1.40.0</span></span>
+<span><span class="co">#&gt;  [9] Biobase_2.70.0              GenomicRanges_1.62.0       </span></span>
+<span><span class="co">#&gt; [11] Seqinfo_1.0.0               IRanges_2.44.0             </span></span>
+<span><span class="co">#&gt; [13] S4Vectors_0.48.0            BiocGenerics_0.56.0        </span></span>
+<span><span class="co">#&gt; [15] generics_0.1.4              MatrixGenerics_1.22.0      </span></span>
+<span><span class="co">#&gt; [17] matrixStats_1.5.0           BiocStyle_2.38.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;  [1] DBI_1.2.3            rlang_1.1.6          magrittr_2.0.4      </span></span>
-<span><span class="co">#&gt;  [4] DOSE_4.5.0           compiler_4.6.0       RSQLite_2.4.5       </span></span>
-<span><span class="co">#&gt;  [7] reshape2_1.4.5       png_0.1-8            systemfonts_1.3.1   </span></span>
-<span><span class="co">#&gt; [10] vctrs_0.6.5          stringr_1.6.0        pkgconfig_2.0.3     </span></span>
-<span><span class="co">#&gt; [13] crayon_1.5.3         fastmap_1.2.0        backports_1.5.0     </span></span>
-<span><span class="co">#&gt; [16] XVector_0.51.0       rmarkdown_2.30       ragg_1.5.0          </span></span>
-<span><span class="co">#&gt; [19] bit_4.6.0            xfun_0.54            cachem_1.1.0        </span></span>
-<span><span class="co">#&gt; [22] jsonlite_2.0.0       blob_1.2.4           DelayedArray_0.37.0 </span></span>
-<span><span class="co">#&gt; [25] BiocParallel_1.45.0  parallel_4.6.0       R6_2.6.1            </span></span>
-<span><span class="co">#&gt; [28] stringi_1.8.7        bslib_0.9.0          RColorBrewer_1.1-3  </span></span>
-<span><span class="co">#&gt; [31] jquerylib_0.1.4      GOSemSim_2.37.0      numDeriv_2016.8-1.1 </span></span>
-<span><span class="co">#&gt; [34] Rcpp_1.1.0           bookdown_0.46        knitr_1.50          </span></span>
-<span><span class="co">#&gt; [37] R.utils_2.13.0       Matrix_1.7-4         splines_4.6.0       </span></span>
-<span><span class="co">#&gt; [40] tidyselect_1.2.1     qvalue_2.43.0        abind_1.4-8         </span></span>
-<span><span class="co">#&gt; [43] yaml_2.3.11          codetools_0.2-20     lattice_0.22-7      </span></span>
-<span><span class="co">#&gt; [46] tibble_3.3.0         plyr_1.8.9           KEGGREST_1.51.1     </span></span>
-<span><span class="co">#&gt; [49] S7_0.2.1             coda_0.19-4.1        evaluate_1.0.5      </span></span>
-<span><span class="co">#&gt; [52] desc_1.4.3           Biostrings_2.79.2    pillar_1.11.1       </span></span>
-<span><span class="co">#&gt; [55] BiocManager_1.30.26  checkmate_2.3.3      emdbook_1.3.14      </span></span>
-<span><span class="co">#&gt; [58] ggplot2_4.0.1        scales_1.4.0         glue_1.8.0          </span></span>
-<span><span class="co">#&gt; [61] tools_4.6.0          apeglm_1.33.0        data.table_1.17.8   </span></span>
-<span><span class="co">#&gt; [64] fgsea_1.37.0         locfit_1.5-9.12      fs_1.6.6            </span></span>
-<span><span class="co">#&gt; [67] mvtnorm_1.3-3        fastmatch_1.1-6      cowplot_1.2.0       </span></span>
-<span><span class="co">#&gt; [70] grid_4.6.0           bbmle_1.0.25.1       bdsmatrix_1.3-7     </span></span>
-<span><span class="co">#&gt; [73] AnnotationDbi_1.73.0 cli_3.6.5            rappdirs_0.3.3      </span></span>
-<span><span class="co">#&gt; [76] textshaping_1.0.4    S4Arrays_1.11.1      dplyr_1.1.4         </span></span>
-<span><span class="co">#&gt; [79] gtable_0.3.6         yulab.utils_0.2.2    R.methodsS3_1.8.2   </span></span>
-<span><span class="co">#&gt; [82] sass_0.4.10          digest_0.6.39        SparseArray_1.11.8  </span></span>
-<span><span class="co">#&gt; [85] htmlwidgets_1.6.4    farver_2.1.2         R.oo_1.27.1         </span></span>
-<span><span class="co">#&gt; [88] memoise_2.0.1        htmltools_0.5.9      pkgdown_2.2.0.9000  </span></span>
-<span><span class="co">#&gt; [91] lifecycle_1.0.4      httr_1.4.7           GO.db_3.22.0        </span></span>
-<span><span class="co">#&gt; [94] statmod_1.5.1        bit64_4.6.0-1        MASS_7.3-65</span></span></code></pre></div>
+<span><span class="co">#&gt;  [1] DBI_1.2.3            writexl_1.5.4        rlang_1.1.6         </span></span>
+<span><span class="co">#&gt;  [4] magrittr_2.0.4       DOSE_4.4.0           compiler_4.5.2      </span></span>
+<span><span class="co">#&gt;  [7] RSQLite_2.4.5        reshape2_1.4.5       png_0.1-8           </span></span>
+<span><span class="co">#&gt; [10] systemfonts_1.3.1    vctrs_0.6.5          stringr_1.6.0       </span></span>
+<span><span class="co">#&gt; [13] crayon_1.5.3         pkgconfig_2.0.3      fastmap_1.2.0       </span></span>
+<span><span class="co">#&gt; [16] backports_1.5.0      XVector_0.50.0       rmarkdown_2.30      </span></span>
+<span><span class="co">#&gt; [19] ragg_1.5.0           bit_4.6.0            xfun_0.54           </span></span>
+<span><span class="co">#&gt; [22] cachem_1.1.0         jsonlite_2.0.0       blob_1.2.4          </span></span>
+<span><span class="co">#&gt; [25] DelayedArray_0.36.0  BiocParallel_1.44.0  parallel_4.5.2      </span></span>
+<span><span class="co">#&gt; [28] R6_2.6.1             stringi_1.8.7        bslib_0.9.0         </span></span>
+<span><span class="co">#&gt; [31] RColorBrewer_1.1-3   jquerylib_0.1.4      GOSemSim_2.36.0     </span></span>
+<span><span class="co">#&gt; [34] numDeriv_2016.8-1.1  Rcpp_1.1.0           bookdown_0.45       </span></span>
+<span><span class="co">#&gt; [37] knitr_1.50           R.utils_2.13.0       Matrix_1.7-4        </span></span>
+<span><span class="co">#&gt; [40] splines_4.5.2        tidyselect_1.2.1     qvalue_2.42.0       </span></span>
+<span><span class="co">#&gt; [43] rstudioapi_0.17.1    dichromat_2.0-0.1    abind_1.4-8         </span></span>
+<span><span class="co">#&gt; [46] yaml_2.3.11          codetools_0.2-20     lattice_0.22-7      </span></span>
+<span><span class="co">#&gt; [49] tibble_3.3.0         plyr_1.8.9           KEGGREST_1.50.0     </span></span>
+<span><span class="co">#&gt; [52] S7_0.2.1             coda_0.19-4.1        evaluate_1.0.5      </span></span>
+<span><span class="co">#&gt; [55] desc_1.4.3           Biostrings_2.78.0    pillar_1.11.1       </span></span>
+<span><span class="co">#&gt; [58] BiocManager_1.30.27  checkmate_2.3.3      emdbook_1.3.14      </span></span>
+<span><span class="co">#&gt; [61] ggplot2_4.0.1        scales_1.4.0         glue_1.8.0          </span></span>
+<span><span class="co">#&gt; [64] tools_4.5.2          apeglm_1.32.0        data.table_1.17.8   </span></span>
+<span><span class="co">#&gt; [67] fgsea_1.36.0         locfit_1.5-9.12      fs_1.6.6            </span></span>
+<span><span class="co">#&gt; [70] mvtnorm_1.3-3        fastmatch_1.1-6      cowplot_1.2.0       </span></span>
+<span><span class="co">#&gt; [73] grid_4.5.2           bbmle_1.0.25.1       bdsmatrix_1.3-7     </span></span>
+<span><span class="co">#&gt; [76] AnnotationDbi_1.72.0 cli_3.6.5            rappdirs_0.3.3      </span></span>
+<span><span class="co">#&gt; [79] textshaping_1.0.4    S4Arrays_1.10.0      dplyr_1.1.4         </span></span>
+<span><span class="co">#&gt; [82] gtable_0.3.6         yulab.utils_0.2.2    R.methodsS3_1.8.2   </span></span>
+<span><span class="co">#&gt; [85] sass_0.4.10          digest_0.6.39        SparseArray_1.10.3  </span></span>
+<span><span class="co">#&gt; [88] htmlwidgets_1.6.4    farver_2.1.2         R.oo_1.27.1         </span></span>
+<span><span class="co">#&gt; [91] memoise_2.0.1        htmltools_0.5.8.1    pkgdown_2.2.0       </span></span>
+<span><span class="co">#&gt; [94] lifecycle_1.0.4      httr_1.4.7           GO.db_3.22.0        </span></span>
+<span><span class="co">#&gt; [97] statmod_1.5.1        bit64_4.6.0-1        MASS_7.3-65</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -2277,7 +2303,7 @@ GeneTonic.”</span> <em>Current Protocols</em> 2 (4). <a href="https://doi.org/
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

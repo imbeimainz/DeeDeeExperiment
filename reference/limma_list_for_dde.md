@@ -5,7 +5,7 @@ a `limma::MArrayLM` object and reformats them into a list of
 standardized data frames suitable for integration in a
 `DeeDeeExperiment` object. Each resulting data frame includes renamed
 columns: `logFC` to `log2FoldChange` ,`P.Value` to `pvalue`, and
-`adj.P.Val` to `padj`.
+`adj.P.Val` to `padj`
 
 ## Usage
 
@@ -53,5 +53,5 @@ object must therefore accurately reflect the intended contrast names.
 ``` r
 data("de_limma", package = "DeeDeeExperiment")
 new_limma_list <- limma_list_for_dde(de_limma)
-#> ℹ Returning 4 limma contrasts formatted for DeeDeeExperiment
+#> Error in topTable(fit, coef = x, number = number, sort.by = sort.by): could not find function "topTable"
 ```

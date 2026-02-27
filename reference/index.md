@@ -96,6 +96,10 @@
 
   `enrichr_res`
 
+- [`export_result_for_dde()`](export_result_for_dde.md) :
+
+  Export DEA/FEA/ASSAY results from a `DeeDeeExperiment` to excel files
+
 - [`fgseaRes`](fgseaRes.md) :
 
   `fgseaRes`

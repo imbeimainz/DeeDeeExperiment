@@ -1,6 +1,7 @@
 # `gost_res`
 
-A list of FE results generated with `gprofiler2::gost()`
+A list of FE results generated with
+[`gprofiler2::gost()`](https://rdrr.io/pkg/gprofiler2/man/gost.html)
 
 ## Format
 

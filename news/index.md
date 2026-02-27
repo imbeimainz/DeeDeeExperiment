@@ -2,6 +2,10 @@
 
 ## DeeDeeExperiment 1.2.0
 
+- The `dea` and `fea` slots now use
+  [`S4Vectors::SimpleList`](https://rdrr.io/pkg/S4Vectors/man/SimpleList-class.html)
+  instead of base `list`
+
 - The DEA original objects are no longer stored in the `dea` slot. They
   are now stored under `metadata(dde)$singlecontrast` or
   `metadata(dde)$multicontrast`, and each contrast entry in the dea slot
@@ -10,6 +14,9 @@
 - Added helper functions to simplify inserting DE results from
   [`muscat::pbDS()`](https://rdrr.io/pkg/muscat/man/pbDS.html) and
   `MArrayLM` object with multiple contrast into a `dde` object
+
+- Added a helper function to export results stored in `dea` and `fea`
+  slots as excel files
 
 - Improved warning messages
 

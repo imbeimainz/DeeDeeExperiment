@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,13 +36,15 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.2.0" id="deedeeexperiment-120">DeeDeeExperiment 1.2.0<a class="anchor" aria-label="anchor" href="#deedeeexperiment-120"></a></h2>
-<ul><li><p>The DEA original objects are no longer stored in the <code>dea</code> slot. They are now stored under <code>metadata(dde)$singlecontrast</code> or <code>metadata(dde)$multicontrast</code>, and each contrast entry in the dea slot contains a pointer to its original object</p></li>
+<ul><li><p>The <code>dea</code> and <code>fea</code> slots now use <code><a href="https://rdrr.io/pkg/S4Vectors/man/SimpleList-class.html" class="external-link">S4Vectors::SimpleList</a></code> instead of base <code>list</code></p></li>
+<li><p>The DEA original objects are no longer stored in the <code>dea</code> slot. They are now stored under <code>metadata(dde)$singlecontrast</code> or <code>metadata(dde)$multicontrast</code>, and each contrast entry in the dea slot contains a pointer to its original object</p></li>
 <li><p>Added helper functions to simplify inserting DE results from <code><a href="https://rdrr.io/pkg/muscat/man/pbDS.html" class="external-link">muscat::pbDS()</a></code> and <code>MArrayLM</code> object with multiple contrast into a <code>dde</code> object</p></li>
+<li><p>Added a helper function to export results stored in <code>dea</code> and <code>fea</code> slots as excel files</p></li>
 <li><p>Improved warning messages</p></li>
 <li><p>A new vignette showcasing how to apply <code>DeeDeeExperiment</code> to a single-cell dataset</p></li>
 </ul></div>
@@ -126,7 +128,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
