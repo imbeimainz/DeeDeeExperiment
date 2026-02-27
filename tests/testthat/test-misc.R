@@ -114,11 +114,12 @@ test_that("misc", {
  expect_error(export_result_for_dde(dde_w_david,
                                     force = "yes"))
 
- outdir <- withr::local_tempdir()
+ outdir <- tempdir()
 
  path <- export_result_for_dde(dde_w_david,
                                res_type = "dea",
-                               output_dir = outdir)
+                               output_dir = outdir,
+                               force = TRUE)
  expect_true(file.exists(path))
  expect_length(path, 1)
 

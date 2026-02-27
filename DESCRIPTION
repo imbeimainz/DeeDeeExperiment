@@ -54,7 +54,6 @@ Suggests:
     ExperimentHub,
     scater,
     muscat,
-    withr,
     testthat (>= 3.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/imbeimainz/DeeDeeExperiment
