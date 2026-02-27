@@ -1,13 +1,13 @@
 #' DeeDeeExperiment
 #'
 #' `DeeDeeExperiment` is a an S4 class that allows integrating and managing
-#' transcriptomic analysis results.
+#' omics analysis results.
 #'
 #' `DeeDeeExpeirment` is an S4 class extending the `SummarizedExperiment`
-#' framework to facilitate the integration and management of transcriptomic
+#' framework to facilitate the integration and management of omics
 #' analysis results.
 #' It introduces two dedicated slots to store Differential Expression (DE)
-#' analysis results and Functional Enrichment analysis outcomes, providing a
+#' analysis results and Functional Enrichment analysis results, providing a
 #' structured approach for downstream analysis.
 #'
 
@@ -25,6 +25,7 @@
 #' @importFrom utils packageVersion
 #' @importFrom methods show as callNextMethod is new validObject
 #' @importFrom cli cli_alert_success cli_alert_info
+#' @importFrom writexl write_xlsx
 #'
 #' @name DeeDeeExperiment-pkg
 #' @docType package

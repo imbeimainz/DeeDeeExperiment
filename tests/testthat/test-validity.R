@@ -14,48 +14,63 @@ test_that("validity and so", {
     de_results = de_named_list
   )
 
-  dde3@dea <- list("foo", "bar")
+  dde3@dea <- SimpleList(foo = "foo", bar = "bar")
   expect_error(validObject(dde3))
 
   dea_not_list <- dde3
 
-  expect_error({
+  expect_error(
     getDEAInfo(dea_not_list) <- data.frame()
-  })
+  )
 
-  expect_error({
+  expect_error(
     getFEAInfo(dea_not_list) <- data.frame()
-  })
+  )
 
   dde4 <- DeeDeeExperiment(
     se_macrophage_noassays,
     enrich_results = topGO_results_list
   )
-  dde4@fea <- list("foo", "bar")
+
+  dde4@fea <- SimpleList(foo = "foo", bar = "bar")
   expect_error(validObject(dde4))
 
-  expect_error({
+  expect_error(
     addFEA(dde4, fea = "meow", fea_tool = "fujitsu")
-  })
+  )
 
+  expect_error(
+    getFEAInfo(dde4) <- SimpleList(
+      bad_entry = list(
+        de_name = "c1",
+        fe_name = "c1",
+        shaken_results = NULL,
+        original_object = "meow",
+        fe_tool = "topGO"
+      )
+    )
+  )
 
-  expect_error({
-    getFEAInfo(dde4) <- list(list(
-      de_name = "c1",
-      fe_name = "c1",
-      shaken_results = NULL,
-      original_object = "meow",
-      fe_tool = "topGO"
-    ))
-  })
-
-  expect_error({
-    getFEAInfo(dde4) <- list(list(
+  expect_error(
+    getFEAInfo(dde4) <- SimpleList(
+      bad_entry = list(
       de_name = "c1",
       fe_name = "c1",
       shaken_results = NULL,
       original_object = NULL,
       fe_tool = "chico"
     ))
-  })
+  )
+
+  expect_error(
+    getFEAInfo(dde4) <- list(
+      bad_entry = list(
+        de_name = "c1",
+        fe_name = "c1",
+        shaken_results = NULL,
+        original_object = NULL,
+        fe_tool = "topGO"
+      ))
+  )
+
 })

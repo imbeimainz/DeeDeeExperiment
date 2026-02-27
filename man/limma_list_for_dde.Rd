@@ -26,8 +26,8 @@ indicating its package origin (\code{limma}).
 This helper function extracts DE results for each contrast contained in a
 \code{limma::MArrayLM} object and reformats them into a list of standardized data
 frames suitable for integration in a \code{DeeDeeExperiment} object.
-Each resulting data frame includes renamed columns: \code{logFC} to \code{log2FoldChange}
-,\code{P.Value} to \code{pvalue}, and \code{adj.P.Val} to \code{padj}.
+Each resulting data frame includes renamed columns:
+\code{logFC} to \code{log2FoldChange} ,\code{P.Value} to \code{pvalue}, and \code{adj.P.Val} to \code{padj}
 }
 \details{
 The function assumes that each column in \code{fit$coefficients} corresponds to

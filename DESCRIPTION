@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results
-Version: 1.1.2
+Version: 1.1.3
 Authors@R: 
     c(
         person(
@@ -39,6 +39,7 @@ Imports:
     DESeq2,
     edgeR,
     limma,
+    writexl,
     cli
 Suggests: 
     macrophage,

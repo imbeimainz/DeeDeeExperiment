@@ -23,8 +23,8 @@
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
               all(na.omit(res_de$pvalue >= 0)))
 
-  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
   sce <- .fill_rowdata_with_dea(sce = sce,
@@ -1022,8 +1022,8 @@ supported_fea_formats <- function() {
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
               all(na.omit(res_de$pvalue >= 0)))
 
-  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
   sce <- .fill_rowdata_with_dea(sce = sce,
@@ -1082,8 +1082,8 @@ supported_fea_formats <- function() {
 #' This helper function extracts DE results for each contrast contained in a
 #' `limma::MArrayLM` object and reformats them into a list of standardized data
 #' frames suitable for integration in a `DeeDeeExperiment` object.
-#' Each resulting data frame includes renamed columns: `logFC` to `log2FoldChange`
-#' ,`P.Value` to `pvalue`, and `adj.P.Val` to `padj`.
+#' Each resulting data frame includes renamed columns:
+#' `logFC` to `log2FoldChange` ,`P.Value` to `pvalue`, and `adj.P.Val` to `padj`
 #'
 #' @details
 #' The function assumes that each column in `fit$coefficients` corresponds to
@@ -1128,7 +1128,8 @@ limma_list_for_dde <- function(fit,
                      "P.Value" = "pvalue",
                      "adj.P.Val" = "padj")
     intersect_cols <- intersect(names(rename_cols), colnames(res))
-    colnames(res)[match(intersect_cols, colnames(res))] <- rename_cols[intersect_cols]
+    colnames(res)[match(intersect_cols, colnames(res))] <-
+      rename_cols[intersect_cols]
 
     # keep metadata
     attr(res, "package") <- "limma"
@@ -1219,7 +1220,8 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
       rename_cols[padj_col] <- "padj"
 
       intersect_cols <- intersect(names(rename_cols), colnames(df))
-      colnames(df)[match(intersect_cols, colnames(df))] <- rename_cols[intersect_cols]
+      colnames(df)[match(intersect_cols, colnames(df))] <-
+        rename_cols[intersect_cols]
 
       # assign a unique name, combining the contrast and cluster name
       entry_name <- paste(contrast_name, cell, sep = "_")
@@ -1259,7 +1261,7 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #' * stores the original `MArrayLM` fit in `metadata(sce)$multicontrast`
 #'   under the user-supplied `entry_name`, and
 #' * imports each contrast table into `rowData(sce)` via `.importDE_df()`,
-#'   assembling a named list of DEA contrast metadata to populate the `dea` slot.
+#'   assembling a named list of DEA contrast metadata to populate the `dea` slot
 #'
 #' The function assumes that `de_list` already has standardized column names
 #' (`log2FoldChange`, `pvalue`, `padj`) and carries the attributes
@@ -1271,12 +1273,13 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #'
 #' @param de_list A named list of contrast-specific DE result tables, typically
 #' the output of `limma_list_for_dde()`
-#' @param entry_name A character string indicating the name under which the original
-#' `MArrayLM` fit will be stored in `metadata(sce)$multicontrast`. This is
-#' usually the object name as supplied by the user.
+#' @param entry_name A character string indicating the name under which the
+#' original `MArrayLM` fit will be stored in `metadata(sce)$multicontrast`. This
+#' is usually the object name as supplied by the user.
 #'
 #' @return A list containing the update `SingleCellExperiment` object, and
-#' a named list of DEA contrasts ready to be merged into the dea slot of a dde object
+#' a named list of DEA contrasts ready to be merged into the dea slot of a dde
+#' object
 #'
 #' @noRd
 .handle_limma_list <- function(sce, de_list, entry_name) {
@@ -1323,3 +1326,225 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
   list(sce = sce, dea_contrasts = dea_contrasts)
 }
 
+
+#' Export DEA/FEA/ASSAY results from a `DeeDeeExperiment` to excel files
+#'
+#' Extracts DEA and/or FEA results stored in a `DeeDeeExperiment` and writes
+#' them to excel files. Each contrast/result is written to a separate sheet.
+#' DEA and FEA are written to separate files.
+#'
+#' @param x A `DeeDeeExperiment` object containing DEA/FEA results to be
+#' extracted
+#' @param res_type A character vector indicating the result to extract
+#' (i.e. `"dea"`, `"fea"`, `"assay"`) from the corresponding slot
+#' If set to `"all"`, DEAs, FEAs, as well as the specified assays are extracted
+#' into separate excel files
+#' @param res_format A character string specifying the DEA/FEAs output format
+#' to be exported (i.e. `"minimal"` or `"original"`)
+#' @param output_dir A character string specifying the directory where the excel
+#' file will be written
+#' @param file_name Optional character string specifying a file name. If `NULL`,
+#' a default name is generated
+#' @param assay_type Optional character vector specifying the assays to export.
+#' It defaults to `"counts"`
+#' @param force Logical. If `TRUE`, an existing file with the same name will be
+#' overwritten
+#'
+#' @return An (invisible) character vector of file paths to the exported excel
+#' files. The vector may contain one path `res_type = "dea"` or
+#' `res_type = "fea" `or three paths `res_type = "all"`
+#'
+#' @export
+#'
+#' @examples
+#' data("de_named_list", package = "DeeDeeExperiment")
+#' data("topGO_results_list", package = "DeeDeeExperiment")
+#' dde <- DeeDeeExperiment(de_results = de_named_list, enrich_results = topGO_results_list)
+#'
+#' export_result_for_dde(dde,
+#' res_type = "dea",
+#' res_format = "minimal", output_dir = tempdir(), force = TRUE)
+#'
+#' export_result_for_dde(dde,
+#' res_type = c("dea", "fea"),
+#' res_format = "original", output_dir = tempdir(), force = TRUE)
+#'
+#'
+export_result_for_dde <- function(x,
+                          res_type = c("assay","dea", "fea", "all"),
+                          res_format = c("minimal", "original"),
+                          output_dir = getwd(),
+                          file_name = NULL,
+                          assay_type = c("counts"),
+                          force = FALSE) {
+  # checks on the args
+  if (!is(x, "DeeDeeExperiment")) {
+    stop("`x` must be a `DeeDeeExperiment` object!")
+  }
+
+  if (!is.character(output_dir) || length(output_dir) != 1 ||
+      output_dir == "") {
+    stop("`output_dir` must be a non empty character string!")
+  }
+
+  if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+
+  if (!is.null(file_name) && (!is.character(file_name) ||
+                              length(file_name) != 1 || file_name == "")) {
+    stop("`file_name` must be a non empty character string!")
+  }
+
+  if (!is.logical(force)) {
+    stop("`force` must be logical!")
+  }
+
+  if(!is.character(assay_type)) {
+    stop("`assay_type` must be a character vector!")
+  }
+
+  res_type <- match.arg(res_type, several.ok = TRUE)
+  res_format <- match.arg(res_format)
+
+  out_paths <- character()
+
+  # export results
+  if (any(res_type %in% c("dea", "all"))) {
+    # get all deas
+    deas <- getDEAList(x, format = res_format)
+    out_paths <- c(out_paths, .write_res(list = deas,
+                                         result_type = "DEA",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+  }
+
+  if (any(res_type %in% c("fea", "all"))) {
+    # get all feas
+    feas <- getFEAList(x, format = res_format)
+    out_paths <- c(out_paths, .write_res(list = feas,
+                                         result_type = "FEA",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+  }
+
+
+  if (any(res_type %in% c("assay", "all"))) {
+
+    if (!all(assay_type %in% SummarizedExperiment::assayNames(x))) {
+      missing <- setdiff(assay_type, SummarizedExperiment::assayNames(x))
+      stop("assay not found in `x`: ", paste(missing, collapse = ", "))
+    }
+
+    assays <- setNames(
+      lapply(assay_type, function(i){
+      assay(x, i)}),
+      assay_type)
+
+    out_paths <- c(out_paths, .write_res(list = assays,
+                                         result_type = "ASSAY",
+                                         res_format = res_format,
+                                         output_dir = output_dir,
+                                         file_name = file_name,
+                                         force = force))
+
+  }
+
+
+  if (length(out_paths) == 0) {
+    stop("No results were exported!")
+  }
+
+  invisible(out_paths)
+
+}
+
+
+#' Write DEA/FEA/ASSAY results to an excel file
+#'
+#' @param list A named list of data frames (or coercible objects), where each
+#' element represents one contrast/result/assay and will be written to a
+#' separate sheet
+#' @param result_type A character vector indicating the result to extract
+#' (i.e. `"DEA"`, `"FEA"`, or `"ASSAY"`). It is used in the output file name
+#' @param res_format A character string, specifying the DEA/FEAs output format
+#' to export (i.e. `"minimal"` or `"original"`). It is used in the output file
+#' name
+#' @param output_dir A character string specifying the directory where the excel
+#' file will be written
+#' @param file_name Optional character string specifying a file name. If `NULL`,
+#' a default name is generated
+#' @param force Logical. If `TRUE`, an existing file with the same name will be
+#' overwritten
+#'
+#' @return A character string giving the path to the written excel file,
+#' or `NULL` if there were no results to export
+#'
+#' @noRd
+.write_res <- function(list,
+                       result_type,
+                       res_format,
+                       output_dir,
+                       file_name,
+                       force) {
+  message(paste("Found", length(list), result_type, "results"))
+
+  if (length(list) == 0) {
+    warning(paste("No", result_type, "results to export."), call. = FALSE)
+    return(NULL)
+  }
+
+  # add rownames as a column
+  list <- lapply(list, function(df){
+    rn <- rownames(df)
+    if (!is.null(rn)) {
+      col_name <- "id"
+      col_name <- make.unique(c(names(df), col_name))[length(names(df)) + 1]
+      df <- cbind(
+        setNames(data.frame(rn, stringsAsFactors = FALSE), col_name),
+        df)
+    }
+    df
+  })
+
+  sheet_name <- names(list)
+  sheet_name <- make.unique(.clean_sheet_names(sheet_name))
+  names(list) <- sheet_name
+
+  prefix <- if (is.null(file_name)) {paste("dde", res_format, sep = "_")
+  } else {
+    file_name
+  }
+
+  base <- paste(prefix, result_type, sep = "_")
+  out_file <- file.path(output_dir, paste0(base, ".xlsx"))
+
+  if (file.exists(out_file) && !isTRUE(force)) {
+    stop("File already exists: ", out_file,
+         "\nSet `force = TRUE` to replace it.")
+  }
+
+  cli::cli_alert_success(
+    "Writing results to:  {out_file} "
+  )
+  writexl::write_xlsx(list, path = out_file)
+
+  out_file
+}
+
+
+
+#' Clean excel sheet names
+#'
+#' @param x A character vector of proposed Excel sheet names
+#'
+#' @return A character vector of excel-safe sheet names
+#'
+#' @noRd
+.clean_sheet_names <- function(x) {
+  # excel sheet name rules: max 31 chars; cannot contain : \ / ? * [ ]
+  x <- gsub("[:\\\\/\\?\\*\\[\\]]", "_", x)
+  substr(x, 1, 31)
+}

@@ -8,7 +8,8 @@
 A \code{list} structured as returned by \code{muscat::pbDS()}
 }
 \value{
-A named \code{list} of DE results tables compatible with \code{muscat_list_for_dde}
+A named \code{list} of DE results tables compatible with
+\code{muscat_list_for_dde}
 }
 \description{
 A small example object generated with \code{muscat::pbDS()} ona subset Kang et al.

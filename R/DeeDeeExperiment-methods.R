@@ -761,7 +761,8 @@ setMethod("removeDEA",
                 fea[["de_name"]] <- NULL
               }
               fea
-            })
+            }) |> SimpleList()
+
             getFEAInfo(x) <- feas
 
             # here check some validity?
@@ -1067,7 +1068,7 @@ setMethod("getFEANames",
           }
 )
 
-## renameFEA ------------------------------------------------------------------
+## renameFEA -------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -1132,7 +1133,7 @@ setMethod("renameFEA",
           }
 )
 
-## addFEA ---------------------------------------------------------------------
+## addFEA ----------------------------------------------------------------------
 
 #' @rdname DeeDeeExperiment-methods
 #' @export
@@ -1441,7 +1442,10 @@ setMethod("getFEAList",
               stop("'dea_name' must be a single character string")
             }
 
+
+
             for (i in all_fea_names) {
+
               # catch the corresponding dea
               de_name <- getFEAInfo(x)[[i]][["de_name"]]
 
@@ -1465,10 +1469,12 @@ setMethod("getFEAList",
                       )
                     }
 
-                    matched_feas[[i]] <- getFEAInfo(x)[[i]][["original_object"]]
+                    matched_feas[[i]] <- as.data.frame(
+                      getFEAInfo(x)[[i]][["original_object"]])
                   }
                 } else if (format == "original") {
-                  matched_feas[[i]] <- getFEAInfo(x)[[i]][["original_object"]]
+                  matched_feas[[i]] <- as.data.frame(
+                    getFEAInfo(x)[[i]][["original_object"]])
                 }
               }
             }

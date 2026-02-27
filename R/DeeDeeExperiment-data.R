@@ -485,7 +485,8 @@ NULL
 #' `ExperimentHub` and processed using `muscat` workflows. Only a small
 #' subset of genes and clusters was retained to reduce object size.
 #'
-#' @return A named `list` of DE results tables compatible with `muscat_list_for_dde`
+#' @return A named `list` of DE results tables compatible with
+#' `muscat_list_for_dde`
 #'
 #' @format A `list` structured as returned by `muscat::pbDS()`
 #'
