@@ -23,8 +23,8 @@
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
               all(na.omit(res_de$pvalue >= 0)))
 
-  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
   sce <- .fill_rowdata_with_dea(sce = sce,
@@ -1022,8 +1022,8 @@ supported_fea_formats <- function() {
   stopifnot(all(na.omit(res_de$pvalue <= 1)) &
               all(na.omit(res_de$pvalue >= 0)))
 
-  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with se
-  # only valid indices
+  matched_ids <- match(rownames(sce), rownames(res_de)) # we align de res with
+  # se only valid indices
   valid_matches <- !is.na(matched_ids)
 
   sce <- .fill_rowdata_with_dea(sce = sce,
@@ -1082,8 +1082,8 @@ supported_fea_formats <- function() {
 #' This helper function extracts DE results for each contrast contained in a
 #' `limma::MArrayLM` object and reformats them into a list of standardized data
 #' frames suitable for integration in a `DeeDeeExperiment` object.
-#' Each resulting data frame includes renamed columns: `logFC` to `log2FoldChange`
-#' ,`P.Value` to `pvalue`, and `adj.P.Val` to `padj`.
+#' Each resulting data frame includes renamed columns:
+#' `logFC` to `log2FoldChange` ,`P.Value` to `pvalue`, and `adj.P.Val` to `padj`
 #'
 #' @details
 #' The function assumes that each column in `fit$coefficients` corresponds to
@@ -1128,7 +1128,8 @@ limma_list_for_dde <- function(fit,
                      "P.Value" = "pvalue",
                      "adj.P.Val" = "padj")
     intersect_cols <- intersect(names(rename_cols), colnames(res))
-    colnames(res)[match(intersect_cols, colnames(res))] <- rename_cols[intersect_cols]
+    colnames(res)[match(intersect_cols, colnames(res))] <-
+      rename_cols[intersect_cols]
 
     # keep metadata
     attr(res, "package") <- "limma"
@@ -1219,7 +1220,8 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
       rename_cols[padj_col] <- "padj"
 
       intersect_cols <- intersect(names(rename_cols), colnames(df))
-      colnames(df)[match(intersect_cols, colnames(df))] <- rename_cols[intersect_cols]
+      colnames(df)[match(intersect_cols, colnames(df))] <-
+        rename_cols[intersect_cols]
 
       # assign a unique name, combining the contrast and cluster name
       entry_name <- paste(contrast_name, cell, sep = "_")
@@ -1259,7 +1261,7 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #' * stores the original `MArrayLM` fit in `metadata(sce)$multicontrast`
 #'   under the user-supplied `entry_name`, and
 #' * imports each contrast table into `rowData(sce)` via `.importDE_df()`,
-#'   assembling a named list of DEA contrast metadata to populate the `dea` slot.
+#'   assembling a named list of DEA contrast metadata to populate the `dea` slot
 #'
 #' The function assumes that `de_list` already has standardized column names
 #' (`log2FoldChange`, `pvalue`, `padj`) and carries the attributes
@@ -1271,12 +1273,13 @@ muscat_list_for_dde <- function(res, padj_col = c("p_adj.loc", "p_adj.glb")){
 #'
 #' @param de_list A named list of contrast-specific DE result tables, typically
 #' the output of `limma_list_for_dde()`
-#' @param entry_name A character string indicating the name under which the original
-#' `MArrayLM` fit will be stored in `metadata(sce)$multicontrast`. This is
-#' usually the object name as supplied by the user.
+#' @param entry_name A character string indicating the name under which the
+#' original `MArrayLM` fit will be stored in `metadata(sce)$multicontrast`. This
+#' is usually the object name as supplied by the user.
 #'
 #' @return A list containing the update `SingleCellExperiment` object, and
-#' a named list of DEA contrasts ready to be merged into the dea slot of a dde object
+#' a named list of DEA contrasts ready to be merged into the dea slot of a dde
+#' object
 #'
 #' @noRd
 .handle_limma_list <- function(sce, de_list, entry_name) {
