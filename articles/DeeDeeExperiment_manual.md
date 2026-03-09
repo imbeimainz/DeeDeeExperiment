@@ -45,8 +45,9 @@ analysis.
 
 Specifically, `DeeDeeExperiment` has two new slots:
 
-- `dea` : a list that stores results from differential expression
-  analysis (DEA), along with relevant metadata. This includes:
+- `dea` : a `SimpleList` that stores results from differential
+  expression analysis (DEA), along with relevant metadata. This
+  includes:
 
   - The used False Discovery Rate (FDR) and log2 fold change (LFC)
     thresholds (if specified).
@@ -62,8 +63,8 @@ The main columns to use in DEA in addition to the feature identifier
 (`log2FoldChange`, `pvalue`, and `padj`) are also stored in the
 `rowData` of the `DeeDeeExperiment` object.
 
-- `fea` : a list that stores results from functional enrichment analysis
-  (FEA), along with relevant metadata. This includes:
+- `fea` : a `SimpleList` that stores results from functional enrichment
+  analysis (FEA), along with relevant metadata. This includes:
 
   - The name of the associated DEA contrast.
   - The FEA name.
@@ -73,6 +74,10 @@ The main columns to use in DEA in addition to the feature identifier
   - The enrichment tool used to generate the results (e.g. `topGO`,
     `clusterProfiler...`).
   - A copy of the original enrichment result object.
+
+The `SimpleList` slot type will bring the advantage of storing DEA/FEA
+related metadata (e.g., the design formula) directly into its
+`metadata`/`mcols`.
 
 ### Creating a `DeeDeeExperiment` object
 
@@ -2126,24 +2131,26 @@ assay that are stored in a `DeeDeeExperiment` object using
 
 ``` r
 # export only DEAs
+out_dir <- "path/to/results_folder"
+
 export_result_for_dde(dde,
                       res_type = "dea",
                       res_format = "minimal",
-                      output_dir = file.path(getwd(),"res_output"),
+                      output_dir = out_dir,
                       file_name = "macrophage_dataset")
 
 # export both DEAs and FEAs
 export_result_for_dde(dde,
                       res_type = c("dea","fea"),
                       res_format = "minimal",
-                      output_dir = file.path(getwd(),"res_output"),
+                      output_dir = out_dir,
                       file_name = "macrophage_dataset")
 
 # export DEAs, FEAs, and assays
 export_result_for_dde(dde,
                       res_type = "all",
                       res_format = "minimal",
-                      output_dir = file.path(getwd(),"res_output"),
+                      output_dir = out_dir,
                       file_name = "macrophage_dataset",
                       force = TRUE)
 ```

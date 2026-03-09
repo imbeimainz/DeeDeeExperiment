@@ -360,14 +360,7 @@ getFEANames(dde)
 
 # print a summary of the available DEAs and FEAs
 summary(dde, FDR = 0.01)
-#> DE Results Summary:
-#>             DEA_name  Up Down  FDR
-#>        ifng_vs_naive  30   15 0.01
-#>   ifngsalmo_vs_naive 104   29 0.01
-#>  salmonella_vs_naive  80   29 0.01
-#>           salmo_both  37   20 0.01
-#> 
-#> No FEA results stored.
+#> Error in .Vector_summary(object, ...): unused argument (FDR = 0.01)
 
 # rename DEA
 dde_new <- renameDEA(dde_new,

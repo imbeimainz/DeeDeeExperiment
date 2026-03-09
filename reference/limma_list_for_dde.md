@@ -53,5 +53,5 @@ object must therefore accurately reflect the intended contrast names.
 ``` r
 data("de_limma", package = "DeeDeeExperiment")
 new_limma_list <- limma_list_for_dde(de_limma)
-#> Error in topTable(fit, coef = x, number = number, sort.by = sort.by): could not find function "topTable"
+#> ℹ Returning 4 limma contrasts formatted for DeeDeeExperiment
 ```

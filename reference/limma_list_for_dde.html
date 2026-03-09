@@ -15,7 +15,7 @@ logFC to log2FoldChange ,P.Value to pvalue, and adj.P.Val to padj"></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -102,7 +102,7 @@ must therefore accurately reflect the intended contrast names.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"de_limma"</span>, package <span class="op">=</span> <span class="st">"DeeDeeExperiment"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">new_limma_list</span> <span class="op">&lt;-</span> <span class="fu">limma_list_for_dde</span><span class="op">(</span><span class="va">de_limma</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in topTable(fit, coef = x, number = number, sort.by = sort.by):</span> could not find function "topTable"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Returning 4 limma contrasts formatted for DeeDeeExperiment</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
