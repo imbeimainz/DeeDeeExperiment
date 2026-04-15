@@ -17,6 +17,8 @@ excel files
 * A new vignette showcasing how to apply `DeeDeeExperiment` to a single-cell
 dataset
 
+* Updating citation since the `DeeDeeExperiment` paper is out!
+
 # DeeDeeExperiment 1.0.0
 
 `DeeDeeExperiment` is now on Bioconductor!
