@@ -1,0 +1,14 @@
+citHeader("DeeDeeExperiment is described in the following publication:")
+
+citEntry(
+    entry  = "Article",
+    title = "DeeDeeExperiment: Building an infrastructure for integrating and managing omics data analysis results in R/Bioconductor",
+    author = personList(as.person("Najla Abassi"),
+                      as.person("Lea Schwarz"),
+                      as.person("Edoardo Filippi"),
+                      as.person("Federico Marini")),
+    journal = "Bioinformatics",
+    year = 2026,
+    doi = "10.1093/bioinformatics/btag157",
+    textVersion = "Abassi, N., Schwarz, L., Filippi, E., and Marini, F. (2026). DeeDeeExperiment: Building an infrastructure for integrating and managing omics data analysis results in R/Bioconductor. Bioinformatics. https://doi.org/10.1093/bioinformatics/btag157"
+  )
