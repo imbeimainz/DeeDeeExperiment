@@ -671,10 +671,10 @@
     gs_bg_count = unlist(lapply(strsplit(fullresults$BgRatio, "/"),
                                 function(arg) arg[[1]])),
     gs_ontology = obj@ontology,
-    GeneRatio = fullresults$GeneRatio,
-    BgRatio = fullresults$BgRatio,
-    p.adjust = fullresults$p.adjust,
-    qvalue = fullresults$qvalue,
+    gs_GeneRatio = fullresults$GeneRatio,
+    gs_BgRatio = fullresults$BgRatio,
+    gs_p.adjust = fullresults$p.adjust,
+    gs_qvalue = fullresults$qvalue,
     stringsAsFactors = FALSE
   )
 
@@ -738,7 +738,7 @@
     gs_de_count = fullresults$Significant,
     gs_bg_count = fullresults$Annotated,
     # gs_ontology = obj@ontology,
-    Expected = fullresults$Expected,
+    gs_Expected = fullresults$Expected,
     stringsAsFactors = FALSE
   )
 
