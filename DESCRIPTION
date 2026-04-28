@@ -1,6 +1,6 @@
 Package: DeeDeeExperiment
 Title: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results
-Version: 1.1.5
+Version: 1.2.0
 Authors@R: 
     c(
         person(
