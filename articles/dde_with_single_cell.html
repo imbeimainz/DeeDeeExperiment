@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">DeeDeeExperiment</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@ Marini</h4>
 Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:marinif@uni-mainz.de" class="email">marinif@uni-mainz.de</a>
       </address>
                   
-            <h4 data-toc-skip class="date">9 March 2026</h4>
+            <h4 data-toc-skip class="date">19 May 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/vignettes/dde_with_single_cell.Rmd" class="external-link"><code>vignettes/dde_with_single_cell.Rmd</code></a></small>
       <div class="d-none name"><code>dde_with_single_cell.Rmd</code></div>
@@ -105,18 +105,18 @@ Mainz<br><a class="author_email" href="mailto:#"></a><a href="mailto:marinif@uni
 <code>DeeDeeExperiment</code> on the <code>Kang</code> dataset<a class="anchor" aria-label="anchor" href="#deedeeexperiment-on-the-kang-dataset"></a>
 </h3>
 <p>In this vignette, we illustrate how to integrate Differential
-Expression Analysis (DEA) results generated with the <em><a href="https://bioconductor.org/packages/3.22/muscat" class="external-link">muscat</a></em>
-framework into a <em><a href="https://bioconductor.org/packages/3.22/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
+Expression Analysis (DEA) results generated with the <em><a href="https://bioconductor.org/packages/3.24/muscat" class="external-link">muscat</a></em>
+framework into a <em><a href="https://bioconductor.org/packages/3.24/DeeDeeExperiment" class="external-link">DeeDeeExperiment</a></em>
 object. As an example, we use a publicly available dataset from Kang, et
 al. “Multiplexed droplet single-cell RNA-sequencing using natural
 genetic variation”, published in Nature Biotechnology, December 2017 <a href="https://doi.org/10.1038/nbt.4042" class="external-link"><span class="citation">Kang et
 al. (2017)</span></a></p>
-<p>The data is made available via the <em><a href="https://bioconductor.org/packages/3.22/ExperimentHub" class="external-link">ExperimentHub</a></em>
-Bioconductor package as a <em><a href="https://bioconductor.org/packages/3.22/SingleCellExperiment" class="external-link">SingleCellExperiment</a></em>
+<p>The data is made available via the <em><a href="https://bioconductor.org/packages/3.24/ExperimentHub" class="external-link">ExperimentHub</a></em>
+Bioconductor package as a <em><a href="https://bioconductor.org/packages/3.24/SingleCellExperiment" class="external-link">SingleCellExperiment</a></em>
 object containing scRNA-seq data from PBMCs obtained from 8 lupus
 patients before and after IFNβ stimulation.</p>
 <p>For demonstration purposes we adapt parts of the code from the
-original <em><a href="https://bioconductor.org/packages/3.22/muscat" class="external-link">muscat</a></em> <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/muscat/inst/doc/analysis.html#differential-state-ds-analysis" class="external-link">vignette</a>)</p>
+original <em><a href="https://bioconductor.org/packages/3.24/muscat" class="external-link">muscat</a></em> <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/muscat/inst/doc/analysis.html#differential-state-ds-analysis" class="external-link">vignette</a>)</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/imbeimainz/DeeDeeExperiment" class="external-link">"DeeDeeExperiment"</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/Bioconductor/ExperimentHub" class="external-link">"ExperimentHub"</a></span><span class="op">)</span></span>
@@ -132,24 +132,28 @@ its accession ID “EH2259”.</p>
 <code class="sourceCode R"><span><span class="co"># retrieve the data</span></span>
 <span><span class="va">eh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ExperimentHub/man/ExperimentHub-class.html" class="external-link">ExperimentHub</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/AnnotationHub/man/AnnotationHub-class.html" class="external-link">query</a></span><span class="op">(</span><span class="va">eh</span>, <span class="st">"Kang"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; ExperimentHub with 3 records</span></span>
-<span><span class="co">#&gt; # snapshotDate(): 2025-10-07</span></span>
-<span><span class="co">#&gt; # $dataprovider: NCI_GDC, GEO</span></span>
+<span><span class="co">#&gt; ExperimentHub with 1 record</span></span>
+<span><span class="co">#&gt; # snapshotDate(): 2026-05-19</span></span>
+<span><span class="co">#&gt; # names(): EH2259</span></span>
+<span><span class="co">#&gt; # package(): muscData</span></span>
+<span><span class="co">#&gt; # $dataprovider: GEO</span></span>
 <span><span class="co">#&gt; # $species: Homo sapiens</span></span>
-<span><span class="co">#&gt; # $rdataclass: character, SingleCellExperiment, BSseq</span></span>
-<span><span class="co">#&gt; # additional mcols(): taxonomyid, genome, description,</span></span>
-<span><span class="co">#&gt; #   coordinate_1_based, maintainer, rdatadateadded, preparerclass, tags,</span></span>
-<span><span class="co">#&gt; #   rdatapath, sourceurl, sourcetype </span></span>
-<span><span class="co">#&gt; # retrieve records with, e.g., 'object[["EH1661"]]' </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;            title                                               </span></span>
-<span><span class="co">#&gt;   EH1661 | Whole Genome Bisulfit Sequencing Data for 47 samples</span></span>
-<span><span class="co">#&gt;   EH1662 | Whole Genome Bisulfit Sequencing Data for 47 samples</span></span>
-<span><span class="co">#&gt;   EH2259 | Kang18_8vs8</span></span>
+<span><span class="co">#&gt; # $rdataclass: SingleCellExperiment</span></span>
+<span><span class="co">#&gt; # $rdatadateadded: 2019-04-15</span></span>
+<span><span class="co">#&gt; # $title: Kang18_8vs8</span></span>
+<span><span class="co">#&gt; # $description: Droplet-based scRNA-seq PBMC data from 8 Lupus patients befo...</span></span>
+<span><span class="co">#&gt; # $taxonomyid: 9606</span></span>
+<span><span class="co">#&gt; # $genome: NA</span></span>
+<span><span class="co">#&gt; # $sourcetype: tar.gz</span></span>
+<span><span class="co">#&gt; # $sourceurl: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE96583</span></span>
+<span><span class="co">#&gt; # $sourcesize: NA</span></span>
+<span><span class="co">#&gt; # $tags: c("ExperimentHub", "ExperimentData", "ExpressionData",</span></span>
+<span><span class="co">#&gt; #   "SingleCellData", "ImmunoOncologyData", "Homo_sapiens_Data") </span></span>
+<span><span class="co">#&gt; # retrieve record with 'object[["EH2259"]]'</span></span>
 <span><span class="va">sce</span> <span class="op">&lt;-</span> <span class="va">eh</span><span class="op">[[</span><span class="st">"EH2259"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>Before running muscat, we perform standard single-cell preprocessing
 steps: removing undetected genes, filtering low-quality cells using
-<em><a href="https://bioconductor.org/packages/3.22/scater" class="external-link">scater</a></em>,
+<em><a href="https://bioconductor.org/packages/3.24/scater" class="external-link">scater</a></em>,
 and removing lowly expressed genes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove undetected genes</span></span>
@@ -291,36 +295,36 @@ typing</p>
 <span><span class="co">#&gt;                                  &lt;numeric&gt;                 &lt;numeric&gt;</span></span>
 <span><span class="co">#&gt; NOC2L                                   NA                        NA</span></span>
 <span><span class="co">#&gt; HES4                                    NA                        NA</span></span>
-<span><span class="co">#&gt; ISG15                             4.714773               6.66734e-20</span></span>
-<span><span class="co">#&gt; TNFRSF18                         -0.583992               6.47700e-02</span></span>
-<span><span class="co">#&gt; TNFRSF4                          -0.220578               4.98028e-01</span></span>
-<span><span class="co">#&gt; SDF4                             -0.524322               1.77759e-02</span></span>
+<span><span class="co">#&gt; ISG15                             4.715080               6.94235e-20</span></span>
+<span><span class="co">#&gt; TNFRSF18                         -0.583846               6.49706e-02</span></span>
+<span><span class="co">#&gt; TNFRSF4                          -0.219549               5.00289e-01</span></span>
+<span><span class="co">#&gt; SDF4                             -0.523241               1.80659e-02</span></span>
 <span><span class="co">#&gt;          stim-ctrl_NK cells_padj</span></span>
 <span><span class="co">#&gt;                        &lt;numeric&gt;</span></span>
 <span><span class="co">#&gt; NOC2L                         NA</span></span>
 <span><span class="co">#&gt; HES4                          NA</span></span>
-<span><span class="co">#&gt; ISG15                2.88696e-17</span></span>
-<span><span class="co">#&gt; TNFRSF18             1.63055e-01</span></span>
-<span><span class="co">#&gt; TNFRSF4              6.65061e-01</span></span>
-<span><span class="co">#&gt; SDF4                 6.29608e-02</span></span>
+<span><span class="co">#&gt; ISG15                3.00604e-17</span></span>
+<span><span class="co">#&gt; TNFRSF18             1.63560e-01</span></span>
+<span><span class="co">#&gt; TNFRSF4              6.67095e-01</span></span>
+<span><span class="co">#&gt; SDF4                 6.37857e-02</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEA</a></span><span class="op">(</span><span class="va">dde</span>,</span>
 <span>       dea_name <span class="op">=</span> <span class="st">"stim-ctrl_CD14+ Monocytes"</span>,</span>
 <span>       format <span class="op">=</span> <span class="st">"original"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              gene      cluster_id log2FoldChange    logCPM          F</span></span>
-<span><span class="co">#&gt; HES4         HES4 CD14+ Monocytes      6.4921975  7.975074 305.569411</span></span>
-<span><span class="co">#&gt; ISG15       ISG15 CD14+ Monocytes      7.0240366 14.751515 232.635530</span></span>
-<span><span class="co">#&gt; SDF4         SDF4 CD14+ Monocytes     -0.7242092  5.446124  15.386517</span></span>
-<span><span class="co">#&gt; UBE2J2     UBE2J2 CD14+ Monocytes     -0.8153555  5.351035  23.424243</span></span>
-<span><span class="co">#&gt; CPSF3L     CPSF3L CD14+ Monocytes     -0.6688228  4.337862   7.582583</span></span>
-<span><span class="co">#&gt; AURKAIP1 AURKAIP1 CD14+ Monocytes     -0.5741367  7.389181  34.562176</span></span>
+<span><span class="co">#&gt; HES4         HES4 CD14+ Monocytes      6.5041181  7.975074 282.968142</span></span>
+<span><span class="co">#&gt; ISG15       ISG15 CD14+ Monocytes      7.0258237 14.751515 229.037506</span></span>
+<span><span class="co">#&gt; SDF4         SDF4 CD14+ Monocytes     -0.7256656  5.446124  15.236040</span></span>
+<span><span class="co">#&gt; UBE2J2     UBE2J2 CD14+ Monocytes     -0.8083617  5.351035  22.886511</span></span>
+<span><span class="co">#&gt; CPSF3L     CPSF3L CD14+ Monocytes     -0.6600343  4.337862   7.343274</span></span>
+<span><span class="co">#&gt; AURKAIP1 AURKAIP1 CD14+ Monocytes     -0.5728129  7.389181  34.211958</span></span>
 <span><span class="co">#&gt;                pvalue         padj    p_adj.glb  contrast</span></span>
-<span><span class="co">#&gt; HES4     2.883448e-14 1.398472e-12 1.686302e-12 stim-ctrl</span></span>
-<span><span class="co">#&gt; ISG15    6.200271e-13 1.606550e-11 2.344791e-11 stim-ctrl</span></span>
-<span><span class="co">#&gt; SDF4     7.676618e-04 1.818450e-03 3.340543e-03 stim-ctrl</span></span>
-<span><span class="co">#&gt; UBE2J2   8.502381e-05 2.510891e-04 4.817526e-04 stim-ctrl</span></span>
-<span><span class="co">#&gt; CPSF3L   1.187149e-02 2.083016e-02 3.426077e-02 stim-ctrl</span></span>
-<span><span class="co">#&gt; AURKAIP1 7.378159e-06 2.880451e-05 5.506716e-05 stim-ctrl</span></span></code></pre></div>
+<span><span class="co">#&gt; HES4     6.912599e-14 2.959294e-12 3.687094e-12 stim-ctrl</span></span>
+<span><span class="co">#&gt; ISG15    8.146888e-13 2.139849e-11 3.052753e-11 stim-ctrl</span></span>
+<span><span class="co">#&gt; SDF4     8.128918e-04 1.921981e-03 3.528924e-03 stim-ctrl</span></span>
+<span><span class="co">#&gt; UBE2J2   9.898603e-05 2.898329e-04 5.545317e-04 stim-ctrl</span></span>
+<span><span class="co">#&gt; CPSF3L   1.314382e-02 2.297739e-02 3.751614e-02 stim-ctrl</span></span>
+<span><span class="co">#&gt; AURKAIP1 8.127731e-06 3.167114e-05 6.047946e-05 stim-ctrl</span></span></code></pre></div>
 <p>General info on the DEA performed can be shown with
 <code><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo()</a></code></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
@@ -329,7 +333,7 @@ typing</p>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="va">dea_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"package"</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "muscat"</span></span>
 <span><span class="fu"><a href="../reference/DeeDeeExperiment-methods.html">getDEAInfo</a></span><span class="op">(</span><span class="va">dde</span><span class="op">)</span><span class="op">[[</span><span class="va">dea_name</span><span class="op">]</span><span class="op">]</span><span class="op">[[</span><span class="st">"package_version"</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [1] "1.24.0"</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] "1.25.4"</span></span></code></pre></div>
 <p>To add some information on the scenario under investigation, we can
 use <code><a href="../reference/DeeDeeExperiment-methods.html">addScenarioInfo()</a></code>. This can be e.g. later processed as
 a contextually relevant bit if a Large Language Model is used to
@@ -345,14 +349,14 @@ quick overview on all performed analyses.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">dde</span>, show_scenario_info <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; DE Results Summary:</span></span>
 <span><span class="co">#&gt;                     DEA_name   Up Down  FDR</span></span>
-<span><span class="co">#&gt;            stim-ctrl_B cells  345  271 0.05</span></span>
-<span><span class="co">#&gt;    stim-ctrl_CD14+ Monocytes 1121 1289 0.05</span></span>
-<span><span class="co">#&gt;        stim-ctrl_CD4 T cells  642  516 0.05</span></span>
+<span><span class="co">#&gt;            stim-ctrl_B cells  344  270 0.05</span></span>
+<span><span class="co">#&gt;    stim-ctrl_CD14+ Monocytes 1118 1282 0.05</span></span>
+<span><span class="co">#&gt;        stim-ctrl_CD4 T cells  640  511 0.05</span></span>
 <span><span class="co">#&gt;        stim-ctrl_CD8 T cells  178  115 0.05</span></span>
 <span><span class="co">#&gt;    stim-ctrl_Dendritic cells  113   70 0.05</span></span>
-<span><span class="co">#&gt;  stim-ctrl_FCGR3A+ Monocytes  498  413 0.05</span></span>
+<span><span class="co">#&gt;  stim-ctrl_FCGR3A+ Monocytes  497  411 0.05</span></span>
 <span><span class="co">#&gt;     stim-ctrl_Megakaryocytes   29    2 0.05</span></span>
-<span><span class="co">#&gt;           stim-ctrl_NK cells  254  201 0.05</span></span>
+<span><span class="co">#&gt;           stim-ctrl_NK cells  254  200 0.05</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; No FEA results stored.</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -370,13 +374,13 @@ quick overview on all performed analyses.</p>
 </h2>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.5.2 (2025-10-31)</span></span>
-<span><span class="co">#&gt; Platform: aarch64-apple-darwin20</span></span>
+<span><span class="co">#&gt; R version 4.6.0 (2026-04-24)</span></span>
+<span><span class="co">#&gt; Platform: aarch64-apple-darwin23</span></span>
 <span><span class="co">#&gt; Running under: macOS Sequoia 15.7.2</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
-<span><span class="co">#&gt; BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib </span></span>
-<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
+<span><span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib </span></span>
+<span><span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; locale:</span></span>
 <span><span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span></span>
@@ -389,84 +393,80 @@ quick overview on all performed analyses.</p>
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] muscData_1.24.0             limma_3.66.0               </span></span>
-<span><span class="co">#&gt;  [3] muscat_1.24.0               scater_1.38.0              </span></span>
-<span><span class="co">#&gt;  [5] ggplot2_4.0.1               scuttle_1.20.0             </span></span>
-<span><span class="co">#&gt;  [7] ExperimentHub_3.0.0         AnnotationHub_4.0.0        </span></span>
-<span><span class="co">#&gt;  [9] BiocFileCache_3.0.0         dbplyr_2.5.1               </span></span>
-<span><span class="co">#&gt; [11] DeeDeeExperiment_1.1.3      SingleCellExperiment_1.32.0</span></span>
-<span><span class="co">#&gt; [13] SummarizedExperiment_1.40.0 Biobase_2.70.0             </span></span>
-<span><span class="co">#&gt; [15] GenomicRanges_1.62.0        Seqinfo_1.0.0              </span></span>
-<span><span class="co">#&gt; [17] IRanges_2.44.0              S4Vectors_0.48.0           </span></span>
-<span><span class="co">#&gt; [19] BiocGenerics_0.56.0         generics_0.1.4             </span></span>
-<span><span class="co">#&gt; [21] MatrixGenerics_1.22.0       matrixStats_1.5.0          </span></span>
-<span><span class="co">#&gt; [23] BiocStyle_2.38.0           </span></span>
+<span><span class="co">#&gt;  [1] muscData_1.27.0             limma_3.69.0               </span></span>
+<span><span class="co">#&gt;  [3] muscat_1.25.4               scater_1.41.1              </span></span>
+<span><span class="co">#&gt;  [5] ggplot2_4.0.3               scuttle_1.21.6             </span></span>
+<span><span class="co">#&gt;  [7] ExperimentHub_3.3.0         AnnotationHub_4.1.0        </span></span>
+<span><span class="co">#&gt;  [9] BiocFileCache_3.3.0         dbplyr_2.5.2               </span></span>
+<span><span class="co">#&gt; [11] DeeDeeExperiment_1.3.0      SingleCellExperiment_1.35.0</span></span>
+<span><span class="co">#&gt; [13] SummarizedExperiment_1.43.0 Biobase_2.73.1             </span></span>
+<span><span class="co">#&gt; [15] GenomicRanges_1.65.0        Seqinfo_1.3.0              </span></span>
+<span><span class="co">#&gt; [17] IRanges_2.45.0              S4Vectors_0.51.1           </span></span>
+<span><span class="co">#&gt; [19] BiocGenerics_0.59.0         generics_0.1.4             </span></span>
+<span><span class="co">#&gt; [21] MatrixGenerics_1.25.0       matrixStats_1.5.0          </span></span>
+<span><span class="co">#&gt; [23] BiocStyle_2.41.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span><span class="co">#&gt;   [1] RcppAnnoy_0.0.22         splines_4.5.2            bitops_1.0-9            </span></span>
-<span><span class="co">#&gt;   [4] filelock_1.0.3           tibble_3.3.0             lpsymphony_1.38.0       </span></span>
-<span><span class="co">#&gt;   [7] lifecycle_1.0.4          httr2_1.2.1              Rdpack_2.6.4            </span></span>
-<span><span class="co">#&gt;  [10] edgeR_4.8.0              doParallel_1.0.17        globals_0.18.0          </span></span>
-<span><span class="co">#&gt;  [13] lattice_0.22-7           MASS_7.3-65              backports_1.5.0         </span></span>
-<span><span class="co">#&gt;  [16] magrittr_2.0.4           sass_0.4.10              rmarkdown_2.30          </span></span>
-<span><span class="co">#&gt;  [19] jquerylib_0.1.4          yaml_2.3.11              sctransform_0.4.2       </span></span>
-<span><span class="co">#&gt;  [22] DBI_1.2.3                minqa_1.2.8              RColorBrewer_1.1-3      </span></span>
-<span><span class="co">#&gt;  [25] multcomp_1.4-29          abind_1.4-8              EnvStats_3.1.0          </span></span>
-<span><span class="co">#&gt;  [28] glmmTMB_1.1.13           purrr_1.2.0              TH.data_1.1-5           </span></span>
-<span><span class="co">#&gt;  [31] rappdirs_0.3.3           sandwich_3.1-1           circlize_0.4.16         </span></span>
-<span><span class="co">#&gt;  [34] pbkrtest_0.5.5           ggrepel_0.9.6            irlba_2.3.5.1           </span></span>
-<span><span class="co">#&gt;  [37] listenv_0.10.0           RSpectra_0.16-2          parallelly_1.45.1       </span></span>
-<span><span class="co">#&gt;  [40] pkgdown_2.2.0            codetools_0.2-20         DelayedArray_0.36.0     </span></span>
-<span><span class="co">#&gt;  [43] tidyselect_1.2.1         shape_1.4.6.1            farver_2.1.2            </span></span>
-<span><span class="co">#&gt;  [46] lme4_1.1-37              ScaledMatrix_1.18.0      viridis_0.6.5           </span></span>
-<span><span class="co">#&gt;  [49] jsonlite_2.0.0           GetoptLong_1.1.0         BiocNeighbors_2.4.0     </span></span>
-<span><span class="co">#&gt;  [52] survival_3.8-3           iterators_1.0.14         emmeans_2.0.0           </span></span>
-<span><span class="co">#&gt;  [55] systemfonts_1.3.1        foreach_1.5.2            tools_4.5.2             </span></span>
-<span><span class="co">#&gt;  [58] progress_1.2.3           ragg_1.5.0               Rcpp_1.1.0              </span></span>
-<span><span class="co">#&gt;  [61] blme_1.0-6               glue_1.8.0               gridExtra_2.3           </span></span>
-<span><span class="co">#&gt;  [64] SparseArray_1.10.3       xfun_0.54                mgcv_1.9-4              </span></span>
-<span><span class="co">#&gt;  [67] DESeq2_1.50.2            dplyr_1.1.4              withr_3.0.2             </span></span>
-<span><span class="co">#&gt;  [70] numDeriv_2016.8-1.1      BiocManager_1.30.27      fastmap_1.2.0           </span></span>
-<span><span class="co">#&gt;  [73] boot_1.3-32              caTools_1.18.3           digest_0.6.39           </span></span>
-<span><span class="co">#&gt;  [76] rsvd_1.0.5               R6_2.6.1                 estimability_1.5.1      </span></span>
-<span><span class="co">#&gt;  [79] textshaping_1.0.4        colorspace_2.1-2         gtools_3.9.5            </span></span>
-<span><span class="co">#&gt;  [82] dichromat_2.0-0.1        RSQLite_2.4.5            RhpcBLASctl_0.23-42     </span></span>
-<span><span class="co">#&gt;  [85] tidyr_1.3.1              variancePartition_1.40.0 corpcor_1.6.10          </span></span>
-<span><span class="co">#&gt;  [88] data.table_1.17.8        prettyunits_1.2.0        httr_1.4.7              </span></span>
-<span><span class="co">#&gt;  [91] htmlwidgets_1.6.4        S4Arrays_1.10.0          uwot_0.2.4              </span></span>
-<span><span class="co">#&gt;  [94] pkgconfig_2.0.3          gtable_0.3.6             blob_1.2.4              </span></span>
-<span><span class="co">#&gt;  [97] ComplexHeatmap_2.26.0    S7_0.2.1                 XVector_0.50.0          </span></span>
-<span><span class="co">#&gt; [100] remaCor_0.0.20           htmltools_0.5.8.1        bookdown_0.45           </span></span>
-<span><span class="co">#&gt; [103] TMB_1.9.18               clue_0.3-66              scales_1.4.0            </span></span>
-<span><span class="co">#&gt; [106] png_0.1-8                fANCOVA_0.6-1            reformulas_0.4.2        </span></span>
-<span><span class="co">#&gt; [109] knitr_1.50               rstudioapi_0.17.1        reshape2_1.4.5          </span></span>
-<span><span class="co">#&gt; [112] rjson_0.2.23             coda_0.19-4.1            nlme_3.1-168            </span></span>
-<span><span class="co">#&gt; [115] curl_7.0.0               nloptr_2.2.1             cachem_1.1.0            </span></span>
-<span><span class="co">#&gt; [118] zoo_1.8-14               GlobalOptions_0.1.3      stringr_1.6.0           </span></span>
-<span><span class="co">#&gt; [121] KernSmooth_2.23-26       BiocVersion_3.22.0       parallel_4.5.2          </span></span>
-<span><span class="co">#&gt; [124] vipor_0.4.7              AnnotationDbi_1.72.0     desc_1.4.3              </span></span>
-<span><span class="co">#&gt; [127] pillar_1.11.1            grid_4.5.2               vctrs_0.6.5             </span></span>
-<span><span class="co">#&gt; [130] gplots_3.3.0             slam_0.1-55              BiocSingular_1.26.1     </span></span>
-<span><span class="co">#&gt; [133] IHW_1.38.0               beachmat_2.26.0          xtable_1.8-4            </span></span>
-<span><span class="co">#&gt; [136] cluster_2.1.8.1          beeswarm_0.4.0           evaluate_1.0.5          </span></span>
-<span><span class="co">#&gt; [139] mvtnorm_1.3-3            cli_3.6.5                locfit_1.5-9.12         </span></span>
-<span><span class="co">#&gt; [142] compiler_4.5.2           rlang_1.1.6              crayon_1.5.3            </span></span>
-<span><span class="co">#&gt; [145] future.apply_1.20.0      fdrtool_1.2.18           plyr_1.8.9              </span></span>
-<span><span class="co">#&gt; [148] fs_1.6.6                 ggbeeswarm_0.7.3         stringi_1.8.7           </span></span>
-<span><span class="co">#&gt; [151] writexl_1.5.4            viridisLite_0.4.2        BiocParallel_1.44.0     </span></span>
-<span><span class="co">#&gt; [154] lmerTest_3.1-3           Biostrings_2.78.0        aod_1.3.3               </span></span>
-<span><span class="co">#&gt; [157] Matrix_1.7-4             hms_1.1.4                future_1.68.0           </span></span>
-<span><span class="co">#&gt; [160] bit64_4.6.0-1            KEGGREST_1.50.0          statmod_1.5.1           </span></span>
-<span><span class="co">#&gt; [163] rbibutils_2.4            broom_1.0.10             memoise_2.0.1           </span></span>
-<span><span class="co">#&gt; [166] bslib_0.9.0              bit_4.6.0</span></span></code></pre></div>
+<span><span class="co">#&gt;   [1] RcppAnnoy_0.0.23         splines_4.6.0            bitops_1.0-9            </span></span>
+<span><span class="co">#&gt;   [4] filelock_1.0.3           tibble_3.3.1             lifecycle_1.0.5         </span></span>
+<span><span class="co">#&gt;   [7] httr2_1.2.2              Rdpack_2.6.6             edgeR_4.9.9             </span></span>
+<span><span class="co">#&gt;  [10] doParallel_1.0.17        lattice_0.22-9           MASS_7.3-65             </span></span>
+<span><span class="co">#&gt;  [13] backports_1.5.1          magrittr_2.0.5           sass_0.4.10             </span></span>
+<span><span class="co">#&gt;  [16] rmarkdown_2.31           jquerylib_0.1.4          yaml_2.3.12             </span></span>
+<span><span class="co">#&gt;  [19] otel_0.2.0               DBI_1.3.0                minqa_1.2.8             </span></span>
+<span><span class="co">#&gt;  [22] RColorBrewer_1.1-3       multcomp_1.4-30          abind_1.4-8             </span></span>
+<span><span class="co">#&gt;  [25] EnvStats_3.1.0           glmmTMB_1.1.14           purrr_1.2.2             </span></span>
+<span><span class="co">#&gt;  [28] TH.data_1.1-5            rappdirs_0.3.4           sandwich_3.1-1          </span></span>
+<span><span class="co">#&gt;  [31] circlize_0.4.18          pbkrtest_0.5.5           ggrepel_0.9.8           </span></span>
+<span><span class="co">#&gt;  [34] irlba_2.3.7              RSpectra_0.16-2          pkgdown_2.2.0           </span></span>
+<span><span class="co">#&gt;  [37] codetools_0.2-20         DelayedArray_0.39.1      tidyselect_1.2.1        </span></span>
+<span><span class="co">#&gt;  [40] shape_1.4.6.1            farver_2.1.2             lme4_2.0-1              </span></span>
+<span><span class="co">#&gt;  [43] ScaledMatrix_1.21.0      viridis_0.6.5            jsonlite_2.0.0          </span></span>
+<span><span class="co">#&gt;  [46] GetoptLong_1.1.1         BiocNeighbors_2.7.1      survival_3.8-6          </span></span>
+<span><span class="co">#&gt;  [49] iterators_1.0.14         emmeans_2.0.3            systemfonts_1.3.2       </span></span>
+<span><span class="co">#&gt;  [52] foreach_1.5.2            tools_4.6.0              progress_1.2.3          </span></span>
+<span><span class="co">#&gt;  [55] ragg_1.5.2               Rcpp_1.1.1-1.1           blme_1.0-7              </span></span>
+<span><span class="co">#&gt;  [58] glue_1.8.1               gridExtra_2.3            SparseArray_1.11.13     </span></span>
+<span><span class="co">#&gt;  [61] xfun_0.57                mgcv_1.9-4               DESeq2_1.51.7           </span></span>
+<span><span class="co">#&gt;  [64] dplyr_1.2.1              withr_3.0.2              numDeriv_2016.8-1.1     </span></span>
+<span><span class="co">#&gt;  [67] BiocManager_1.30.27      fastmap_1.2.0            boot_1.3-32             </span></span>
+<span><span class="co">#&gt;  [70] caTools_1.18.3           digest_0.6.39            rsvd_1.0.5              </span></span>
+<span><span class="co">#&gt;  [73] R6_2.6.1                 estimability_1.5.1       textshaping_1.0.5       </span></span>
+<span><span class="co">#&gt;  [76] colorspace_2.1-2         gtools_3.9.5             dichromat_2.0-0.1       </span></span>
+<span><span class="co">#&gt;  [79] RSQLite_3.52.0           RhpcBLASctl_0.23-42      tidyr_1.3.2             </span></span>
+<span><span class="co">#&gt;  [82] variancePartition_1.41.5 corpcor_1.6.10           prettyunits_1.2.0       </span></span>
+<span><span class="co">#&gt;  [85] httr_1.4.8               htmlwidgets_1.6.4        S4Arrays_1.13.0         </span></span>
+<span><span class="co">#&gt;  [88] uwot_0.2.4               pkgconfig_2.0.3          gtable_0.3.6            </span></span>
+<span><span class="co">#&gt;  [91] blob_1.3.0               ComplexHeatmap_2.29.0    S7_0.2.2                </span></span>
+<span><span class="co">#&gt;  [94] XVector_0.53.0           remaCor_0.0.20           htmltools_0.5.9         </span></span>
+<span><span class="co">#&gt;  [97] bookdown_0.46            TMB_1.9.21               clue_0.3-68             </span></span>
+<span><span class="co">#&gt; [100] scales_1.4.0             png_0.1-9                fANCOVA_0.6-1           </span></span>
+<span><span class="co">#&gt; [103] reformulas_0.4.4         knitr_1.51               rstudioapi_0.18.0       </span></span>
+<span><span class="co">#&gt; [106] reshape2_1.4.5           rjson_0.2.23             coda_0.19-4.1           </span></span>
+<span><span class="co">#&gt; [109] nlme_3.1-169             curl_7.1.0               nloptr_2.2.1            </span></span>
+<span><span class="co">#&gt; [112] cachem_1.1.0             zoo_1.8-15               GlobalOptions_0.1.4     </span></span>
+<span><span class="co">#&gt; [115] stringr_1.6.0            KernSmooth_2.23-26       BiocVersion_3.24.0      </span></span>
+<span><span class="co">#&gt; [118] parallel_4.6.0           vipor_0.4.7              AnnotationDbi_1.75.0    </span></span>
+<span><span class="co">#&gt; [121] desc_1.4.3               pillar_1.11.1            grid_4.6.0              </span></span>
+<span><span class="co">#&gt; [124] vctrs_0.7.3              gplots_3.3.0             BiocSingular_1.29.0     </span></span>
+<span><span class="co">#&gt; [127] beachmat_2.29.0          xtable_1.8-8             cluster_2.1.8.2         </span></span>
+<span><span class="co">#&gt; [130] beeswarm_0.4.0           evaluate_1.0.5           mvtnorm_1.3-7           </span></span>
+<span><span class="co">#&gt; [133] cli_3.6.6                locfit_1.5-9.12          compiler_4.6.0          </span></span>
+<span><span class="co">#&gt; [136] rlang_1.2.0              crayon_1.5.3             plyr_1.8.9              </span></span>
+<span><span class="co">#&gt; [139] fs_2.1.0                 ggbeeswarm_0.7.3         stringi_1.8.7           </span></span>
+<span><span class="co">#&gt; [142] writexl_1.5.4            viridisLite_0.4.3        BiocParallel_1.47.0     </span></span>
+<span><span class="co">#&gt; [145] lmerTest_3.2-1           Biostrings_2.81.1        aod_1.3.3               </span></span>
+<span><span class="co">#&gt; [148] Matrix_1.7-5             hms_1.1.4                bit64_4.8.0             </span></span>
+<span><span class="co">#&gt; [151] KEGGREST_1.53.0          statmod_1.5.1            rbibutils_2.4.1         </span></span>
+<span><span class="co">#&gt; [154] broom_1.0.12             memoise_2.0.1            bslib_0.10.0            </span></span>
+<span><span class="co">#&gt; [157] bit_4.6.0</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Kang2017" class="csl-entry">
-Kang, Hyun Min, Meena Subramaniam, Sasha Targ, Michelle Nguyen, Lenka
-Maliskova, Elizabeth McCarthy, Eunice Wan, et al. 2017.
+Kang, Hyun Min, Meena Subramaniam, Sasha Targ, et al. 2017.
 <span>“Multiplexed Droplet Single-Cell RNA-Sequencing Using Natural
 Genetic Variation.”</span> <em>Nature Biotechnology</em> 36 (1): 89–94.
 <a href="https://doi.org/10.1038/nbt.4042" class="external-link">https://doi.org/10.1038/nbt.4042</a>.

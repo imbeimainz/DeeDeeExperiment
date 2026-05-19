@@ -14,17 +14,17 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/DESCRIPTION)
+[`inst/CITATION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/inst/CITATION)
 
-Abassi N, Schwarz L, Marini F (2026). *DeeDeeExperiment:
-DeeDeeExperiment: An S4 Class for managing and exploring omics analysis
-results*. R package version 1.1.4,
-<https://github.com/imbeimainz/DeeDeeExperiment>.
+Abassi, N., Schwarz, L., Filippi, E., and Marini, F. (2026).
+DeeDeeExperiment: Building an infrastructure for integrating and
+managing omics data analysis results in R/Bioconductor. Bioinformatics.
+https://doi.org/10.1093/bioinformatics/btag157
 
-    @Manual{,
-      title = {DeeDeeExperiment: DeeDeeExperiment: An S4 Class for managing and exploring omics analysis results},
-      author = {Najla Abassi and Lea Schwarz and Federico Marini},
+    @Article{,
+      title = {DeeDeeExperiment: Building an infrastructure for integrating and managing omics data analysis results in R/Bioconductor},
+      author = {Najla Abassi and Lea Schwarz and Edoardo Filippi and Federico Marini},
+      journal = {Bioinformatics},
       year = {2026},
-      note = {R package version 1.1.4},
-      url = {https://github.com/imbeimainz/DeeDeeExperiment},
+      doi = {10.1093/bioinformatics/btag157},
     }

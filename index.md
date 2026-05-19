@@ -12,6 +12,7 @@ You can install the development version of `DeeDeeExperiment` from
 GitHub with
 
 ``` r
+
 library("remotes")
 remotes::install_github("imbeimainz/DeeDeeExperiment",
                         dependencies = TRUE,
@@ -41,6 +42,7 @@ Specifically, `DeeDeeExperiment` has two new slots:
 ## Example
 
 ``` r
+
 library("DeeDeeExperiment")
 library("macrophage")
 

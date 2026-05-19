@@ -16,10 +16,10 @@ across cell types and contrasts, making it challenging to organize,
 explore, and reproduce findings, even for experienced users - we invite
 you to see this more in detail in the [dedicated companion vignette for
 single cell
-data](https://bioconductor.org/packages/3.22/DeeDeeExperiment/vignettes/dde_with_single_cell.html).
+data](https://bioconductor.org/packages/3.24/DeeDeeExperiment/vignettes/dde_with_single_cell.html).
 
 To address these issues, we introduce the
-*[DeeDeeExperiment](https://bioconductor.org/packages/3.22/DeeDeeExperiment)*
+*[DeeDeeExperiment](https://bioconductor.org/packages/3.24/DeeDeeExperiment)*
 class, an S4 object that extends the widely adopted
 `SingleCellExperiment` class in Bioconductor.
 
@@ -53,9 +53,9 @@ Specifically, `DeeDeeExperiment` has two new slots:
     thresholds (if specified).
   - Meta info related to both the LFC and p-value.
   - The package used to generate the DE results
-    (e.g. *[DEseq2](https://bioconductor.org/packages/3.22/DEseq2)*,
-    *[edgeR](https://bioconductor.org/packages/3.22/edgeR)* or
-    *[limma](https://bioconductor.org/packages/3.22/limma)*…).
+    (e.g. *[DEseq2](https://bioconductor.org/packages/3.24/DEseq2)*,
+    *[edgeR](https://bioconductor.org/packages/3.24/edgeR)* or
+    *[limma](https://bioconductor.org/packages/3.24/limma)*…).
   - A pointer to the original DE result object, which is kept in the
     `metadata` of the `DeeDeeExperiment` object.
 
@@ -70,7 +70,7 @@ The main columns to use in DEA in addition to the feature identifier
   - The FEA name.
   - A `GeneTonicList`-compatible set of `shaken_results` (ready to be
     used in
-    *[GeneTonic](https://bioconductor.org/packages/3.22/GeneTonic)*).
+    *[GeneTonic](https://bioconductor.org/packages/3.24/GeneTonic)*).
   - The enrichment tool used to generate the results (e.g. `topGO`,
     `clusterProfiler...`).
   - A copy of the original enrichment result object.
@@ -95,6 +95,7 @@ following inputs are required:
   and output of `GeneTonic` shakers)
 
 ``` r
+
 # do not run
 dde <- DeeDeeExperiment(
   sce = sce, # sce is a SingleCellExperiment object
@@ -110,6 +111,7 @@ dde <- DeeDeeExperiment(
 To install this package, start R and enter:
 
 ``` r
+
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
   install.packages("BiocManager")
 }
@@ -121,6 +123,7 @@ Once installed, the package can be loaded and attached to your current
 workspace as follows:
 
 ``` r
+
 library("DeeDeeExperiment")
 ```
 
@@ -128,7 +131,7 @@ library("DeeDeeExperiment")
 
 In the remainder of this vignette, we will illustrate the main features
 of
-*[DeeDeeExperiment](https://bioconductor.org/packages/3.22/DeeDeeExperiment)*
+*[DeeDeeExperiment](https://bioconductor.org/packages/3.24/DeeDeeExperiment)*
 on a publicly available dataset from Alasoo, et al. “Shared genetic
 effects on chromatin and gene expression indicate a role for enhancer
 priming in immune response”, published in Nature Genetics, January 2018
@@ -136,7 +139,7 @@ priming in immune response”, published in Nature Genetics, January 2018
 [doi:10.1038/s41588-018-0046-7](https://doi.org/10.1038/s41588-018-0046-7).
 
 The data is made available via the
-*[macrophage](https://bioconductor.org/packages/3.22/macrophage)*
+*[macrophage](https://bioconductor.org/packages/3.24/macrophage)*
 Bioconductor package, which contains the files output from the Salmon
 quantification (version 0.12.0, with GENCODE v29 reference), as well as
 the values summarized at the gene level, which we will use to exemplify.
@@ -149,6 +152,7 @@ and SL1344).
 Let’s start by loading all the necessary packages:
 
 ``` r
+
 library("DeeDeeExperiment")
 
 library("macrophage")
@@ -163,6 +167,7 @@ data and setting up the design for the Differential Expression Analysis
 (DEA).
 
 ``` r
+
 # load data
 data(gse, package = "macrophage")
 ```
@@ -188,6 +193,7 @@ Below we will demonstrate an example on how to generate DE results with
 `DESeq2`
 
 ``` r
+
 # set up design
 dds_macrophage <- DESeqDataSet(gse, design = ~ line + condition)
 rownames(dds_macrophage) <- substr(rownames(dds_macrophage), 1, 15)
@@ -200,6 +206,7 @@ For the sake of demonstration, we will further subset the dataset for
 faster processing
 
 ``` r
+
 # set seed for reproducibility
 set.seed(42)
 # sample randomly for 1k genes to speed up the processing
@@ -213,6 +220,7 @@ We then run the main
 check the `resultsNames` being generated
 
 ``` r
+
 dds_macrophage
 #> class: DESeqDataSet 
 #> dim: 1000 24 
@@ -239,6 +247,7 @@ Let’s extract the DE results for each contrast. We will only use two
 contrasts
 
 ``` r
+
 FDR <- 0.05
 # IFNg_vs_naive
 IFNg_vs_naive <- results(dds_macrophage,
@@ -307,6 +316,7 @@ input for `limma`, using the
 function from the `DEFormats` package.
 
 ``` r
+
 # create DGE list
 dge <- DEFormats::as.DGEList(dds_macrophage)
 ```
@@ -316,6 +326,7 @@ running the [`lmFit()`](https://rdrr.io/pkg/limma/man/lmFit.html)
 function:
 
 ``` r
+
 # normalize the counts
 dge <- calcNormFactors(dge)
 
@@ -331,6 +342,7 @@ fit <- lmFit(v, design)
 We define here as usual the contrast matrix:
 
 ``` r
+
 # available comparisons
 colnames(design)
 #> [1] "(Intercept)"      "lineeiwy_1"       "linefikt_3"       "lineieki_2"      
@@ -348,6 +360,7 @@ We then extract the results by applying the `contrasts.fit` function,
 followed by the empirical Bayes moderation as it follows:
 
 ``` r
+
 # apply contrast
 fit2 <- contrasts.fit(fit, contrast_matrix)
 
@@ -360,30 +373,31 @@ We show here the top 10 DE genes, as detected in the contrast
 `IFNg_vs_Naive`
 
 ``` r
+
 # show top 10 genes, first columns
 topTable(de_limma, coef = "IFNg_vs_Naive", number = 10)[, 1:7] 
 #>                 seqnames     start       end  width strand            gene_id
 #> ENSG00000204257     chr6  32948613  32969094  20482      - ENSG00000204257.14
 #> ENSG00000231389     chr6  33064569  33080775  16207      -  ENSG00000231389.7
 #> ENSG00000123992     chr2 219373527 219400022  26496      - ENSG00000123992.19
-#> ENSG00000197448     chr7 143244093 143270854  26762      + ENSG00000197448.13
 #> ENSG00000227531     chr9 111139246 111284836 145591      -  ENSG00000227531.1
-#> ENSG00000135124    chr12 121209857 121234106  24250      + ENSG00000135124.14
-#> ENSG00000075399    chr16  89707134  89720986  13853      - ENSG00000075399.13
+#> ENSG00000197448     chr7 143244093 143270854  26762      + ENSG00000197448.13
+#> ENSG00000100418    chr22  41598028  41621096  23069      -  ENSG00000100418.7
 #> ENSG00000065911     chr2  74198562  74217565  19004      + ENSG00000065911.11
 #> ENSG00000233621     chr1  37454879  37474411  19533      -  ENSG00000233621.1
-#> ENSG00000104894    chr19  49335171  49343335   8165      + ENSG00000104894.11
+#> ENSG00000143771     chr1 224356850 224379459  22610      + ENSG00000143771.11
+#> ENSG00000135124    chr12 121209857 121234106  24250      + ENSG00000135124.14
 #>                    SYMBOL
 #> ENSG00000204257   HLA-DMA
 #> ENSG00000231389  HLA-DPA1
 #> ENSG00000123992     DNPEP
-#> ENSG00000197448     GSTK1
 #> ENSG00000227531      <NA>
-#> ENSG00000135124     P2RX4
-#> ENSG00000075399    VPS9D1
+#> ENSG00000197448     GSTK1
+#> ENSG00000100418     DESI1
 #> ENSG00000065911    MTHFD2
 #> ENSG00000233621 LINC01137
-#> ENSG00000104894      CD37
+#> ENSG00000143771     CNIH4
+#> ENSG00000135124     P2RX4
 ```
 
 We now have a `MArrayLM` object: `de_limma`, ready to be integrated into
@@ -399,6 +413,7 @@ We reuse the normalized `DGEList` and design matrix from the previous
 [`DEFormats::as.DGEList()`](https://rdrr.io/pkg/DEFormats/man/as.DGEList.html)):
 
 ``` r
+
 dge <- DEFormats::as.DGEList(dds_macrophage)
 
 # estimate dispersion
@@ -410,6 +425,7 @@ fit <- glmFit(dge, design)
 Here as well, we define the contrasts of interest:
 
 ``` r
+
 # available comparisons
 colnames(design)
 #> [1] "(Intercept)"      "lineeiwy_1"       "linefikt_3"       "lineieki_2"      
@@ -427,6 +443,7 @@ contrast_matrix <- makeContrasts(
 follows:
 
 ``` r
+
 # DGELRT objects
 dge_lrt_IFNg_vs_naive <- glmLRT(fit,
                                 contrast = contrast_matrix[, "IFNg_vs_Naive"])
@@ -438,6 +455,7 @@ The top 10 DE genes computed within the edgeR framework can be shown as
 in this chunk:
 
 ``` r
+
 # show top 10 genes, first few columns
 topTags(dge_lrt_IFNg_vs_naive, n = 10)[, 1:7] 
 #> Coefficient:  1*groupIFNg 
@@ -471,6 +489,7 @@ results with the
 [`exactTest()`](https://rdrr.io/pkg/edgeR/man/exactTest.html) approach.
 
 ``` r
+
 # perform exact test
 # exact test doesn't handle multi factor models, so we have to subset
 
@@ -507,6 +526,7 @@ Again, the top 10 DE genes in the `dge_exact_Salm_vs_naive` object can
 be shown with
 
 ``` r
+
 topTags(dge_exact_Salm_vs_naive, n = 10)[, 1:7]
 #> Comparison of groups:  SL1344-naive 
 #>                 seqnames     start       end  width strand            gene_id
@@ -544,6 +564,7 @@ generated with `run_topGO()` (a practical wrapper provided by the
 package.
 
 ``` r
+
 # load Functional Enrichment Analysis results examples
 data("topGO_results_list", package = "DeeDeeExperiment")
 data("gost_res", package = "DeeDeeExperiment")
@@ -554,6 +575,7 @@ The enrichment results can be displayed in a summary way with these
 commands:
 
 ``` r
+
 # ifng vs naive
 head(topGO_results_list$ifng_vs_naive)
 #>        GO.ID
@@ -594,6 +616,7 @@ head(topGO_results_list$ifng_vs_naive)
 ```
 
 ``` r
+
 # salmonella vs naive
 head(gost_res$result)
 #>     query significant    p_value term_size query_size intersection_size
@@ -641,6 +664,7 @@ head(gost_res$result)
 ```
 
 ``` r
+
 # ifng vs naive
 head(clusterPro_res$ifng_vs_naive)
 #>                    ID
@@ -692,6 +716,7 @@ are supported natively within `DeeDeeExperiment`, simply run the
 following command:
 
 ``` r
+
 DeeDeeExperiment::supported_fea_formats()
 #>         Format         Package
 #> 1   data.frame           topGO
@@ -718,6 +743,7 @@ In the following example we construct the dde object using a `dds`
 object and **named list** of DE results
 
 ``` r
+
 # initialize DeeDeeExperiment with dds object and DESeq results (as a named list)
 dde <- DeeDeeExperiment(
   sce = dds_macrophage,
@@ -761,6 +787,7 @@ We can also add results as individual element of class `DESeqResults`,
 `MArrayLM`, `DGEExact` or `DGELRT`.
 
 ``` r
+
 # add a named list of results from edgeR
 dde <- addDEA(dde, dea = list(
   dge_exact_IFNg_vs_naive = dge_exact_IFNg_vs_naive,
@@ -865,6 +892,7 @@ It is possible to overwrite the results, when the argument `force` is
 set to `TRUE`
 
 ``` r
+
 dde <- addDEA(dde, dea = list(same_contrast = dge_lrt_Salm_vs_naive))
 
 # overwrite results with the same name
@@ -901,6 +929,7 @@ coefficient 2) can be extracted at a time. The constructor therefore
 issues a warning when it detects more than one coefficient:
 
 ``` r
+
 dde_limma <- DeeDeeExperiment(sce = dds_macrophage,
                               de_results = de_limma)
 
@@ -929,6 +958,7 @@ tables. This is achieved using the
 function:
 
 ``` r
+
 dde_limma_list <- limma_list_for_dde(fit = de_limma,
                                      number = nrow(de_limma),
                                      sort.by = "none")
@@ -942,6 +972,7 @@ contrast in the original `MArrayLM` object. Now we can insert all
 contrast directly into a `DeeDeeExperiment` object at once:
 
 ``` r
+
 dde_limma <- addDEA(dde_limma,
                     dea = dde_limma_list)
 
@@ -977,6 +1008,7 @@ explicitly specify the `fea_tool` used, also for simple bookkeeping
 reasons.
 
 ``` r
+
 # add FEA results as a named list
 dde <- addFEA(dde,
                fea = list(IFNg_vs_naive = topGO_results_list$ifng_vs_naive))
@@ -1015,6 +1047,7 @@ This maintains a clear association between the analyses and helps
 document it within the `dde` object.
 
 ``` r
+
 dde <- linkDEAandFEA(dde,
                         dea_name = "Salm_vs_naive",
                         fea_name = c("salmonella_vs_naive", "gost_res$result")
@@ -1025,6 +1058,7 @@ This is then directly visible in the object summary, provided with the
 dedicated [`summary()`](https://rdrr.io/r/base/summary.html) method:
 
 ``` r
+
 summary(dde)
 #> DE Results Summary:
 #>                 DEA_name  Up Down  FDR
@@ -1032,7 +1066,7 @@ summary(dde)
 #>            Salm_vs_naive  90   34 0.05
 #>  dge_exact_IFNg_vs_naive  91   67 0.05
 #>    dge_lrt_IFNg_vs_naive 156  145 0.05
-#>                 de_limma 263  302 0.05
+#>                 de_limma 503   98 0.05
 #>            same_contrast 166  184 0.05
 #> 
 #> FE Results Summary:
@@ -1054,6 +1088,7 @@ model that can benefit of the extra bits to assist in the
 interpretation.
 
 ``` r
+
 dde <- addScenarioInfo(dde,
                          dea_name = "IFNg_vs_naive",
                          info = "This results contains the output of a Differential Expression Analysis performed on data from the `macrophage` package, more precisely contrasting the counts from naive macrophage to those associated with IFNg."
@@ -1066,6 +1101,7 @@ All results stored in a `dde` object can be easily inspected with the
 [`summary()`](https://rdrr.io/r/base/summary.html) method
 
 ``` r
+
 # minimal summary
 summary(dde)
 #> DE Results Summary:
@@ -1074,7 +1110,7 @@ summary(dde)
 #>            Salm_vs_naive  90   34 0.05
 #>  dge_exact_IFNg_vs_naive  91   67 0.05
 #>    dge_lrt_IFNg_vs_naive 156  145 0.05
-#>                 de_limma 263  302 0.05
+#>                 de_limma 503   98 0.05
 #>            same_contrast 166  184 0.05
 #> 
 #> FE Results Summary:
@@ -1091,6 +1127,7 @@ arguments. For example, the `FDR` threshold can be adjusted to display
 the number of up- and downregulated genes for each comparison.
 
 ``` r
+
 # specify FDR threshold for subsetting DE genes based on adjusted p-values
 summary(dde, FDR = 0.01)
 #> DE Results Summary:
@@ -1099,7 +1136,7 @@ summary(dde, FDR = 0.01)
 #>            Salm_vs_naive  80   29 0.01
 #>  dge_exact_IFNg_vs_naive  68   42 0.01
 #>    dge_lrt_IFNg_vs_naive 123  107 0.01
-#>                 de_limma 201  244 0.01
+#>                 de_limma 415   69 0.01
 #>            same_contrast 128  126 0.01
 #> 
 #> FE Results Summary:
@@ -1114,6 +1151,7 @@ It is also possible to include any scenario information associated with
 each DEA by setting `show_scenario_info = TRUE`
 
 ``` r
+
 # show contextual information, if available
 summary(dde, show_scenario_info = TRUE)
 #> DE Results Summary:
@@ -1122,7 +1160,7 @@ summary(dde, show_scenario_info = TRUE)
 #>            Salm_vs_naive  90   34 0.05
 #>  dge_exact_IFNg_vs_naive  91   67 0.05
 #>    dge_lrt_IFNg_vs_naive 156  145 0.05
-#>                 de_limma 263  302 0.05
+#>                 de_limma 503   98 0.05
 #>            same_contrast 166  184 0.05
 #> 
 #> FE Results Summary:
@@ -1150,6 +1188,7 @@ Specific results can be renamed after being added using the
 corresponding column names in the `rowData` will be updated accordingly.
 
 ``` r
+
 # rename dea, one element
 dde <- renameDEA(dde,
                   old_name = "de_limma",
@@ -1176,6 +1215,7 @@ The method [`removeDEA()`](../reference/DeeDeeExperiment-methods.md) and
 delete results from a `dde` object.
 
 ``` r
+
 # removing dea
 dde <- removeDEA(dde, c(
   "ifng_vs_naive_&_salm_vs_naive",
@@ -1215,6 +1255,7 @@ stored within a `dde` object.
 methods to quickly retrieve the names of available DEAs and FEAs
 
 ``` r
+
 # get DEA names
 getDEANames(dde)
 #> [1] "IFNg_vs_naive"     "Salm_vs_naive"     "lrt_IFNg_vs_naive"
@@ -1231,6 +1272,7 @@ retrieve results in the same class as originally provided (e.g.,
 `DESeqResults`, `MArrayLM`…).
 
 ``` r
+
 # access the 1st DEA if dea_name is not specified (default: minimal format)
 getDEA(dde) |> head()
 #> DataFrame with 6 rows and 3 columns
@@ -1699,6 +1741,7 @@ getDEA(dde, dea_name = "lrt_IFNg_vs_naive") |> head()
 available DEAs stored in a dde object as a list.
 
 ``` r
+
 # get dea results as a list, (default: minimal format)
 lapply(getDEAList(dde), head)
 #> $IFNg_vs_naive
@@ -1716,7 +1759,7 @@ lapply(getDEAList(dde), head)
 #> ENSG00000078808     0.78936007 0.9975592 1.0000000
 #> ENSG00000251034     1.18814968 0.2269175 0.9820422
 #> ENSG00000162676     0.44208213 0.8432117 1.0000000
-#> ENSG00000170356    -0.62492008 0.7269723 1.0000000
+#> ENSG00000170356    -0.62492010 0.7269723 1.0000000
 #> ENSG00000204257    -0.72938102 0.8838883 1.0000000
 #> 
 #> $lrt_IFNg_vs_naive
@@ -1743,6 +1786,7 @@ access to the original objects provided when creating and updating the
 `dde` container.
 
 ``` r
+
 # get dea results as a list, in original format
 lapply(getDEAList(dde, format = "original"), head)
 ```
@@ -1753,6 +1797,7 @@ following chunk is left unevaluated for clarity as its output can be
 very verbose.
 
 ``` r
+
 # extra info
 getDEAInfo(dde)
 ```
@@ -1761,6 +1806,7 @@ It is easy, still, to retrieve some specific set of information, such as
 the `package` used for a specific `dea_name`:
 
 ``` r
+
 # retrieve specific information like the package name used for specific dea
 dea_name <- "Salm_vs_naive"
 getDEAInfo(dde)[[dea_name]][["package"]]
@@ -1777,6 +1823,7 @@ specific FEA results either in their original format or in minimal
 format
 
 ``` r
+
 # access the 1st FEA, (default: minimal format)
 getFEA(dde) |> head()
 #>                 gs_id
@@ -1807,13 +1854,13 @@ getFEA(dde) |> head()
 #> GO:1904064                                          ANK2,CTSS,KCNE5,P2RX4
 #> GO:0042098                                     CD28,HLA-DPA1,IL27,TNFSF18
 #> GO:0070663                                     CD28,HLA-DPA1,IL27,TNFSF18
-#>            gs_de_count gs_bg_count Expected
-#> GO:0002822           6          11     0.55
-#> GO:0002697           6          13     0.65
-#> GO:0002250          10          17     0.85
-#> GO:1904064           4          10     0.50
-#> GO:0042098           4          10     0.50
-#> GO:0070663           4          11     0.55
+#>            gs_de_count gs_bg_count gs_Expected
+#> GO:0002822           6          11        0.55
+#> GO:0002697           6          13        0.65
+#> GO:0002250          10          17        0.85
+#> GO:1904064           4          10        0.50
+#> GO:0042098           4          10        0.50
+#> GO:0070663           4          11        0.55
 
 # access the 1st FEA, in original format
 getFEA(dde, format = "original") |> head()
@@ -1883,20 +1930,20 @@ getFEA(dde, fea_name = "ifng_vs_naive") |> head()
 #> GO:0002460                                                                 ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000110848
 #> GO:0002697                                                                 ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000110848
 #> GO:0050776                 ENSG00000231389,ENSG00000204257,ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000163131,ENSG00000110848
-#>            gs_de_count gs_bg_count gs_ontology GeneRatio BgRatio     p.adjust
-#> GO:0002250          10          17          BP     10/37  17/744 2.561426e-07
-#> GO:0002819           6          11          BP      6/37  11/744 8.352007e-04
-#> GO:0002822           6          11          BP      6/37  11/744 8.352007e-04
-#> GO:0002460           6          12          BP      6/37  12/744 1.207607e-03
-#> GO:0002697           6          13          BP      6/37  13/744 1.729413e-03
-#> GO:0050776           9          41          BP      9/37  41/744 8.267416e-03
-#>                  qvalue
-#> GO:0002250 2.233668e-07
-#> GO:0002819 7.283293e-04
-#> GO:0002822 7.283293e-04
-#> GO:0002460 1.053083e-03
-#> GO:0002697 1.508119e-03
-#> GO:0050776 7.209526e-03
+#>            gs_de_count gs_bg_count gs_ontology gs_GeneRatio gs_BgRatio
+#> GO:0002250          10          17          BP        10/37     17/744
+#> GO:0002819           6          11          BP         6/37     11/744
+#> GO:0002822           6          11          BP         6/37     11/744
+#> GO:0002460           6          12          BP         6/37     12/744
+#> GO:0002697           6          13          BP         6/37     13/744
+#> GO:0050776           9          41          BP         9/37     41/744
+#>             gs_p.adjust    gs_qvalue
+#> GO:0002250 2.561426e-07 2.233668e-07
+#> GO:0002819 8.352007e-04 7.283293e-04
+#> GO:0002822 8.352007e-04 7.283293e-04
+#> GO:0002460 1.207607e-03 1.053083e-03
+#> GO:0002697 1.729413e-03 1.508119e-03
+#> GO:0050776 8.267416e-03 7.209526e-03
 
 # access specific FEA by name, in original format
 getFEA(dde, fea_name = "ifng_vs_naive", format = "original") |> head()
@@ -1951,6 +1998,7 @@ returns all FEAs linked to a specific DEA. This is illustrated in the
 following chunk
 
 ``` r
+
 # get fea results as a list (default: minimal format)
 lapply(getFEAList(dde), head)
 #> $IFNg_vs_naive
@@ -1982,13 +2030,13 @@ lapply(getFEAList(dde), head)
 #> GO:1904064                                          ANK2,CTSS,KCNE5,P2RX4
 #> GO:0042098                                     CD28,HLA-DPA1,IL27,TNFSF18
 #> GO:0070663                                     CD28,HLA-DPA1,IL27,TNFSF18
-#>            gs_de_count gs_bg_count Expected
-#> GO:0002822           6          11     0.55
-#> GO:0002697           6          13     0.65
-#> GO:0002250          10          17     0.85
-#> GO:1904064           4          10     0.50
-#> GO:0042098           4          10     0.50
-#> GO:0070663           4          11     0.55
+#>            gs_de_count gs_bg_count gs_Expected
+#> GO:0002822           6          11        0.55
+#> GO:0002697           6          13        0.65
+#> GO:0002250          10          17        0.85
+#> GO:1904064           4          10        0.50
+#> GO:0042098           4          10        0.50
+#> GO:0070663           4          11        0.55
 #> 
 #> $salm_vs_naive
 #>                 gs_id                                  gs_description
@@ -2049,20 +2097,20 @@ lapply(getFEAList(dde), head)
 #> GO:0002460                                                                 ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000110848
 #> GO:0002697                                                                 ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000110848
 #> GO:0050776                 ENSG00000231389,ENSG00000204257,ENSG00000141574,ENSG00000197721,ENSG00000178562,ENSG00000197272,ENSG00000120337,ENSG00000163131,ENSG00000110848
-#>            gs_de_count gs_bg_count gs_ontology GeneRatio BgRatio     p.adjust
-#> GO:0002250          10          17          BP     10/37  17/744 2.561426e-07
-#> GO:0002819           6          11          BP      6/37  11/744 8.352007e-04
-#> GO:0002822           6          11          BP      6/37  11/744 8.352007e-04
-#> GO:0002460           6          12          BP      6/37  12/744 1.207607e-03
-#> GO:0002697           6          13          BP      6/37  13/744 1.729413e-03
-#> GO:0050776           9          41          BP      9/37  41/744 8.267416e-03
-#>                  qvalue
-#> GO:0002250 2.233668e-07
-#> GO:0002819 7.283293e-04
-#> GO:0002822 7.283293e-04
-#> GO:0002460 1.053083e-03
-#> GO:0002697 1.508119e-03
-#> GO:0050776 7.209526e-03
+#>            gs_de_count gs_bg_count gs_ontology gs_GeneRatio gs_BgRatio
+#> GO:0002250          10          17          BP        10/37     17/744
+#> GO:0002819           6          11          BP         6/37     11/744
+#> GO:0002822           6          11          BP         6/37     11/744
+#> GO:0002460           6          12          BP         6/37     12/744
+#> GO:0002697           6          13          BP         6/37     13/744
+#> GO:0050776           9          41          BP         9/37     41/744
+#>             gs_p.adjust    gs_qvalue
+#> GO:0002250 2.561426e-07 2.233668e-07
+#> GO:0002819 8.352007e-04 7.283293e-04
+#> GO:0002822 8.352007e-04 7.283293e-04
+#> GO:0002460 1.207607e-03 1.053083e-03
+#> GO:0002697 1.729413e-03 1.508119e-03
+#> GO:0050776 8.267416e-03 7.209526e-03
 
 
 # get all FEAs for this de_name, in original format
@@ -2111,6 +2159,7 @@ associated metadata. Again, the following chunk is left unevaluated for
 clarity as its output can be very verbose:
 
 ``` r
+
 # extra info
 getFEAInfo(dde)
 ```
@@ -2120,6 +2169,7 @@ specific `fea_name` (here, “ifng_vs_naive”) can be easily retrieved
 with:
 
 ``` r
+
 # the tool used to perform the FEA
 getFEAInfo(dde)[["ifng_vs_naive"]][["fe_tool"]]
 #> [1] "clusterProfiler"
@@ -2130,6 +2180,7 @@ assay that are stored in a `DeeDeeExperiment` object using
 `export_result_for_dde`
 
 ``` r
+
 # export only DEAs
 out_dir <- "path/to/results_folder"
 
@@ -2167,6 +2218,7 @@ you can save it and plug it into these tools for interactive exploration
 and visualization.
 
 ``` r
+
 saveRDS(dde, "dde_macrophage.RDS")
 ```
 
@@ -2174,6 +2226,7 @@ To explore the `dde` object within `iSEE`, simply run these lines of
 code:
 
 ``` r
+
 library("iSEE")
 iSEE::iSEE(dde)
 ```
@@ -2182,6 +2235,7 @@ Similarly, to see more on `dde` within `GeneTonic`, you can run the
 following chunk:
 
 ``` r
+
 library("GeneTonic")
 my_dde <- dde
 
@@ -2232,14 +2286,15 @@ submit a pull request within the `DeeDeeExperiment` Github repository
 ## Session info
 
 ``` r
+
 sessionInfo()
-#> R version 4.5.2 (2025-10-31)
-#> Platform: aarch64-apple-darwin20
+#> R version 4.6.0 (2026-04-24)
+#> Platform: aarch64-apple-darwin23
 #> Running under: macOS Sequoia 15.7.2
 #> 
 #> Matrix products: default
-#> BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
-#> LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+#> BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
+#> LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 #> 
 #> locale:
 #> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -2252,65 +2307,61 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#>  [1] DEFormats_1.38.0            edgeR_4.8.0                
-#>  [3] limma_3.66.0                DESeq2_1.50.2              
-#>  [5] macrophage_1.26.0           DeeDeeExperiment_1.1.3     
-#>  [7] SingleCellExperiment_1.32.0 SummarizedExperiment_1.40.0
-#>  [9] Biobase_2.70.0              GenomicRanges_1.62.0       
-#> [11] Seqinfo_1.0.0               IRanges_2.44.0             
-#> [13] S4Vectors_0.48.0            BiocGenerics_0.56.0        
-#> [15] generics_0.1.4              MatrixGenerics_1.22.0      
-#> [17] matrixStats_1.5.0           BiocStyle_2.38.0           
+#>  [1] DEFormats_1.41.0            edgeR_4.9.9                
+#>  [3] limma_3.69.0                DESeq2_1.51.7              
+#>  [5] macrophage_1.29.0           DeeDeeExperiment_1.3.0     
+#>  [7] SingleCellExperiment_1.35.0 SummarizedExperiment_1.43.0
+#>  [9] Biobase_2.73.1              GenomicRanges_1.65.0       
+#> [11] Seqinfo_1.3.0               IRanges_2.45.0             
+#> [13] S4Vectors_0.51.1            BiocGenerics_0.59.0        
+#> [15] generics_0.1.4              MatrixGenerics_1.25.0      
+#> [17] matrixStats_1.5.0           BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] DBI_1.2.3            writexl_1.5.4        rlang_1.1.6         
-#>  [4] magrittr_2.0.4       DOSE_4.4.0           compiler_4.5.2      
-#>  [7] RSQLite_2.4.5        reshape2_1.4.5       png_0.1-8           
-#> [10] systemfonts_1.3.1    vctrs_0.6.5          stringr_1.6.0       
-#> [13] crayon_1.5.3         pkgconfig_2.0.3      fastmap_1.2.0       
-#> [16] backports_1.5.0      XVector_0.50.0       rmarkdown_2.30      
-#> [19] ragg_1.5.0           bit_4.6.0            xfun_0.54           
-#> [22] cachem_1.1.0         jsonlite_2.0.0       blob_1.2.4          
-#> [25] DelayedArray_0.36.0  BiocParallel_1.44.0  parallel_4.5.2      
-#> [28] R6_2.6.1             stringi_1.8.7        bslib_0.9.0         
-#> [31] RColorBrewer_1.1-3   jquerylib_0.1.4      GOSemSim_2.36.0     
-#> [34] numDeriv_2016.8-1.1  Rcpp_1.1.0           bookdown_0.45       
-#> [37] knitr_1.50           R.utils_2.13.0       Matrix_1.7-4        
-#> [40] splines_4.5.2        tidyselect_1.2.1     qvalue_2.42.0       
-#> [43] rstudioapi_0.17.1    dichromat_2.0-0.1    abind_1.4-8         
-#> [46] yaml_2.3.11          codetools_0.2-20     lattice_0.22-7      
-#> [49] tibble_3.3.0         plyr_1.8.9           KEGGREST_1.50.0     
-#> [52] S7_0.2.1             coda_0.19-4.1        evaluate_1.0.5      
-#> [55] desc_1.4.3           Biostrings_2.78.0    pillar_1.11.1       
-#> [58] BiocManager_1.30.27  checkmate_2.3.3      emdbook_1.3.14      
-#> [61] ggplot2_4.0.1        scales_1.4.0         glue_1.8.0          
-#> [64] tools_4.5.2          apeglm_1.32.0        data.table_1.17.8   
-#> [67] fgsea_1.36.0         locfit_1.5-9.12      fs_1.6.6            
-#> [70] mvtnorm_1.3-3        fastmatch_1.1-6      cowplot_1.2.0       
-#> [73] grid_4.5.2           bbmle_1.0.25.1       bdsmatrix_1.3-7     
-#> [76] AnnotationDbi_1.72.0 cli_3.6.5            rappdirs_0.3.3      
-#> [79] textshaping_1.0.4    S4Arrays_1.10.0      dplyr_1.1.4         
-#> [82] gtable_0.3.6         yulab.utils_0.2.2    R.methodsS3_1.8.2   
-#> [85] sass_0.4.10          digest_0.6.39        SparseArray_1.10.3  
-#> [88] htmlwidgets_1.6.4    farver_2.1.2         R.oo_1.27.1         
-#> [91] memoise_2.0.1        htmltools_0.5.8.1    pkgdown_2.2.0       
-#> [94] lifecycle_1.0.4      httr_1.4.7           GO.db_3.22.0        
-#> [97] statmod_1.5.1        bit64_4.6.0-1        MASS_7.3-65
+#>  [1] DBI_1.3.0            writexl_1.5.4        rlang_1.2.0         
+#>  [4] magrittr_2.0.5       DOSE_4.7.0           otel_0.2.0          
+#>  [7] compiler_4.6.0       RSQLite_3.52.0       reshape2_1.4.5      
+#> [10] png_0.1-9            systemfonts_1.3.2    vctrs_0.7.3         
+#> [13] stringr_1.6.0        crayon_1.5.3         pkgconfig_2.0.3     
+#> [16] fastmap_1.2.0        backports_1.5.1      XVector_0.53.0      
+#> [19] rmarkdown_2.31       ragg_1.5.2           bit_4.6.0           
+#> [22] xfun_0.57            cachem_1.1.0         jsonlite_2.0.0      
+#> [25] blob_1.3.0           DelayedArray_0.39.1  BiocParallel_1.47.0 
+#> [28] parallel_4.6.0       R6_2.6.1             stringi_1.8.7       
+#> [31] bslib_0.10.0         RColorBrewer_1.1-3   enrichit_0.1.4      
+#> [34] jquerylib_0.1.4      GOSemSim_2.39.0      numDeriv_2016.8-1.1 
+#> [37] Rcpp_1.1.1-1.1       bookdown_0.46        knitr_1.51          
+#> [40] Matrix_1.7-5         splines_4.6.0        tidyselect_1.2.1    
+#> [43] rstudioapi_0.18.0    dichromat_2.0-0.1    abind_1.4-8         
+#> [46] yaml_2.3.12          codetools_0.2-20     lattice_0.22-9      
+#> [49] tibble_3.3.1         plyr_1.8.9           KEGGREST_1.53.0     
+#> [52] S7_0.2.2             coda_0.19-4.1        evaluate_1.0.5      
+#> [55] desc_1.4.3           Biostrings_2.81.1    pillar_1.11.1       
+#> [58] BiocManager_1.30.27  checkmate_2.3.4      emdbook_1.3.14      
+#> [61] ggplot2_4.0.3        scales_1.4.0         glue_1.8.1          
+#> [64] tools_4.6.0          apeglm_1.35.0        data.table_1.18.4   
+#> [67] locfit_1.5-9.12      fs_2.1.0             mvtnorm_1.3-7       
+#> [70] grid_4.6.0           bbmle_1.0.25.1       bdsmatrix_1.3-7     
+#> [73] AnnotationDbi_1.75.0 cli_3.6.6            rappdirs_0.3.4      
+#> [76] textshaping_1.0.5    S4Arrays_1.13.0      dplyr_1.2.1         
+#> [79] gtable_0.3.6         yulab.utils_0.2.4    sass_0.4.10         
+#> [82] digest_0.6.39        SparseArray_1.11.13  htmlwidgets_1.6.4   
+#> [85] farver_2.1.2         memoise_2.0.1        htmltools_0.5.9     
+#> [88] pkgdown_2.2.0        lifecycle_1.0.5      httr_1.4.8          
+#> [91] GO.db_3.23.1         statmod_1.5.1        bit64_4.8.0         
+#> [94] MASS_7.3-65
 ```
 
 ## References
 
-Alasoo, Kaur, Julia Rodrigues, Subhankar Mukhopadhyay, Andrew J.
-Knights, Alice L. Mann, Kousik Kundu, Christine Hale, Gordon Dougan, and
-Daniel J. Gaffney. 2018. “Shared genetic effects on chromatin and gene
-expression indicate a role for enhancer priming in immune response.”
-*Nature Genetics* 50 (3): 424–31.
-<https://doi.org/10.1038/s41588-018-0046-7>.
+Alasoo, Kaur, Julia Rodrigues, Subhankar Mukhopadhyay, et al. 2018.
+“Shared genetic effects on chromatin and gene expression indicate a role
+for enhancer priming in immune response.” *Nature Genetics* 50 (3):
+424–31. <https://doi.org/10.1038/s41588-018-0046-7>.
 
-Law, Charity W., Monther Alhamdoosh, Shian Su, Xueyi Dong, Luyi Tian,
-Gordon K. Smyth, and Matthew E. Ritchie. 2018. “RNA-Seq Analysis Is Easy
-as 1-2-3 with Limma, Glimma and edgeR.” *F1000Research* 5 (December):
-1408. <https://doi.org/10.12688/f1000research.9005.3>.
+Law, Charity W., Monther Alhamdoosh, Shian Su, et al. 2018. “RNA-Seq
+Analysis Is Easy as 1-2-3 with Limma, Glimma and edgeR.” *F1000Research*
+5 (December): 1408. <https://doi.org/10.12688/f1000research.9005.3>.
 
 Love, Michael I., Simon Anders, Vladislav Kim, and Wolfgang Huber. 2016.
 “RNA-Seq Workflow: Gene-Level Exploratory Analysis and Differential
