@@ -46,7 +46,7 @@ then load the dataset of interest using its accession ID “EH2259”.
 eh <- ExperimentHub()
 query(eh, "Kang")
 #> ExperimentHub with 1 record
-#> # snapshotDate(): 2026-05-19
+#> # snapshotDate(): 2026-07-16
 #> # names(): EH2259
 #> # package(): muscData
 #> # $dataprovider: GEO

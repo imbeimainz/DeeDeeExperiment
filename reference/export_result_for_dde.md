@@ -86,14 +86,14 @@ export_result_for_dde(dde,
 res_type = "dea",
 res_format = "minimal", output_dir = tempdir(), force = TRUE)
 #> Found 4 DEA results
-#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//Rtmpm6xy8i/dde_minimal_DEA.xlsx 
+#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//RtmpKRfWNz/dde_minimal_DEA.xlsx 
 
 export_result_for_dde(dde,
 res_type = c("dea", "fea"),
 res_format = "original", output_dir = tempdir(), force = TRUE)
 #> Found 4 DEA results
-#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//Rtmpm6xy8i/dde_original_DEA.xlsx 
+#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//RtmpKRfWNz/dde_original_DEA.xlsx 
 #> Found 4 FEA results
-#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//Rtmpm6xy8i/dde_original_FEA.xlsx 
+#> ✔ Writing results to:  /var/folders/5q/v_ms_h9x6mv05dzlf94g48d00000gn/T//RtmpKRfWNz/dde_original_FEA.xlsx 
 
 ```
