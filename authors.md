@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/HEAD/inst/CITATION)
+[`inst/CITATION`](https://github.com/imbeimainz/DeeDeeExperiment/blob/devel/inst/CITATION)
 
 Abassi, N., Schwarz, L., Filippi, E., and Marini, F. (2026).
 DeeDeeExperiment: Building an infrastructure for integrating and

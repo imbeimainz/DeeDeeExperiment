@@ -1,7 +1,6 @@
 # `fgseaRes`
 
-A data frame of FE results generated with
-[`fgsea::fgsea()`](https://rdrr.io/pkg/fgsea/man/fgsea.html)
+A data frame of FE results generated with `fgsea::fgsea()`
 
 ## Format
 

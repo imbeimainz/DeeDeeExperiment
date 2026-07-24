@@ -1746,7 +1746,7 @@ available DEAs stored in a dde object as a list.
 lapply(getDEAList(dde), head)
 #> $IFNg_vs_naive
 #>                 log2FoldChange       pvalue        padj
-#> ENSG00000164741     0.22914867 9.805414e-01 1.00000e+00
+#> ENSG00000164741     0.22914868 9.805414e-01 1.00000e+00
 #> ENSG00000078808    -0.01153364 1.000000e+00 1.00000e+00
 #> ENSG00000251034    -0.11670132 9.338990e-01 1.00000e+00
 #> ENSG00000162676     0.26914813 9.008170e-01 1.00000e+00
@@ -1755,7 +1755,7 @@ lapply(getDEAList(dde), head)
 #> 
 #> $Salm_vs_naive
 #>                 log2FoldChange    pvalue      padj
-#> ENSG00000164741     0.01146911 0.9996325 1.0000000
+#> ENSG00000164741     0.01146907 0.9996325 1.0000000
 #> ENSG00000078808     0.78936007 0.9975592 1.0000000
 #> ENSG00000251034     1.18814968 0.2269175 0.9820422
 #> ENSG00000162676     0.44208213 0.8432117 1.0000000
@@ -2288,9 +2288,9 @@ submit a pull request within the `DeeDeeExperiment` Github repository
 ``` r
 
 sessionInfo()
-#> R version 4.6.0 (2026-04-24)
+#> R version 4.6.1 (2026-06-24)
 #> Platform: aarch64-apple-darwin23
-#> Running under: macOS Sequoia 15.7.2
+#> Running under: macOS Tahoe 26.4
 #> 
 #> Matrix products: default
 #> BLAS:   /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRblas.0.dylib 
@@ -2299,7 +2299,7 @@ sessionInfo()
 #> locale:
 #> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 #> 
-#> time zone: Europe/Berlin
+#> time zone: UTC
 #> tzcode source: internal
 #> 
 #> attached base packages:
@@ -2307,49 +2307,48 @@ sessionInfo()
 #> [8] base     
 #> 
 #> other attached packages:
-#>  [1] DEFormats_1.41.0            edgeR_4.9.9                
-#>  [3] limma_3.69.0                DESeq2_1.51.7              
+#>  [1] DEFormats_1.41.0            edgeR_4.11.4               
+#>  [3] limma_3.69.2                DESeq2_1.53.2              
 #>  [5] macrophage_1.29.0           DeeDeeExperiment_1.3.0     
-#>  [7] SingleCellExperiment_1.35.0 SummarizedExperiment_1.43.0
-#>  [9] Biobase_2.73.1              GenomicRanges_1.65.0       
-#> [11] Seqinfo_1.3.0               IRanges_2.45.0             
-#> [13] S4Vectors_0.51.1            BiocGenerics_0.59.0        
+#>  [7] SingleCellExperiment_1.35.2 SummarizedExperiment_1.43.0
+#>  [9] Biobase_2.73.1              GenomicRanges_1.65.1       
+#> [11] Seqinfo_1.3.0               IRanges_2.47.2             
+#> [13] S4Vectors_0.51.5            BiocGenerics_0.59.10       
 #> [15] generics_0.1.4              MatrixGenerics_1.25.0      
 #> [17] matrixStats_1.5.0           BiocStyle_2.41.0           
 #> 
 #> loaded via a namespace (and not attached):
-#>  [1] DBI_1.3.0            writexl_1.5.4        rlang_1.2.0         
+#>  [1] DBI_1.3.0            writexl_1.5.4        rlang_1.3.0         
 #>  [4] magrittr_2.0.5       DOSE_4.7.0           otel_0.2.0          
-#>  [7] compiler_4.6.0       RSQLite_3.52.0       reshape2_1.4.5      
+#>  [7] compiler_4.6.1       RSQLite_3.53.3       reshape2_1.4.5      
 #> [10] png_0.1-9            systemfonts_1.3.2    vctrs_0.7.3         
 #> [13] stringr_1.6.0        crayon_1.5.3         pkgconfig_2.0.3     
 #> [16] fastmap_1.2.0        backports_1.5.1      XVector_0.53.0      
 #> [19] rmarkdown_2.31       ragg_1.5.2           bit_4.6.0           
-#> [22] xfun_0.57            cachem_1.1.0         jsonlite_2.0.0      
-#> [25] blob_1.3.0           DelayedArray_0.39.1  BiocParallel_1.47.0 
-#> [28] parallel_4.6.0       R6_2.6.1             stringi_1.8.7       
-#> [31] bslib_0.10.0         RColorBrewer_1.1-3   enrichit_0.1.4      
-#> [34] jquerylib_0.1.4      GOSemSim_2.39.0      numDeriv_2016.8-1.1 
-#> [37] Rcpp_1.1.1-1.1       bookdown_0.46        knitr_1.51          
-#> [40] Matrix_1.7-5         splines_4.6.0        tidyselect_1.2.1    
-#> [43] rstudioapi_0.18.0    dichromat_2.0-0.1    abind_1.4-8         
-#> [46] yaml_2.3.12          codetools_0.2-20     lattice_0.22-9      
-#> [49] tibble_3.3.1         plyr_1.8.9           KEGGREST_1.53.0     
-#> [52] S7_0.2.2             coda_0.19-4.1        evaluate_1.0.5      
-#> [55] desc_1.4.3           Biostrings_2.81.1    pillar_1.11.1       
-#> [58] BiocManager_1.30.27  checkmate_2.3.4      emdbook_1.3.14      
-#> [61] ggplot2_4.0.3        scales_1.4.0         glue_1.8.1          
-#> [64] tools_4.6.0          apeglm_1.35.0        data.table_1.18.4   
-#> [67] locfit_1.5-9.12      fs_2.1.0             mvtnorm_1.3-7       
-#> [70] grid_4.6.0           bbmle_1.0.25.1       bdsmatrix_1.3-7     
-#> [73] AnnotationDbi_1.75.0 cli_3.6.6            rappdirs_0.3.4      
-#> [76] textshaping_1.0.5    S4Arrays_1.13.0      dplyr_1.2.1         
-#> [79] gtable_0.3.6         yulab.utils_0.2.4    sass_0.4.10         
-#> [82] digest_0.6.39        SparseArray_1.11.13  htmlwidgets_1.6.4   
-#> [85] farver_2.1.2         memoise_2.0.1        htmltools_0.5.9     
-#> [88] pkgdown_2.2.0        lifecycle_1.0.5      httr_1.4.8          
-#> [91] GO.db_3.23.1         statmod_1.5.1        bit64_4.8.0         
-#> [94] MASS_7.3-65
+#> [22] xfun_0.60            cachem_1.1.0         jsonlite_2.0.0      
+#> [25] blob_1.3.0           DelayedArray_0.39.3  BiocParallel_1.47.0 
+#> [28] parallel_4.6.1       R6_2.6.1             stringi_1.8.7       
+#> [31] bslib_0.11.0         RColorBrewer_1.1-3   enrichit_0.2.0      
+#> [34] jquerylib_0.1.4      GOSemSim_2.39.2      numDeriv_2016.8-1.1 
+#> [37] Rcpp_1.1.2           bookdown_0.47        knitr_1.51          
+#> [40] BiocBaseUtils_1.15.1 Matrix_1.7-5         splines_4.6.1       
+#> [43] tidyselect_1.2.1     abind_1.4-8          yaml_2.3.12         
+#> [46] codetools_0.2-20     lattice_0.22-9       tibble_3.3.1        
+#> [49] plyr_1.8.9           KEGGREST_1.53.5      S7_0.2.2            
+#> [52] coda_0.19-4.1        evaluate_1.0.5       desc_1.4.3          
+#> [55] Biostrings_2.81.5    pillar_1.11.1        BiocManager_1.30.27 
+#> [58] checkmate_2.3.4      emdbook_1.3.14       ggplot2_4.0.3       
+#> [61] scales_1.4.0         glue_1.8.1           tools_4.6.1         
+#> [64] apeglm_1.35.0        data.table_1.18.4    locfit_1.5-9.12     
+#> [67] fs_2.1.0             mvtnorm_1.4-2        grid_4.6.1          
+#> [70] bbmle_1.0.25.1       bdsmatrix_1.3-7      AnnotationDbi_1.75.2
+#> [73] cli_3.6.6            rappdirs_0.3.4       textshaping_1.0.5   
+#> [76] S4Arrays_1.13.0      dplyr_1.2.1          gtable_0.3.6        
+#> [79] yulab.utils_0.2.4    sass_0.4.10          digest_0.6.39       
+#> [82] SparseArray_1.13.2   htmlwidgets_1.6.4    farver_2.1.2        
+#> [85] memoise_2.0.1        htmltools_0.5.9      pkgdown_2.2.1.9000  
+#> [88] lifecycle_1.0.5      httr_1.4.8           GO.db_3.23.1        
+#> [91] statmod_1.5.2        bit64_4.8.2          MASS_7.3-66
 ```
 
 ## References
